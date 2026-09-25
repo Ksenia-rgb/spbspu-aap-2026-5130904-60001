@@ -4,7 +4,7 @@ namespace erin
 {
   void printName()
   {
-    std::cout<<"erin.ivan\n";
+    std::cout<< "erin.ivan\n";
   }
 }
 
