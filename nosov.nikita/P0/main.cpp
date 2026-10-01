@@ -1,5 +1,6 @@
-#include <iostream>
+include <iostream>
+
 int main()
 {
-std::cout <<"nosov.nikita\n";
+  std::cout << "nosov.nikita\n";
 }
