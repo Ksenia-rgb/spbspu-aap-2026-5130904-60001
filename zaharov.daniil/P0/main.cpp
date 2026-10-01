@@ -2,7 +2,5 @@
 
 int main()
 {
-
- std::cout << "zaharov.daniil\n";
-
+  std::cout << "zaharov.daniil\n";
 }
