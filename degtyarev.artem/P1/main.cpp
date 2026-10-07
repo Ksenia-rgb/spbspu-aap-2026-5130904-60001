@@ -1,7 +1,8 @@
 #include <iostream>
 
 int main()
-{
+{ 
+  bool morethan0val = false;
   int val2 = 0;
   std::cin >> val2;
 
@@ -11,24 +12,22 @@ int main()
     return 1;
   }
 
-  // sub-max
   int max = val2;
   int sub_max = 0;
 
-  // aft-max
   int max2 = val2;
   int cnt = 0;
 
   while (val2 != 0)
-  {
+  { 
+    morethan0val = true;
     std::cin >> val2;
     if (std::cin.fail())
     {
       std::cout << "Error: input is not a valid number\n";
       return 1;
     }
-
-    // sub-max
+  
     if (val2 != 0)
     {
       if (max < val2)
@@ -42,7 +41,6 @@ int main()
       }
     }
 
-    // aft-max
     if (val2 != 0)
     {
       if (max2 >= val2)
@@ -57,7 +55,7 @@ int main()
     }
   }
 
-  if (cnt == 0)
+  if (morethan0val == false)
   {
     std::cerr << "Sequence too short to compute sub-max\n";
     std::cerr << "Sequence too short to compute aft-max\n";
@@ -66,7 +64,7 @@ int main()
   else if (sub_max == 0)
   {
     std::cerr << "Sequence too short to compute sub-max\n";
-    std::cout << "aft-max = " << cnt-1 << '\n';
+    std::cout << "aft-max = " << cnt << '\n';
     return 2;
   }
   else
