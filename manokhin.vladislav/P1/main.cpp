@@ -1,6 +1,7 @@
 #include <iostream>
 
-int main() {
+int main()
+{
   int a = 0, prev = 0, fath = 0, mn = 0, grt = 0, tmp = 0;
 
   std::cin >> prev;
