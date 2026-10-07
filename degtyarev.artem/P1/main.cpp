@@ -1,7 +1,7 @@
 #include <iostream>
 
 int main()
-{ 
+{
   bool morethan0val = false;
   int val2 = 0;
   std::cin >> val2;
@@ -19,7 +19,7 @@ int main()
   int cnt = 0;
 
   while (val2 != 0)
-  { 
+  {
     morethan0val = true;
     std::cin >> val2;
     if (std::cin.fail())
@@ -27,7 +27,7 @@ int main()
       std::cout << "Error: input is not a valid number\n";
       return 1;
     }
-  
+
     if (val2 != 0)
     {
       if (max < val2)
