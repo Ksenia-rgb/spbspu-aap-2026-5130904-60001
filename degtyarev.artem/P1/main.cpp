@@ -2,7 +2,7 @@
 
 int main()
 {
-  int val1 = 0, val2 = 0;
+  int val2 = 0;
   std::cin >> val2;
 
   if (std::cin.fail())
@@ -11,15 +11,16 @@ int main()
     return 1;
   }
 
+  // sub-max
   int max = val2;
   int sub_max = 0;
 
+  // aft-max
   int max2 = val2;
   int cnt = 0;
 
   while (val2!=0)
   { 
-    val1 = val2;
     std::cin >> val2;
     if (std::cin.fail())
     {
@@ -27,29 +28,51 @@ int main()
       return 1;
     }
 
-    if (max2 >= val2)
+    // sub-max
+    if (val2 != 0)
     {
-      ++cnt;
-    }
-    else
-    {
-      max2 = val2;
-      cnt = 0;
+      if (max < val2)
+      {
+        sub_max = max;
+        max = val2;
+      }
+      else if ((sub_max < val2 && max!=val2) | (sub_max == 0 && max!=val2))
+      {
+        sub_max = val2;
+      }
     }
 
-    if (max < val2)
+    // aft-max
+    if (val2 != 0)
     {
-      sub_max = max;
-      max = val2;
+      if (max2 >= val2)
+      {
+        ++cnt;
+      }
+      else
+      {
+        max2 = val2;
+        cnt = 0;
+      }
     }
-    else if (sub_max < val2 && max!=val2)
-    {
-      sub_max = val2;
-    }
-  
   }
-  std::cout << "////////////////////" << '\n';
 
-  std::cout << sub_max <<  '\n';
-  std::cout << cnt-1 <<  '\n';
+  if (cnt == 0)
+  {
+    std::cerr << "Слишком короткая последовательность, невозможно рассчитать sub-max" << '\n';
+    std::cerr << "Слишком короткая последовательность, невозможно рассчитать aft-max" << '\n';
+    return 2;
+  }
+  else if (sub_max == 0)
+  {
+    std::cerr << "Слишком короткая последовательность, невозможно рассчитать sub-max" << '\n';
+    std::cout << "aft-max = " << cnt-1 << '\n';
+    return 2;
+  }
+  else
+  {
+    std::cout << "sub_max = " << sub_max << '\n';
+    std::cout << "aft-max = " << cnt << '\n';
+    return 0;
+  }
 }
