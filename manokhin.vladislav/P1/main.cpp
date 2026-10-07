@@ -2,12 +2,12 @@
 
 int main()
 {
-  int a = 0, prev = 0, fath = 0, mn = 0, grt = 0, tmp = 0;
+  int a = 0, prev = 0, fath = 0, mn = 0, grt = 0;
 
   std::cin >> prev;
 
   if (!std::cin) {
-    std::cout << "Unexpected input" << '\n';
+    std::cerr << "Unexpected input" << '\n';
     return 1;
   }
 
@@ -18,7 +18,7 @@ int main()
   std::cin >> a;
 
   if (!std::cin) {
-    std::cout << "Unexpected input" << '\n';
+    std::cerr << "Unexpected input" << '\n';
     return 1;
   }
 
@@ -29,7 +29,7 @@ int main()
   std::cin >> fath;
 
   if (!std::cin) {
-    std::cout << "Unexpected input" << '\n';
+    std::cerr << "Unexpected input" << '\n';
     return 1;
   }
 
@@ -40,13 +40,12 @@ int main()
     if (a < prev && a > fath) {
       grt++;
     }
-    tmp = a;
-    a = fath;
-    prev = tmp;
+    prev = a;
+    fath = a;
     std::cin >> fath;
 
     if (!std::cin) {
-      std::cout << "Unexpected input" << '\n';
+      std::cerr << "Unexpected input" << '\n';
       return 1;
     }
   }
