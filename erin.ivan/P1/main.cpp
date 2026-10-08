@@ -16,7 +16,7 @@ int task()
   int now = 0;
 
   const int min_w = 3;
-  const int err = 2;
+  const int error = 2;
 
   while (std::cin >> now && now != 0)
   {
@@ -49,7 +49,7 @@ int task()
   if (len == 0)
   {
     std::cerr << "Empty sequence\n";
-    return err;
+    return error;
   }
 
   std::cout << count_loc_max << "\n";
