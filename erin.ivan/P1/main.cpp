@@ -50,7 +50,7 @@ namespace erin
    }
 
    std::cout << count_loc_max << "\n";
-   std::cout << count_sgh_chg << "\n";
+   std::cout << count_sgn_chg << "\n";
    return 0;
   }
 }
