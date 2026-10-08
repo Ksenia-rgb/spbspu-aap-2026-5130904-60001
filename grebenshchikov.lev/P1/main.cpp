@@ -2,11 +2,14 @@
 
 int main()
 {
-    long long max = -1000000000000;
-    long long sub_max = -1000000000000;
+    constexpr long long INITIAL_MAX = -1000000000000;
+    constexpr long long INITIAL_MIN = 1000000000000;
+
+    long long max = INITIAL_MAX;
+    long long sub_max = INITIAL_MAX;
     long long a = -1;
     long long ctn_min = 0;
-    long long min = 100000000000;
+    long long min = INITIAL_MIN;
     long long count = 0;
 
     while (a != 0)
@@ -43,17 +46,17 @@ int main()
         }
     }
 
-    int exitCode = 0;
+    int exit_code = 0;
 
     if (count < 2)
     {
         std::cerr << "Erorr: sequence too short for SUB-MAX\n";
-        exitCode = 2;
+        exit_code = 2;
     } else
     {
         std::cout << sub_max << '\n';
     }
 
     std::cout << ctn_min << '\n';
-    return exitCode;
+    return exit_code;
 }
