@@ -5,6 +5,10 @@ int main() {
     int i = 0, ii = 0, n = 0;
     while (true) {
         std::cin >> a;
+        if (std::cin.fail()) {
+            std::cerr << "Input error\n";
+            return 1;
+        }
         if (a == 0) {
             break;
         }
@@ -17,6 +21,10 @@ int main() {
             ii++;
         }
         std::cin >> b;
+        if (std::cin.fail()) {
+            std::cerr << "Input error\n";
+            return 1;
+        }
         if (b == 0) {
             break;
         }
@@ -29,6 +37,10 @@ int main() {
             ii++;
         }
         std::cin >> c;
+        if (std::cin.fail()) {
+            std::cerr << "Input error\n";
+            return 1;
+        }
         if (c == 0) {
             break;
         }
@@ -45,6 +57,10 @@ int main() {
         }
     }
     std::cout << i << "\n";
+    if (n == 0) {
+        std::cerr << "Sequence is too short\n";
+        return 2;
+    }
     std::cout << ii << "\n";
     return 0;
 }
