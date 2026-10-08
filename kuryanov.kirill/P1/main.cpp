@@ -22,7 +22,6 @@ int main()
       count++;
       continue;
     }
-
     if ((prev < 0 && n > 0) || (prev > 0 && n < 0)) {
       cng++;
     }
