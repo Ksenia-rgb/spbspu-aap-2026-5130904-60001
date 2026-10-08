@@ -1,7 +1,6 @@
 #include <iostream>
 
-int main()
-{
+int main() {
   constexpr long long INITIAL_MAX = -1000000000000;
   constexpr long long INITIAL_MIN = 1000000000000;
   constexpr long long MIN_LENGTH_FOR_SUB_MAX = 2;
@@ -14,40 +13,32 @@ int main()
   long long min = INITIAL_MIN;
   long long count = 0;
 
-  while (true)
-  {
+  while (true) {
     long long a = 0;
     std::cin >> a;
 
-    if (std::cin.fail())
-    {
+    if (std::cin.fail()) {
       std::cerr << "Error: input is not a valid sequence of integers\n";
       return INVALID_INPUT_CODE;
     }
 
-    if (a == 0)
-    {
+    if (a == 0) {
        break;
     }
 
-    if (a > max)
-    {
+    if (a > max) {
       sub_max = max;
       max = a;
-    }
-    else if (a >= sub_max && a < max)
-    {
+    } else if (a >= sub_max && a < max) {
       sub_max = a;
     }
 
-    if (a < min)
-    {
+    if (a < min) {
       min = a;
       ctn_min = 0;
     }
 
-    if (a == min)
-    {
+    if (a == min) {
       ++ctn_min;
     }
 
@@ -56,13 +47,10 @@ int main()
 
   int exit_code = 0;
 
-  if (count < MIN_LENGTH_FOR_SUB_MAX)
-  {
+  if (count < MIN_LENGTH_FOR_SUB_MAX) {
     std::cerr << "Error: sequence too short for SUB-MAX\n";
     exit_code = SHORT_SEQUENCE_CODE;
-  }
-  else
-  {
+  } else {
     std::cout << sub_max << '\n';
   }
 
