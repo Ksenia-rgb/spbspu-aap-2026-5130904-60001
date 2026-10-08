@@ -36,7 +36,7 @@ int main()
     return 1;
   }
   std::cout << countMax;
-  if (countDel == 0) 
+  if (countDel == 0)
   {
     std::cerr << "\nВаша последовательность не считается";
     return 2;
