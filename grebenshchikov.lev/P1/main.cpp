@@ -30,7 +30,8 @@ int main()
     {
       sub_max = max;
       max = a;
-    } else if (a >= sub_max && a < max)
+    }
+    else if (a >= sub_max && a < max)
     {
       sub_max = a;
     }
@@ -50,7 +51,8 @@ int main()
   {
     std::cerr << "Error: sequence too short for SUB-MAX\n";
     exit_code = SHORT_SEQUENCE_CODE;
-  } else
+  }
+  else
   {
     std::cout << sub_max << '\n';
   }
