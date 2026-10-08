@@ -14,9 +14,18 @@ int main()
   int previous = 0;
   int before_previous = 0;
   int length = 0;
+  int divisible_count = 0;
 
   while (current != 0)
   {
+    if (length >= 1)
+    {
+      if (previous == -1 || current % previous == 0)
+      {
+        ++divisible_count;
+      }
+    }
+
     before_previous = previous;
     previous = current;
     ++length;
