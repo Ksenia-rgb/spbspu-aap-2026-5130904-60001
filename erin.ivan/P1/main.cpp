@@ -7,11 +7,13 @@ namespace erin
    int a = 0;
    int b = 0;
    int c = 0;
-   int countLocMax = 0;
+   int count_loc_max = 0;
    int pred = 0;
-   int countSgnChg = 0;
+   int count_sgn_chg = 0;
    int len = 0;
    int now = 0;
+   const int min_w = 3;
+   const int err = 2;
 
    while (std::cin >> now && now != 0)
    {
@@ -20,17 +22,17 @@ namespace erin
     c = now;
     len++;
 
-    if (len >= 3)
+    if (len >= min_w)
     {
      if (b > a && b > c)
      {
-       countLocMax++;
+       count_loc_max++;
      }
     }
 
     if ((pred > 0 && now < 0) || (pred < 0 && now > 0))
     {
-      countSgnChg++;
+      count_sgn_chg++;
     }
     pred = now;
    }
@@ -44,11 +46,11 @@ namespace erin
    if (len == 0)
    {
     std::cerr << "Empty sequence\n";
-    return 2;
+    return err;
    }
 
-   std::cout << countLocMax << "\n";
-   std::cout << countSgnChg << "\n";
+   std::cout << count_loc_max << "\n";
+   std::cout << count_sgh_chg << "\n";
    return 0;
   }
 }
