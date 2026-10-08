@@ -8,13 +8,10 @@ int task()
   int b = 0;
   int c = 0;
   int count_loc_max = 0;
-
   int pred = 0;
   int count_sgn_chg = 0;
-
   int len = 0;
   int now = 0;
-
   const int min_w = 3;
   const int error = 2;
 
