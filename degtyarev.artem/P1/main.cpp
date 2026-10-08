@@ -1,4 +1,5 @@
 #include <iostream>
+const int two = 2;
 
 int main()
 {
@@ -59,13 +60,13 @@ int main()
   {
     std::cerr << "Sequence too short to compute sub-max\n";
     std::cerr << "Sequence too short to compute aft-max\n";
-    return 2;
+    return two;
   }
   else if (sub_max == 0)
   {
     std::cerr << "Sequence too short to compute sub-max\n";
     std::cout << "aft-max = " << cnt << '\n';
-    return 2;
+    return two;
   }
   else
   {
