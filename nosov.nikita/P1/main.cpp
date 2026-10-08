@@ -50,5 +50,14 @@ int main()
     }
   }
 
+  std::cout << "pth-trp = " << triples_count << '\n';
+
+  if (length < 2)
+  {
+    std::cerr << "Sequence too short to compute div-rem\n";
+    return 2;
+  }
+
+  std::cout << "div-rem = " << divisible_count << '\n';
   return 0;
 }
