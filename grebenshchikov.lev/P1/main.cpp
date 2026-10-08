@@ -1,6 +1,7 @@
 #include <iostream>
 
-int main() {
+int main()
+{
 	long long max = -1000000000000;
 	long long sub_max = -1000000000000;
 	long long a = -1;
@@ -36,7 +37,7 @@ int main() {
 			++ctn_min;
 		}
 
-		if (a != 0) 
+		if (a != 0)
 		{
 			++count;
 		}
