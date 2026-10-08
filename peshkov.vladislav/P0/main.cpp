@@ -2,6 +2,6 @@
 
 int main()
 {
-  std::cout<<"peshkov.vladislav\n";
+  std::cout<< "peshkov.vladislav\n";
 }
 
