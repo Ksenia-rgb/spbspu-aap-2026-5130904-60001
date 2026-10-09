@@ -1,40 +1,10 @@
 #include <iostream>
-
 int main()
 {
-  long long a, b, c, max_value = 0;
+  long long a = 0, b = 0, c = 0;
+  long long max_value = 0;
   int count1 = 0, count2 = 0, value = 0;
   while (true) {
-    std::cin >> a;
-    if (std::cin.fail()) {
-      std::cerr << "Input error\n";
-      return 1;
-    }
-    if (a == 0) {
-      break;
-    }
-    value++;
-    if (value == 1 || a > max_value) {
-      max_value = a;
-      count2 = 0;
-    } else {
-      count2++;
-    }
-    std::cin >> b;
-    if (std::cin.fail()) {
-      std::cerr << "Input error\n";
-      return 1;
-    }
-    if (b == 0) {
-      break;
-    }
-    value++;
-    if (b > max_value) {
-      max_value = b;
-      count2 = 0;
-    } else {
-      count2++;
-    }
     std::cin >> c;
     if (std::cin.fail()) {
       std::cerr << "Input error\n";
@@ -44,21 +14,33 @@ int main()
       break;
     }
     value++;
-    if (c > max_value) {
+    if (value == 1 || c > max_value) {
       max_value = c;
+      count2 = 0;
+    } else if (c == max_value) {
       count2 = 0;
     } else {
       count2++;
     }
-    if (a > 0 && b > 0 && c > 0 && ((a * a + b * b == c * c) || (a * a + c * c == b * b) || (b * b + c * c == a * a))) {
+    if (value == 1) {
+      a = c;
+      continue;
+    }
+    if (value == 2) {
+      b = c;
+      continue;
+    }
+    if (a > 0 && b > 0 && c > 0 && a * a + b * b == c * c) {
       count1++;
     }
+    a = b;
+    b = c;
   }
-  std::cout << count1 << "\n";
-  if (value == 0) {
+  if (value < 3) {
     std::cerr << "Sequence is too short\n";
     return 2;
   }
+  std::cout << count1 << "\n";
   std::cout << count2 << "\n";
   return 0;
 }
