@@ -1,12 +1,16 @@
 #include <iostream>
 int main()
 {
-  int a = 0;
-  std::cin >> a;
-  if (!std::cin) {
-    std::cerr << "Ошибка ввода\n";
-    return 1;
+  int number = 0;
+  while (true){
+    if (!(std::cin >> number)) {
+      std::cerr << "Ошибка ввода\n";
+      return 1;
+    }
+    if (number == 0){
+      break;
+    }
+    std::cout << number << "\n";
   }
-  std::cout << a << "\n";
   return 0;
 }
