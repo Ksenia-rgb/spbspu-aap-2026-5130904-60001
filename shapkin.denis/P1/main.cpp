@@ -3,6 +3,8 @@
 int main()
 {
   long long a = 0;
+  long long count = 0;
+  size_t  min_len = 3;
   while (true)
   {
     std::cin >> a;
@@ -15,6 +17,12 @@ int main()
     {
       break;
     }
+    count++;
+  }
+  if (count<min_len)
+  {
+    std::cerr << "Error: The sequence is too short to calculate the characteristic\n";
+    return 2;
   }
   std::cout << a << "\n";
   return 0;
