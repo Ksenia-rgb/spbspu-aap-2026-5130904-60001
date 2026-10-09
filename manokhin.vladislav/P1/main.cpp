@@ -14,6 +14,7 @@ int main()
     std::cerr << "No sequence" << '\n';
     return 2;
   }
+
   int a = 0;
   std::cin >> a;
 
