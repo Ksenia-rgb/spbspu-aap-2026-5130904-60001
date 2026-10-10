@@ -7,7 +7,7 @@ int main()
   long long prev2 = 0;
   long long prev1 = 0;
   long long sum_dup = 0;
-  long long inc_seq  = 0;
+  long long inc_seq = 0;
   while (true)
   {
     std::cin >> a;
@@ -16,11 +16,11 @@ int main()
       std::cerr << "Error: input is not a valid sequence\n";
       return 1;
     }
-    if (a==0)
+    if (a == 0)
     {
       break;
     }
-    if (count >= 1 && a>prev1)
+    if (count >= 1 && a > prev1)
     {
       inc_seq++;
     }
