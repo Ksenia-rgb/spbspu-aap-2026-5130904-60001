@@ -53,12 +53,12 @@ int main()
     prev = a;
     count++;
   }
+  std::cout << inc_seq << "\n";
   if (count<min_len)
   {
     std::cerr << "Error: The sequence is too short to calculate the characteristic\n";
     return 2;
   }
   std::cout << sum_dup << "\n";
-  std::cout << inc_seq << "\n";
   return 0;
 }
