@@ -4,11 +4,9 @@ int main()
 {
   long long a = 0;
   long long count = 0;
-  size_t  min_len = 3;
   long long prev2 = 0;
   long long prev1 = 0;
   long long sum_dup = 0;
-  long long prev = 0;
   long long inc_seq  = 0;
   while (true)
   {
@@ -35,7 +33,7 @@ int main()
     count++;
   }
   std::cout << inc_seq << "\n";
-  if (count<min_len)
+  if (count < 3)
   {
     std::cerr << "Error: The sequence is too short to calculate the characteristic\n";
     return 2;
