@@ -5,11 +5,11 @@ int main()
   long long a = 0;
   long long count = 0;
   size_t  min_len = 3;
-  int prev2 = 0;
-  int prev1 = 0;
-  int sum_dup = 0;
-  int prev = 0;
-  int inc_seq  = 0;
+  long long prev2 = 0;
+  long long prev1 = 0;
+  long long sum_dup = 0;
+  long long prev = 0;
+  long long inc_seq  = 0;
   while (true)
   {
     std::cin >> a;
@@ -22,35 +22,16 @@ int main()
     {
       break;
     }
-    if (count == 0)
-    {
-      prev2 = a;
-      prev = a;
-      count++;
-      continue;
-    }
-    if (count == 1)
-    {
-      prev1 = a;
-      count++;
-      if (a>prev)
-      {
-        inc_seq++;
-        prev = a;
-      }
-      continue;
-    }
-    if (a == prev1 + prev2)
-    {
-      sum_dup++;
-    }
-    if (a>prev)
+    if (count >= 1 && a>prev1)
     {
       inc_seq++;
     }
+    if (count >= 2 && a == prev1 + prev2)
+    {
+      sum_dup++;
+    }
     prev2 = prev1;
     prev1 = a;
-    prev = a;
     count++;
   }
   std::cout << inc_seq << "\n";
