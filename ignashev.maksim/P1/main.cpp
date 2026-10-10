@@ -17,18 +17,18 @@ int main()
     std::swap(max1, max2);
   }
   int num = 0;
-  while (std::cin >> num && num != 0)
+  while ((std::cin >> num) && (num != 0))
   {
-    if (num > max1)
+    if (num > max1)
     {
-      max2 = max1;
-      max1 = num;
-    }
-    else if (num > max2 && num < max1)
+      max2 = max1;
+      max1 = num;
+    }
+    else if ((num > max2) && (num < max1))
     {
       max2 = num;
     }
-    else if (max1 == max2 && num < max1)
+    else if ((max1 == max2) && (num < max1))
     {
       max2 = num;
     }
