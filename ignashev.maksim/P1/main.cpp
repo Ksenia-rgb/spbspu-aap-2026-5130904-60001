@@ -7,18 +7,15 @@ int main()
   {
     return 2;
   }
-
   int max2 = 0;
   if (!(std::cin >> max2) || max2 == 0)
   {
     return 2;
   }
-  
   if (max2 > max1)
   {
     std::swap(max1, max2);
   }
-  
   int num = 0;
   while (std::cin >> num && num != 0)
   {
@@ -36,7 +33,6 @@ int main()
       max2 = num;
     }
   }
-  
   std::cout << max2 << std::endl;
   return 0;
 }
