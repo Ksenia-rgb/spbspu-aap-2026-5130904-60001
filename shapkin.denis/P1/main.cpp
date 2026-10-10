@@ -8,6 +8,8 @@ int main()
   int prev2 = 0;
   int prev1 = 0;
   int sum_dup = 0;
+  int prev = 0;
+  int inc_seq  = 0;
   while (true)
   {
     std::cin >> a;
@@ -23,6 +25,7 @@ int main()
     if (count == 0)
     {
       prev2 = a;
+      prev = a;
       count++;
       continue;
     }
@@ -30,14 +33,24 @@ int main()
     {
       prev1 = a;
       count++;
+      if (a>prev)
+      {
+        inc_seq++;
+        prev = a;
+      }
       continue;
     }
     if (a == prev1 + prev2)
     {
       sum_dup++;
     }
+    if (a>prev)
+    {
+      inc_seq++;
+    }
     prev2 = prev1;
     prev1 = a;
+    prev = a;
     count++;
   }
   if (count<min_len)
@@ -46,5 +59,6 @@ int main()
     return 2;
   }
   std::cout << sum_dup << "\n";
+  std::cout << inc_seq << "\n";
   return 0;
 }
