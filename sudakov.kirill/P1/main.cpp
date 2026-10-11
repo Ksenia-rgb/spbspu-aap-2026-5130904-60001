@@ -1,10 +1,11 @@
 #include <iostream>
 int main(){
     int n =1;
-    int m =-10000000;
+    int m =-2147483647;
     int max_len = 0;
+    int loc_min = 2147483647;
     int c = 0;
-    while(n!=0){
+    while(true){
         std::cin >> n;
         //std::cout << n << "\n";
         // Проверки
@@ -14,6 +15,7 @@ int main(){
         }
         if (n==0) break;
         //Алкоритм
+        if (n<loc_min) loc_min=n;
         if (n>=m) ++c;
         if (c>max_len){ 
                 max_len = c;
@@ -24,7 +26,8 @@ int main(){
         m = n;
         }
     
-    std::cout << max_len;
+    std::cout << max_len << "\n";
+    std::cout << loc_min << "\n";
 
 
 
