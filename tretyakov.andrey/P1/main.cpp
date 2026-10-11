@@ -22,6 +22,12 @@ int main()
       std::cerr << "Input error\n";
       return 1;
     }
+    if (kat1 * kat1 == gidrapousa && kat1 != 0)
+    {
+      pthtrp = pthtrp + 1;
+    }
+    gidrapousa = kat1 * kat1 + kat2 * kat2;
+    kat2 = kat1;
   }
   return 0;
 }
