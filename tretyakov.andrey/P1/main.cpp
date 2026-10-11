@@ -2,8 +2,26 @@
 
 int main()
 {
-  int a = 0;
-  std::cin >> a;
-  std::cout << a;
+  int kat1 = 1;
+  int kat2 = 0;
+  int perexodnik = 0;
+  int gidrapousa = 0;
+  int pthtrp = 0;
+  std::cin >> kat1;
+  if (!std::cin)
+  {
+    std::cout << "Input error\n";
+    return 1;
+  }
+  kat2 = kat1;
+  while (kat1 != 0)
+  {
+    std::cin >> kat1;
+    if (!std::cin)
+    {
+      std::cerr << "Input error\n";
+      return 1;
+    }
+  }
+  return 0;
 }
-
