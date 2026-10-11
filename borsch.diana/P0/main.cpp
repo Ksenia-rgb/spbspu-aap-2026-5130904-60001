@@ -2,5 +2,5 @@
 
 int main()
 {
-   std::cout << "borsch.diana\n";
+  std::cout << "borsch.diana\n";
 }
