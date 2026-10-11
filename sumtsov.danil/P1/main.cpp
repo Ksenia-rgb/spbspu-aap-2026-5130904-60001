@@ -13,7 +13,7 @@ namespace sumtsov
 
   SequenceResult analyzeSequence(std::istream & in)
   {
-    SequenceResult result{ false, 0, 0 };
+    SequenceResult result{false, 0, 0};
 
     bool hasPrev = false;
     int prevValue = 0;
