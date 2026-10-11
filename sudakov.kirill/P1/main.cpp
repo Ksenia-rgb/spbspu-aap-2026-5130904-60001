@@ -7,15 +7,12 @@ int main(){
     int c = 0;
     while(true){
         std::cin >> n;
-        //std::cout << n << "\n";
-        // Проверки
         if (std::cin.fail()) {
             std::cerr << "Ошибка ввода\n";
             return 1;
         }
         if (n==0) break;
-        //Алкоритм
-        if (n<loc_min) loc_min=n;
+        if (n<loc_min) loc_min=n;   
         if (n>=m) ++c;
         if (c>max_len){ 
                 max_len = c;
