@@ -1,6 +1,6 @@
 #include <iostream>
 int main()
 {
-std::cout << "sudakov.kirill\n";
+  std::cout << "sudakov.kirill\n";
 }
 
