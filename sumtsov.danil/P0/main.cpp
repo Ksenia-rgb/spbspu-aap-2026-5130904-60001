@@ -1,13 +1,14 @@
 #include <iostream>
 
-namespace sumtsov {
-
-void printStudentId()
+namespace sumtsov
 {
-  std::cout << "sumtsov.danil" << '\n';
-}
 
-}  // namespace sumtsov
+  void printStudentId()
+  {
+    std::cout << "sumtsov.danil" << '\n';
+  }
+
+}
 
 int main()
 {
