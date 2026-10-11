@@ -9,6 +9,7 @@ int main()
   int pthtrp = 0;
   int sumdup = 0;
   int dvapred = 0;
+  int countvved = 1;
   std::cin >> kat1;
   if (!std::cin)
   {
@@ -19,6 +20,7 @@ int main()
   while (kat1 != 0)
   {
     std::cin >> kat1;
+    countvved = countvved + 1;
     if (!std::cin)
     {
       std::cerr << "Input error\n";
@@ -36,7 +38,17 @@ int main()
     dvapred = kat1 + kat2;
     kat2 = kat1;
   }
-  std::cout << "PTH-TRP = " << pthtrp << "\n";
-  std::cout << "SUM-DUP = " << sumdup << "\n";
+  if (countvved > 3)
+  {
+    std::cout << "PTH-TRP = " << pthtrp << "\n";
+    std::cout << "SUM-DUP = " << sumdup << "\n";
+    return 2;
+  }
+  else
+  {
+    std::cerr << "Sequence too short for SUM-DUP\n";
+    std::cout << "PTH-TRP = " << pthtrp << "\n";
+    return 2;
+  }
   return 0;
 }
