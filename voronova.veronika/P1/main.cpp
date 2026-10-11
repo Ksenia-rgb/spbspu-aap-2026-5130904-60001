@@ -22,13 +22,13 @@ int main()
       min = a;
       cnt1 = 1;
     } else if (a == min) {
-      cnt1 ++;
+      cnt1++;
     }
     if (a > max) {
       max = a;
       cnt2 = 0;
     } else {
-      cnt2 ++;
+      cnt2++;
     }
   }
   if (std::cin.fail()) {
