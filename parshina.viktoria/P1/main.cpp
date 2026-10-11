@@ -22,8 +22,8 @@ int parshina::calculateCharacteristics()
     return 2;
   }
 
-  int countMax = 1;
-  int afterMax = 0;
+  int count_max = 1;
+  int after_max = 0;
   int max = num;
 
   while (num != 0)
@@ -43,21 +43,21 @@ int parshina::calculateCharacteristics()
     if (num > max)
     {
       max = num;
-      countMax = 1;
-      afterMax = 0;
+      count_max = 1;
+      after_max = 0;
     }
 
     else
     {
-      afterMax++;
+      after_max++;
       if (num == max)
       {
-        countMax++;
+        count_max++;
       }
     }
   }
-  std::cout << countMax << "\n";
-  std::cout << afterMax << "\n";
+  std::cout << count_max << "\n";
+  std::cout << after_max << "\n";
   return 0;
 }
 
