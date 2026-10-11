@@ -33,7 +33,7 @@ int main()
         max_first = number;
       }
       if (current_number % last_number == 0) {
-        if (div_count == std::numeric_limits<int>::max()) {
+        if (div_count == std::numeric_limits< int >::max()) {
           std::cerr << "Слишком длинная последовательность\n";
           return 2;
         }
@@ -48,7 +48,7 @@ int main()
         max_second = number;
       }
       if (current_number % last_number == 0) {
-        if (div_count == std::numeric_limits<int>::max()) {
+        if (div_count == std::numeric_limits< int >::max()) {
           std::cerr << "Слишком длинная последовательность\n";
           return 2;
         }
