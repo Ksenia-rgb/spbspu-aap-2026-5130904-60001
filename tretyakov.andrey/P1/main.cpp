@@ -37,5 +37,6 @@ int main()
     kat2 = kat1;
   }
   std::cout << "PTH-TRP = " << pthtrp << "\n";
+  std::cout << "SUM-DUP = " << sumdup << "\n";
   return 0;
 }
