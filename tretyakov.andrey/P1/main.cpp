@@ -41,7 +41,7 @@ int main()
   {
     std::cout << "PTH-TRP = " << pthtrp << "\n";
     std::cout << "SUM-DUP = " << sumdup << "\n";
-    return 2;
+    return 0;
   }
   else
   {
