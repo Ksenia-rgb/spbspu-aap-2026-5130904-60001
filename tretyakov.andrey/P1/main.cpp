@@ -29,5 +29,6 @@ int main()
     gidrapousa = kat1 * kat1 + kat2 * kat2;
     kat2 = kat1;
   }
+  std::cout << "PTH-TRP = " << pthtrp << "\n";
   return 0;
 }
