@@ -24,7 +24,8 @@ int main()
     {
       max_e = first;
       count_max = 1;
-    } else if (first == max_e)
+    }
+    else if (first == max_e)
     {
       count_max++;
     }
@@ -40,7 +41,8 @@ int main()
   {
     std::cerr << "\nВаша последовательность не считается";
     return 2;
-  } else
+  }
+  else
   {
     std::cout << "\n" << count_del;
   }
