@@ -4,7 +4,6 @@ int main()
 {
   int kat1 = 1;
   int kat2 = 0;
-  int perexodnik = 0;
   int gidrapousa = 0;
   int pthtrp = 0;
   int sumdup = 0;
