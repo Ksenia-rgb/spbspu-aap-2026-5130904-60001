@@ -1,10 +1,11 @@
 #include <iostream>
+#include <limits>
 int main()
 {
   int n = 1;
-  int m = -2147483647;
+  int m = std::numeric_limits< int >::lowest();
   int max_len = 0;
-  int loc_min = 2147483647;
+  int loc_min = std::numeric_limits< int >::max();
   int c = 0;
   while (true) {
     std::cin >> n;
