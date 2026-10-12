@@ -2,10 +2,10 @@
 
 int main()
 {
-    int prev;
-    int curr;
+    int prev = 0;
+    int curr = 0;
     int v1_c = 0;
-    int max;
+    int max = 0;
     int v2_c = 0;
 
     if (!(std::cin >> prev))
