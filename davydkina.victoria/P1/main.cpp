@@ -1,6 +1,7 @@
 #include <iostream>
 
-int main() {
+int main()
+{
   int prev = 0;
   int curr = 0;
   int v1_c = 0;
