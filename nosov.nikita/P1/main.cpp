@@ -40,7 +40,6 @@ int main()
     before_previous = previous;
     previous = current;
     ++length;
-
     std::cin >> current;
     if (std::cin.fail())
     {
