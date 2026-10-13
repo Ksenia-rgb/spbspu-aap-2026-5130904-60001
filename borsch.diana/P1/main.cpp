@@ -14,50 +14,48 @@ int borsch::analyzeSequence()
   const int singleElementLength = 1;
   const int invalidInputCode = 1;
 
-  int maxEqualLength = 0;
-  int equalLength = 0;
-  int maxIncreasingLength = 0;
-  int increasingLength = 0;
+  int max_equal_length = 0;
+  int equal_length = 0;
+  int max_increasing_length = 0;
+  int increasing_length = 0;
   int previous = 0;
   int current = 0;
-  bool isTerminated = false;
+  bool is_terminated = false;
 
   while (std::cin >> current) {
     if (current == 0) {
-      isTerminated = true;
+      is_terminated = true;
       break;
     }
 
-    if (equalLength > 0 && current == previous) {
-      ++equalLength;
+    if (equal_length > 0 && current == previous) {
+      ++equal_length;
     } else {
-      equalLength = singleElementLength;
+      equal_length = singleElementLength;
     }
 
-    if (increasingLength > 0 && current >= previous) {
-      ++increasingLength;
+    if (increasing_length > 0 && current >= previous) {
+      ++increasing_length;
     } else {
-      increasingLength = singleElementLength;
+      increasing_length = singleElementLength;
     }
 
-    if (equalLength > maxEqualLength) {
-      maxEqualLength = equalLength;
+    if (equal_length > max_equal_length) {
+      max_equal_length = equal_length;
     }
-    if (increasingLength > maxIncreasingLength) {
-      maxIncreasingLength = increasingLength;
+    if (increasing_length > max_increasing_length) {
+      max_increasing_length = increasing_length;
     }
 
     previous = current;
   }
 
-  if (!isTerminated) {
-    std::cerr << "Ошибка: входные данные"
-      << " не являются допустимой"
-      << " последовательностью\n";
+  if (!is_terminated) {
+    std::cerr << "Error: input is not a valid sequence\n";
     return invalidInputCode;
   }
 
-  std::cout << maxEqualLength << "\n";
-  std::cout << maxIncreasingLength << "\n";
+  std::cout << max_equal_length << "\n";
+  std::cout << max_increasing_length << "\n";
   return 0;
 }
