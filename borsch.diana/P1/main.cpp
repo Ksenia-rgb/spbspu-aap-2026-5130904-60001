@@ -51,7 +51,9 @@ int borsch::analyzeSequence()
   }
 
   if (!isTerminated) {
-    std::cerr << "Ошибка: входные данные не являются допустимой последовательностью\n";
+    std::cerr << "Ошибка: входные данные"
+      << " не являются допустимой"
+      << " последовательностью\n";
     return invalidInputCode;
   }
 
