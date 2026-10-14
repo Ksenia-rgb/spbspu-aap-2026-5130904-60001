@@ -54,6 +54,35 @@ int main()
       }
     }
 
+    if (have == 1)
+    {
+      second = cur;
+      have = 2;
+    }
+    else if (have == 2)
+    {
+      third = cur;
+      have = 3;
+
+      if (first * first + second * second == third * third)
+      {
+        ++pythCount;
+      }
+    }
+    else if (have >= 3)
+    {
+      first = second;
+      second = third;
+      third = cur;
+
+      if (first * first + second * second == third * third)
+      {
+        ++pythCount;
+      }
+    }
+
+    prev = cur;
+  }
 
 
 
