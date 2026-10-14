@@ -22,13 +22,13 @@ int main()
     return 2;
   }
 
-  int maxEqual = 1;
-  int curEqual = 1;
+  int max_equal = 1;
+  int cur_equal = 1;
   int first = prev;
   int second = 0;
   int third = 0;
   int have = 1;
-  int pythCount = 0;
+  int pyth_count = 0;
   int cur = 0;
   while (std::cin >> cur)
   {
@@ -39,18 +39,18 @@ int main()
 
     if (cur == prev)
     {
-      ++curEqual;
-      if (curEqual > maxEqual)
+      ++cur_equal;
+      if (cur_equal > max_equal)
       {
-        maxEqual = curEqual;
+        max_equal = cur_equal;
       }
     }
     else
     {
-      curEqual = 1;
-      if (curEqual > maxEqual)
+      cur_equal = 1;
+      if (cur_equal > max_equal)
       {
-        maxEqual = curEqual;
+        max_equal = cur_equal;
       }
     }
 
@@ -66,7 +66,7 @@ int main()
 
       if (first * first + second * second == third * third)
       {
-        ++pythCount;
+        ++pyth_count;
       }
     }
     else if (have >= 3)
@@ -77,7 +77,7 @@ int main()
 
       if (first * first + second * second == third * third)
       {
-        ++pythCount;
+        ++pyth_count;
       }
     }
 
@@ -92,12 +92,12 @@ int main()
 
   if (have < 3)
   {
-    std::cout << maxEqual << "\n";
+    std::cout << max_equal << "\n";
     std::cerr << "Error: cannot compute PTH-TRP characteristic\n";
     return 2;
   }
 
-  std::cout << pythCount << "\n";
-  std::cout << maxEqual << '\n';
+  std::cout << pyth_count << "\n";
+  std::cout << max_equal << '\n';
   return 0;
 }
