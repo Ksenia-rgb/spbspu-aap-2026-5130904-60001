@@ -70,26 +70,18 @@ int main() {
     prev = cur;
   }
 
+  if (std::cin.fail() && !std::cin.eof()) {
+    std::cerr << "Error: input is not a sequence\n";
+    return 1;
+  }
 
+  if (have < 3) {
+    std::cout << maxEqual << "\";
+    std::cerr << "Error: cannot compute PTH-TRP characteristic\n";
+    return 1;
+  }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  std::cout << pythCount << "\n";
+  std::cout << maxEqual << "\n";
+  return 0;
 }
