@@ -27,6 +27,37 @@ int main() {
   int pythCount = 0;
   int cur = 0;
 
+  while (std::cin >> cur) {
+    if (cur == 0) {
+      break;
+    }
+
+    if (cur == prev) {
+      ++curEqual;
+      if (curEqual > maxEqual) {
+        maxEqual = curEqual;
+      }
+    }
+    else {
+      curEqual = 1;
+      if (curEqual > maxEqual) {
+        maxEqual = curEqual;
+      }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
