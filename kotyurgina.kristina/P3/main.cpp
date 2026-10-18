@@ -10,7 +10,7 @@ int main(int argc, char* argv[])
     std::cerr << "invalid number of argumments\n";
     return 1;
   }
-  
+
   const std::string num = argv[1];
   if (num != "1" && num != "2")
   {
@@ -87,7 +87,7 @@ int main(int argc, char* argv[])
     std::cerr << "extra data in input file\n";
     return 2;
   }
-  std::ofstream output(argv[3]);
+  const std::ofstream output(argv[3]);
   if (!output)
   {
     std::cerr << "cannot open output file\n";
