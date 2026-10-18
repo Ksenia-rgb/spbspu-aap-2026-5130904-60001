@@ -9,7 +9,7 @@ int main(int argc, char* argv[])
     std::cerr << "invalid number of argumments\n";
     return 1;
   }
-  std::string num = argv[1];
+  const std::string num = argv[1];
   if (num != "1" && num != "2")
   {
     std::cerr << "invalid task number\n";
