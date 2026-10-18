@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
   {
     long long count = rows;
     count *= cols;
-    int* matrix = new int[count];
+    int* const matrix = new int[count];
     for (long long i = 0; i < count; i++)
     {
       if (!(input >> matrix[i]))
@@ -68,6 +68,12 @@ int main(int argc, char* argv[])
       }
     }
     delete[] matrix;
+  }
+  char extra = '\0';
+  if (input >> extra)
+  {
+    std::cerr << "extra data in input file\n";
+    return 2;
   }
   return 0;
 }
