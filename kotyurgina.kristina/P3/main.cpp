@@ -49,9 +49,7 @@ int main(int argc, char* argv[])
         std::cerr << "invalid matrix elements";
         return 2;
       }
-      std::cout << matrix[i] << " ";
     }
-    std::cout << "\n";
   }
   else
   {
@@ -73,6 +71,12 @@ int main(int argc, char* argv[])
   if (input >> extra)
   {
     std::cerr << "extra data in input file\n";
+    return 2;
+  }
+  std::ofstream output(argv[3]);
+  if (!output)
+  {
+    std::cerr << "cannot open output file\n";
     return 2;
   }
   return 0;
