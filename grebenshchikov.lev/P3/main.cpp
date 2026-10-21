@@ -30,12 +30,19 @@ int main(int argc, char* argv[])
       return 2;
     }
 
-    int mtx[rows][cols]; // создаем массив статического размера
+    const int kmax = 10000; // задаем максимальный размер массива
+    if (rows * cols > kmax) // проверка на превышение максимального размера
+    {
+      std::cerr << "Matrix size exceeds maximum allowed size\n";
+      return 2;
+    }
+
+    int mtx[kmax]; // создаем массив статического размера
     for (size_t i = 0; i < rows; ++i)
     {
-      for (size_t j = 0; j<cols; ++j)
+      for (size_t j = 0; j < cols; ++j)
       {   
-        if (!(in >> mtx[i][j])) // проверяем ошибку ввода
+        if (!(in >> mtx[i * cols + j])) // проверяем ошибку ввода
         {
             std::cerr << "Error reading file\n";
             return 2;
@@ -48,15 +55,14 @@ int main(int argc, char* argv[])
     out << rows << " " << cols;
     for (size_t i = 0; i < rows; ++i)
     {
-      for (size_t j = 0; j<cols; ++j)
+      for (size_t j = 0; j < cols; ++j)
       {   
-        out << " " << mtx[i][j];
+        out << " " << mtx[i * cols + j];
       }
     }
     std::cout << '\n';
     return 0;
   }
-
   // если первый арг равен 2 то динамический массив
   case '2':
   {
@@ -105,4 +111,4 @@ int main(int argc, char* argv[])
     return 1;
   }
 }
-}
+
