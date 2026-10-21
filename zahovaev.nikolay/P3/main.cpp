@@ -136,7 +136,7 @@ int main(int lenargs, char* args[])
   std::ifstream is(args[2]);
 
   if (!is.is_open()) {
-    std::cerr << "Гавно ваш файл, переделайте";
+    std::cerr << "Your file is TRASH";
     return 1;
   }
   num--;
@@ -147,7 +147,7 @@ int main(int lenargs, char* args[])
     int* mass = new int[n * m];
     izmenenie(mass, n, m, is);
     if (!is) {
-      std::cerr << "Ваш массив не правелен. Переделайте";
+      std::cerr << "Your massiv is a TRASH";
       return 2;
     }
 
@@ -155,19 +155,19 @@ int main(int lenargs, char* args[])
     size_t c = cnt_col_nsm(mass, n, m);
     std::ofstream as(args[3]);
     if (!as.is_open()) {
-      std::cerr << "Хз, файл не открылся";
+      std::cerr << "S.. sorry! I can't open your file(";
       return 2;
     }
     zapis(c, mass, n, m, as);
     if (!as) {
-      std::cerr << "Вероятно в коде есть UB. Так что если вы это видите, то создатель мёртв";
+      std::cerr << "My code have UB probably. It means that i already dead";
       return 2;
     }
   } else {
     int mass[10000] = {};
     izmenenie(mass, n, m, is);
     if (!is) {
-      std::cerr << "Ваш массив не правелен. Переделайте";
+      std::cerr << "Your massiv is a TRASH";
       return 2;
     }
 
@@ -175,12 +175,12 @@ int main(int lenargs, char* args[])
     size_t c = cnt_col_nsm(mass, n, m);
     std::ofstream as(args[3]);
     if (!as.is_open()) {
-      std::cerr << "Хз, файл не открылся";
+      std::cerr << "S.. sorry! I can't open your file(";
       return 2;
     }
     zapis(c, mass, n, m, as);
     if (!as) {
-      std::cerr << "Вероятно в коде есть UB. Так что если вы это видите, то создатель мёртв";
+      std::cerr << "Idk what happened if you see this message";
       return 2;
     }
   }
