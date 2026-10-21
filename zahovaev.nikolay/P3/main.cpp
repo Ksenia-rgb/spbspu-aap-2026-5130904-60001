@@ -1,22 +1,22 @@
 #include <iostream>
 #include <fstream>
 
-void lft_bot_clk(int * mass, const size_t n, const size_t m)
+void lft_bot_clk(int* mass, const size_t n, const size_t m)
 {
-  size_t row = n-1;
+  size_t row = n - 1;
   size_t column = 0;
   size_t left_border = 1;
-  size_t bottom_border = n-1;
-  size_t right_border = m-1;
+  size_t bottom_border = n - 1;
+  size_t right_border = m - 1;
   size_t top_border = 0;
   size_t direction = 1;
   size_t i = 0;
-  size_t nm = n*m;
+  size_t nm = n * m;
   while (true) {
     if (i == nm) {
       return;
     }
-    mass[row*m + column] -= ++i;
+    mass[row * m + column] -= ++i;
     if (direction == 1) {
       if (row > top_border) {
         row--;
@@ -53,11 +53,11 @@ void lft_bot_clk(int * mass, const size_t n, const size_t m)
         left_border++;
       }
     }
-    mass[row*m+column] += i--;
+    mass[row * m + column] += i--;
   }
 }
 
-size_t cnt_col_nsm(int const * mass, const size_t n, const size_t m)
+size_t cnt_col_nsm(int const* mass, const size_t n, const size_t m)
 {
   size_t counter = 0;
   int top = 0;
@@ -81,45 +81,45 @@ size_t cnt_col_nsm(int const * mass, const size_t n, const size_t m)
   return counter;
 }
 
-void izmenenie(int * mass, const size_t n, const size_t m, std::ifstream& is)
+void izmenenie(int* mass, const size_t n, const size_t m, std::ifstream& is)
 {
-  for (size_t i = 0; i < m*n; i++) {
+  for (size_t i = 0; i < m * n; i++) {
     is >> mass[i];
-  } 
-}
-
-void zapis(const int * mass, const size_t n, const size_t m, std::ofstream& as)
-{
-  as << n;
-  as << " " << m;
-  for (size_t i = 0; i < n*m; i++) {
-      as << " " << mass[i];
   }
 }
 
-void zapis (const size_t counter, std::ofstream& as)
+void zapis(const int* mass, const size_t n, const size_t m, std::ofstream& as)
+{
+  as << n;
+  as << " " << m;
+  for (size_t i = 0; i < n * m; i++) {
+    as << " " << mass[i];
+  }
+}
+
+void zapis(const size_t counter, std::ofstream& as)
 {
   as << counter;
 }
 
-void zapis (const size_t counter, int const * mass, const size_t n, const size_t m, std::ofstream& as)
+void zapis(const size_t counter, int const* mass, const size_t n, const size_t m, std::ofstream& as)
 {
   zapis(counter, as);
   as << "\n";
   zapis(mass, n, m, as);
 }
 
-int main (int lenargs, char * args[])
-{ 
+int main(int lenargs, char* args[])
+{
   if (lenargs < 4) {
     std::cerr << "Not enough arguments";
-    return 1;  
+    return 1;
   } else if (lenargs > 4) {
     std::cerr << "Too many arguments";
     return 1;
   }
   short num = 0;
-  
+
   try {
     num = std::stoi(args[1]);
     if (!(0 < num && num < 3)) {
@@ -134,24 +134,23 @@ int main (int lenargs, char * args[])
     return 1;
   }
   std::ifstream is(args[2]);
- 
+
   if (!is.is_open()) {
     std::cerr << "Гавно ваш файл, переделайте";
-    return 1; 
-    //В ТЗ нет кода возврата для этого, но по факту эта ошибка относится к вводу переменных окружения
+    return 1;
   }
   num--;
   size_t n = 0;
   size_t m = 0;
   is >> n >> m;
   if (num) {
-    int * mass = new int[n*m];
+    int* mass = new int[n * m];
     izmenenie(mass, n, m, is);
     if (!is) {
       std::cerr << "Ваш массив не правелен. Переделайте";
       return 2;
     }
-    
+
     lft_bot_clk(mass, n, m);
     size_t c = cnt_col_nsm(mass, n, m);
     std::ofstream as(args[3]);
@@ -161,7 +160,8 @@ int main (int lenargs, char * args[])
     }
     zapis(c, mass, n, m, as);
     if (!as) {
-      std::cerr << "Вообще такого быть не должно, но, видимо программа что-то не то начала записывать. Вероятно в коде есть UB. Так что если вы это видите, то создатель мёртв";
+      std::cerr << "Вообще такого быть не должно, но, видимо программа что-то не то начала записывать. Вероятно в коде "
+                   "есть UB. Так что если вы это видите, то создатель мёртв";
       return 2;
     }
   } else {
@@ -171,8 +171,8 @@ int main (int lenargs, char * args[])
       std::cerr << "Ваш массив не правелен. Переделайте";
       return 2;
     }
-    
-    lft_bot_clk(mass,n,m);
+
+    lft_bot_clk(mass, n, m);
     size_t c = cnt_col_nsm(mass, n, m);
     std::ofstream as(args[3]);
     if (!as.is_open()) {
@@ -181,7 +181,8 @@ int main (int lenargs, char * args[])
     }
     zapis(c, mass, n, m, as);
     if (!as) {
-      std::cerr << "Вообще такого быть не должно, но, видимо программа что-то не то начала записывать. Вероятно в коде есть UB. Так что если вы это видите, то создатель мёртв";
+      std::cerr << "Вообще такого быть не должно, но, видимо программа что-то не то начала записывать. Вероятно в коде "
+                   "есть UB. Так что если вы это видите, то создатель мёртв";
       return 2;
     }
   }
