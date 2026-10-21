@@ -152,6 +152,7 @@ int main(int lenargs, char* args[])
     izmenenie(mass, n, m, is);
     if (!is) {
       std::cerr << "Your massiv is a TRASH";
+      delete[] mass;
       return 2;
     }
 
@@ -160,13 +161,16 @@ int main(int lenargs, char* args[])
     std::ofstream as(args[3]);
     if (!as.is_open()) {
       std::cerr << "S.. sorry! I can't open your file(";
+      delete[] mass;
       return 2;
     }
     zapis(c, mass, n, m, as);
     if (!as) {
       std::cerr << "My code have UB probably. It means that i already dead";
+      delete[] mass;
       return 2;
     }
+    delete[] mass;
   } else {
     int mass[maxSize] = {};
     izmenenie(mass, n, m, is);
