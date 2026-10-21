@@ -1,6 +1,62 @@
 #include <iostream>
 #include <fstream>
 
+void lft_bot_clk(int * mass, const size_t n, const size_t m)
+{
+  size_t row = n-1;
+  size_t column = 0;
+  size_t left_border = 1;
+  size_t bottom_border = n-1;
+  size_t right_border = m-1;
+  size_t top_border = 0;
+  size_t direction = 1;
+  size_t i = 0;
+  size_t nm = n*m;
+  while (true) {
+    if (i == nm) {
+      return;
+    }
+    mass[row*m + column] -= ++i;
+    if (direction == 1) {
+      if (row > top_border) {
+        row--;
+        continue;
+      } else {
+        direction--;
+        top_border++;
+      }
+    }
+    if (direction == 0) {
+      if (column < right_border) {
+        column++;
+        continue;
+      } else {
+        direction = 3;
+        right_border--;
+      }
+    }
+    if (direction == 3) {
+      if (row < bottom_border) {
+        row++;
+        continue;
+      } else {
+        direction--;
+        bottom_border--;
+      }
+    }
+    if (direction == 2) {
+      if (column > left_border) {
+        column--;
+        continue;
+      } else {
+        direction--;
+        left_border++;
+      }
+    }
+    mass[row*m+column] += i--;
+  }
+}
+
 size_t cnt_col_nsm(int const * mass, const size_t n, const size_t m)
 {
   size_t counter = 0;
@@ -25,25 +81,19 @@ size_t cnt_col_nsm(int const * mass, const size_t n, const size_t m)
   return counter;
 }
 
-int izmenenie(int * mass, const size_t n, const size_t m, std::ifstream& is)
+void izmenenie(int * mass, const size_t n, const size_t m, std::ifstream& is)
 {
   for (size_t i = 0; i < m*n; i++) {
     is >> mass[i];
   } 
-  return 0;
 }
 
 void zapis(const int * mass, const size_t n, const size_t m, std::ofstream& as)
 {
-  as << mass[0];
-  for (size_t i = 1; i < m; i++) {
-    as << " " << mass[i];
-  }
-  for (size_t i = 1; i < n; i++) {
-    as << "\n" << mass[m*i];
-    for (size_t j = 1; j < m; j++) {
-      as << " " << mass[m*i + j];
-    }
+  as << n;
+  as << " " << m;
+  for (size_t i = 0; i < n*m; i++) {
+      as << " " << mass[i];
   }
 }
 
@@ -52,25 +102,35 @@ void zapis (const size_t counter, std::ofstream& as)
   as << counter;
 }
 
+void zapis (const size_t counter, int const * mass, const size_t n, const size_t m, std::ofstream& as)
+{
+  zapis(counter, as);
+  as << "\n";
+  zapis(mass, n, m, as);
+}
+
 int main (int lenargs, char * args[])
 { 
-  if (lenargs < 3) {
+  if (lenargs < 4) {
     std::cerr << "Not enough arguments";
     return 1;  
-  } else if (lenargs > 3) {
+  } else if (lenargs > 4) {
     std::cerr << "Too many arguments";
-    return 1
+    return 1;
   }
   short num = 0;
   
   try {
-    num = (int)args[1];
+    num = std::stoi(args[1]);
     if (!(0 < num && num < 3)) {
       std::cerr << "First parametr is out of range";
       return 1;
     }
-  } catch (...) {
+  } catch (const std::invalid_argument& e) {
     std::cerr << "First parameter is not a number";
+    return 1;
+  } catch (const std::out_of_range& e) {
+    std::cerr << "First parametr is out of range";
     return 1;
   }
   std::ifstream is(args[2]);
@@ -84,30 +144,29 @@ int main (int lenargs, char * args[])
   size_t n = 0;
   size_t m = 0;
   is >> n >> m;
-  int oshibka = 0;
   if (num) {
     int * mass = new int[n*m];
-    oshibka = izmenenie(mass, n, m, is);
+    izmenenie(mass, n, m, is);
     if (!is) {
       std::cerr << "Ваш массив не правелен. Переделайте";
       return 2;
     }
-
+    
+    lft_bot_clk(mass, n, m);
     size_t c = cnt_col_nsm(mass, n, m);
- 
     std::ofstream as(args[3]);
     if (!as.is_open()) {
       std::cerr << "Хз, файл не открылся";
       return 2;
     }
-    zapis(c, as);
+    zapis(c, mass, n, m, as);
     if (!as) {
       std::cerr << "Вообще такого быть не должно, но, видимо программа что-то не то начала записывать. Вероятно в коде есть UB. Так что если вы это видите, то создатель мёртв";
       return 2;
     }
   } else {
     int mass[10000] = {};
-    oshibka = izmenenie(mass, n, m, is);
+    izmenenie(mass, n, m, is);
     if (!is) {
       std::cerr << "Ваш массив не правелен. Переделайте";
       return 2;
