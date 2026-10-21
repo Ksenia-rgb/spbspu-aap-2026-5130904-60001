@@ -148,7 +148,7 @@ int main(int lenargs, char* args[])
   size_t m = 0;
   is >> n >> m;
   if (num) {
-    int* mass = new int[n * m];
+    int* const mass = new int[n * m];
     izmenenie(mass, n, m, is);
     if (!is) {
       std::cerr << "Your massiv is a TRASH";
