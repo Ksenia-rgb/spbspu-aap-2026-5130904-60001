@@ -1,7 +1,10 @@
 #include <iostream>
 #include <fstream>
+#include <stdexcept>
+#include <string>
+#include <cstddef>
 
-void lft_bot_clk(int* mass, const size_t n, const size_t m)
+void lftBotClk(int* mass, const size_t n, const size_t m)
 {
   size_t row = n - 1;
   size_t column = 0;
@@ -11,7 +14,7 @@ void lft_bot_clk(int* mass, const size_t n, const size_t m)
   size_t top_border = 0;
   size_t direction = 1;
   size_t i = 0;
-  size_t nm = n * m;
+  const size_t nm = n * m;
   while (true) {
     if (i == nm) {
       return;
@@ -57,7 +60,7 @@ void lft_bot_clk(int* mass, const size_t n, const size_t m)
   }
 }
 
-size_t cnt_col_nsm(int const* mass, const size_t n, const size_t m)
+size_t cntColNsm(int const* mass, const size_t n, const size_t m)
 {
   size_t counter = 0;
   int top = 0;
@@ -88,7 +91,7 @@ void izmenenie(int* mass, const size_t n, const size_t m, std::ifstream& is)
   }
 }
 
-void zapis(const int* mass, const size_t n, const size_t m, std::ofstream& as)
+void zapis(int const* mass, const size_t n, const size_t m, std::ofstream& as)
 {
   as << n;
   as << " " << m;
@@ -109,6 +112,7 @@ void zapis(const size_t counter, int const* mass, const size_t n, const size_t m
   zapis(mass, n, m, as);
 }
 
+constexpr size_t maxSize = 10000;
 int main(int lenargs, char* args[])
 {
   if (lenargs < 4) {
@@ -151,8 +155,8 @@ int main(int lenargs, char* args[])
       return 2;
     }
 
-    lft_bot_clk(mass, n, m);
-    size_t c = cnt_col_nsm(mass, n, m);
+    lftBotClk(mass, n, m);
+    const size_t c = cntColNsm(mass, n, m);
     std::ofstream as(args[3]);
     if (!as.is_open()) {
       std::cerr << "S.. sorry! I can't open your file(";
@@ -164,15 +168,15 @@ int main(int lenargs, char* args[])
       return 2;
     }
   } else {
-    int mass[10000] = {};
+    int mass[maxSize] = {};
     izmenenie(mass, n, m, is);
     if (!is) {
       std::cerr << "Your massiv is a TRASH";
       return 2;
     }
 
-    lft_bot_clk(mass, n, m);
-    size_t c = cnt_col_nsm(mass, n, m);
+    lftBotClk(mass, n, m);
+    const size_t c = cntColNsm(mass, n, m);
     std::ofstream as(args[3]);
     if (!as.is_open()) {
       std::cerr << "S.. sorry! I can't open your file(";
