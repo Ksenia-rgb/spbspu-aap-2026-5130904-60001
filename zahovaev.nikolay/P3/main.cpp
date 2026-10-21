@@ -172,14 +172,14 @@ int main (int lenargs, char * args[])
       return 2;
     }
     
-
+    lft_bot_clk(mass,n,m);
     size_t c = cnt_col_nsm(mass, n, m);
     std::ofstream as(args[3]);
     if (!as.is_open()) {
       std::cerr << "Хз, файл не открылся";
       return 2;
     }
-    zapis(c, as);
+    zapis(c, mass, n, m, as);
     if (!as) {
       std::cerr << "Вообще такого быть не должно, но, видимо программа что-то не то начала записывать. Вероятно в коде есть UB. Так что если вы это видите, то создатель мёртв";
       return 2;
