@@ -1,31 +1,22 @@
+#include <cstddef>
 #include <iostream>
+#include <limits>
 int main()
 {
-  constexpr long long INITIAL_MAX = -1000000000000;
-  constexpr long long INITIAL_MIN = 1000000000000;
-  constexpr long long MIN_LENGTH_FOR_SUB_MAX = 2;
-  constexpr int INVALID_INPUT_CODE = 1;
-  constexpr int SHORT_SEQUENCE_CODE = 2;
-  long long max = INITIAL_MAX;
-  long long sub_max = INITIAL_MAX;
-  long long ctn_min = 0;
-  long long min = INITIAL_MIN;
-  long long count = 0;
+  constexpr long long initial_max = std::numeric_limits< long long >::min();
+  constexpr long long initial_min = std::numeric_limits< long long >::max();
+  constexpr size_t min_length_for_sub_max = 2;
+  constexpr int invalid_input_code = 1;
+  constexpr int short_sequence_code = 2;
+  long long max = initial_max;
+  long long sub_max = initial_max;
+  size_t ctn_min = 0;
+  long long min = initial_min;
+  size_t count = 0;
 
-  while (true)
+  long long a = 0;
+  while (std::cin >> a && a != 0)
   {
-    long long a = 0;
-    std::cin >> a;
-
-    if (std::cin.fail())
-    {
-      std::cerr << "Error: input is not a valid sequence of integers\n";
-      return INVALID_INPUT_CODE;
-    }
-    if (a == 0)
-    {
-      break;
-    }
     if (a > max)
     {
       sub_max = max;
@@ -38,19 +29,25 @@ int main()
     if (a < min)
     {
       min = a;
-      ctn_min = 0;
+      ctn_min = 1;
     }
-    if (a == min)
+    else if (a == min)
     {
       ++ctn_min;
     }
     ++count;
   }
+
+  if (std::cin.fail())
+  {
+    std::cerr << "Error: input is not a valid sequence of integers\n";
+    return invalid_input_code;
+  }
   int exit_code = 0;
-  if (count < MIN_LENGTH_FOR_SUB_MAX)
+  if (count < min_length_for_sub_max)
   {
     std::cerr << "Error: sequence too short for SUB-MAX\n";
-    exit_code = SHORT_SEQUENCE_CODE;
+    exit_code = short_sequence_code;
   }
   else
   {
