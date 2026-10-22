@@ -1,64 +1,88 @@
+#include <cstddef>
 #include <iostream>
+#include <limits>
+#include <stdexcept>
 
 namespace erin
 {
-  int task()
+  bool LocMax(int left, int mid, int right)
   {
-    int a = 0;
-    int b = 0;
-    int c = 0;
-    int count_loc_max = 0;
+    return (mid > left) && (mid > right);
+  }
+
+  bool SgnChg(int pred, int now)
+  {
+    return ((pred > 0) && (now < 0)) || ((pred < 0) && (now > 0));
+  }
+
+  void processSequence(std::istream & in, std::size_t & count_loc_max, std::size_t & count_sgn_chg)
+  {
+    const int max_int = std::numeric_limits< int >::max();
+    int left = max_int;
+    int mid = max_int;
+    int right = max_int;
 
     int pred = 0;
-    int count_sgn_chg = 0;
-
-    int len = 0;
     int now = 0;
 
-    const int min_w = 3;
-    const int error = 2;
-
-    while (std::cin >> now && now != 0)
+    while ((in >> now) && (now != 0))
     {
-      a = b;
-      b = c;
-      c = now;
-      len++;
+      left = mid;
+      mid = right;
+      right = now;
 
-      if (len >= min_w)
+      if (LocMax(left, mid, right))
       {
-        if (b > a && b > c)
-        {
-          count_loc_max++;
-        }
+        count_loc_max++;
       }
 
-      if ((pred > 0 && now < 0) || (pred < 0 && now > 0))
+      if (SgnChg(pred, now))
       {
         count_sgn_chg++;
       }
       pred = now;
     }
 
-    if (!std::cin)
+    if (!in)
     {
-      std::cerr << "Invalid input\n";
-      return 1;
+      throw std::invalid_argument("Invalid input");
     }
 
-    if (len == 0)
+    if (pred == 0)
     {
-      std::cerr << "Empty sequence\n";
-      return error;
+      throw std::length_error("Empty sequence");
     }
-
-    std::cout << count_loc_max << "\n";
-    std::cout << count_sgn_chg << "\n";
-    return 0;
   }
 }
 
 int main()
 {
-  return erin::task();
+  const int input_error = 1;
+  const int empty_error = 2;
+
+  std::size_t count_loc_max = 0;
+  std::size_t count_sgn_chg = 0;
+  int return_code = 0;
+
+  try
+  {
+    erin::processSequence(std::cin, count_loc_max, count_sgn_chg);
+  }
+  catch (const std::invalid_argument & e)
+  {
+    std::cerr << e.what() << "\n";
+    return input_error;
+  }
+  catch (const std::length_error & e)
+  {
+    std::cerr << e.what() << "\n";
+    return_code = empty_error;
+  }
+
+  if (return_code == 0)
+  {
+    std::cout << count_loc_max << "\n";
+  }
+  std::cout << count_sgn_chg << "\n";
+  return return_code;
 }
