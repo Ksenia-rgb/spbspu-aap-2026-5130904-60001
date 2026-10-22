@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstddef>
 
 int main()
 {
@@ -22,14 +23,15 @@ int main()
     return 2;
   }
 
-  int max_equal = 1;
-  int cur_equal = 1;
-  int first = prev;
-  int second = 0;
-  int third = 0;
+  std::size_t max_equal = 1;
+  std::size_t cur_equal = 1;
+  std::size_t pyth_count = 0;
+  long long first = prev;
+  long long second = 0;
+  long long third = 0;
   int have = 1;
-  int pyth_count = 0;
   int cur = 0;
+
   while (std::cin >> cur)
   {
     if (cur == 0)
@@ -48,10 +50,6 @@ int main()
     else
     {
       cur_equal = 1;
-      if (cur_equal > max_equal)
-      {
-        max_equal = cur_equal;
-      }
     }
 
     if (have == 1)
