@@ -1,47 +1,55 @@
 #include <iostream>
+#include <limits>
 
 int main()
 {
-  long long a = 0, b = 0, c = 0;
-  long long max_value = 0;
-  int count1 = 0, count2 = 0, value = 0;
-  while (true) {
-    std::cin >> c;
-    if (std::cin.fail()) {
-      std::cerr << "Input error\n";
-      return 1;
-    }
-    if (c == 0) {
-      break;
-    }
-    value++;
-    if (value == 1 || c > max_value) {
-      max_value = c;
-      count2 = 0;
-    } else if (c == max_value) {
-      count2 = 0;
+  const long long max_limit = std::numeric_limits<long long>::max();
+
+  long long prev_prev = 0;
+  long long prev = 0;
+  long long current = 0;
+  long long max_value = std::numeric_limits<long long>::min();
+
+  int triples_count = 0;
+  int elements_after_max = 0;
+  int numbers_count = 0;
+
+  while (std::cin >> current && current != 0) {
+    numbers_count++;
+
+    if (current >= max_value) {
+      max_value = current;
+      elements_after_max = 0;
     } else {
-      count2++;
+      elements_after_max++;
     }
-    if (value == 1) {
-      a = c;
-      continue;
+
+    if (prev_prev > 0 && prev > 0 && current > 0) {
+      bool fits = prev_prev <= max_limit / prev_prev
+          && prev <= max_limit / prev
+          && current <= max_limit / current;
+
+      if (fits && current * current - prev_prev * prev_prev == prev * prev) {
+        triples_count++;
+      }
     }
-    if (value == 2) {
-      b = c;
-      continue;
-    }
-    if (a > 0 && b > 0 && c > 0 && a * a + b * b == c * c) {
-      count1++;
-    }
-    a = b;
-    b = c;
+
+    prev_prev = prev;
+    prev = current;
   }
-  if (value < 3) {
+
+  if (std::cin.fail()) {
+    std::cerr << "Input error\n";
+    return 1;
+  }
+
+  if (numbers_count < 3) {
     std::cerr << "Sequence is too short\n";
     return 2;
   }
-  std::cout << count1 << "\n";
-  std::cout << count2 << "\n";
+
+  std::cout << triples_count << "\n";
+  std::cout << elements_after_max << "\n";
+
   return 0;
 }
