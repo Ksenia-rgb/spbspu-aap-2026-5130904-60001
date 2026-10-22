@@ -25,9 +25,9 @@ int main()
     }
 
     if (prev_prev > 0 && prev > 0 && current > 0) {
-      bool fits = prev_prev <= max_limit / prev_prev
-          && prev <= max_limit / prev
-          && current <= max_limit / current;
+      const bool fits = prev_prev <= max_limit / prev_prev &&
+                        prev <= max_limit / prev &&
+                        current <= max_limit / current;
 
       if (fits && current * current - prev_prev * prev_prev == prev * prev) {
         triples_count++;
