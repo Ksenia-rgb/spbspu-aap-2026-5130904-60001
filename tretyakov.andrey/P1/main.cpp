@@ -8,7 +8,7 @@ int main()
   size_t counter_of_pthtrp = 0;
   size_t counter_of_sumdup = 0;
   int two_previous = 0;
-  int count_of_entered_values = 1;
+  size_t count_of_entered_values = 1;
   std::cin >> value1;
   if (!std::cin)
   {
