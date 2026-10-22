@@ -5,19 +5,19 @@
 
 namespace erin
 {
-  bool is_loc_max(int left, int mid, int right)
+  bool isLocMax(int left, int mid, int right)
   {
     return (mid > left) && (mid > right);
   }
 
-  bool is_sgn_chg(int pred, int now)
+  bool isSgnChg(int pred, int now)
   {
     return ((pred > 0) && (now < 0)) || ((pred < 0) && (now > 0));
   }
 
-  size_t update_loc_max(size_t count, int left, int mid, int right)
+  size_t updateLocMax(size_t count, int left, int mid, int right)
   {
-    if (is_loc_max(left, mid, right))
+    if (isLocMax(left, mid, right))
     {
       if (count == std::numeric_limits< size_t >::max())
       {
@@ -28,9 +28,9 @@ namespace erin
     return count;
   }
 
-  size_t update_sgn_chg(size_t count, int pred, int now)
+  size_t updateSgnChg(size_t count, int pred, int now)
   {
-    if (is_sgn_chg(pred, now))
+    if (isSgnChg(pred, now))
     {
       if (count == std::numeric_limits< size_t >::max())
       {
@@ -62,8 +62,8 @@ int main()
       mid = right;
       right = now;
 
-      count_loc_max = erin::update_loc_max(count_loc_max, left, mid, right);
-      count_sgn_chg = erin::update_sgn_chg(count_sgn_chg, pred, now);
+      count_loc_max = erin::updateLocMax(count_loc_max, left, mid, right);
+      count_sgn_chg = erin::updateSgnChg(count_sgn_chg, pred, now);
 
       pred = now;
     }
