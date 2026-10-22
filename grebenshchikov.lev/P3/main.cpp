@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
       std::cerr << "Error reading file\n";
       return 2;
     }
-
+    //тут нужна ошибка выделения памяти, доделать!!!!!
     int **mtx = new int* [rows]; // создаем динамический массив
     for (size_t i = 0; i < rows; ++i)
     {
