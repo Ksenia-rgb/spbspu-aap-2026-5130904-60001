@@ -5,84 +5,92 @@
 
 namespace erin
 {
-  bool LocMax(int left, int mid, int right)
+  bool is_loc_max(int left, int mid, int right)
   {
     return (mid > left) && (mid > right);
   }
 
-  bool SgnChg(int pred, int now)
+  bool is_sgn_chg(int pred, int now)
   {
     return ((pred > 0) && (now < 0)) || ((pred < 0) && (now > 0));
   }
 
-  void processSequence(std::istream & in, std::size_t & count_loc_max, std::size_t & count_sgn_chg)
+  size_t update_loc_max(size_t count, int left, int mid, int right)
   {
-    const int max_int = std::numeric_limits< int >::max();
-    int left = max_int;
-    int mid = max_int;
-    int right = max_int;
-
-    int pred = 0;
-    int now = 0;
-
-    while ((in >> now) && (now != 0))
+    if (is_loc_max(left, mid, right))
     {
-      left = mid;
-      mid = right;
-      right = now;
-
-      if (LocMax(left, mid, right))
+      if (count == std::numeric_limits< size_t >::max())
       {
-        count_loc_max++;
+        throw std::overflow_error("Too many local maximums");
       }
+      ++count;
+    }
+    return count;
+  }
 
-      if (SgnChg(pred, now))
+  size_t update_sgn_chg(size_t count, int pred, int now)
+  {
+    if (is_sgn_chg(pred, now))
+    {
+      if (count == std::numeric_limits< size_t >::max())
       {
-        count_sgn_chg++;
+        throw std::overflow_error("Too many sign changes");
       }
-      pred = now;
+      ++count;
     }
-
-    if (!in)
-    {
-      throw std::invalid_argument("Invalid input");
-    }
-
-    if (pred == 0)
-    {
-      throw std::length_error("Empty sequence");
-    }
+    return count;
   }
 }
 
 int main()
 {
-  const int input_error = 1;
-  const int empty_error = 2;
+  const int max_int = std::numeric_limits< int >::max();
+  int left = max_int;
+  int mid = max_int;
+  int right = max_int;
+  int pred = 0;
+  int now = 0;
 
-  std::size_t count_loc_max = 0;
-  std::size_t count_sgn_chg = 0;
-  int return_code = 0;
+  size_t count_loc_max = 0;
+  size_t count_sgn_chg = 0;
 
   try
   {
-    erin::processSequence(std::cin, count_loc_max, count_sgn_chg);
+    while ((std::cin >> now) && (now != 0))
+    {
+      left = mid;
+      mid = right;
+      right = now;
+
+      count_loc_max = erin::update_loc_max(count_loc_max, left, mid, right);
+      count_sgn_chg = erin::update_sgn_chg(count_sgn_chg, pred, now);
+
+      pred = now;
+    }
   }
-  catch (const std::invalid_argument & e)
+  catch (const std::overflow_error & e)
   {
     std::cerr << e.what() << "\n";
-    return input_error;
-  }
-  catch (const std::length_error & e)
-  {
-    std::cerr << e.what() << "\n";
-    return_code = empty_error;
+    return 2;
   }
 
-  if (return_code == 0)
+  if (!std::cin)
+  {
+    std::cerr << "Invalid input\n";
+    return 1;
+  }
+
+  int return_code = 0;
+  if (pred == 0)
+  {
+    std::cerr << "Not enough elements\n";
+    return_code = 2;
+  }
+  else
   {
     std::cout << count_loc_max << "\n";
   }
+
   std::cout << count_sgn_chg << "\n";
   return return_code;
 }
