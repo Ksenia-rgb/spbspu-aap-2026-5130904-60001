@@ -1,7 +1,7 @@
 #include <iostream>
 #include <limits>
 int main()
-{ 
+{
   int max = std::numeric_limits<int>::min() + 1;
   int sub_max = std::numeric_limits<int>::min();
 
@@ -55,7 +55,7 @@ int main()
       std::cout << "Error: input is not a valid number\n";
       return 1;
     }
-  
+
   if (sub_max == std::numeric_limits<int>::min())
   {
     std::cerr << "Sequence too short to compute sub-max\n";
