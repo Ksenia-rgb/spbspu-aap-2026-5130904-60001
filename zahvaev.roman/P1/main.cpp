@@ -3,12 +3,12 @@
 
 int main()
 {
-  const long long max_limit = std::numeric_limits<long long>::max();
+  const long long max_limit = std::numeric_limits< long long >::max();
 
   long long prev_prev = 0;
   long long prev = 0;
   long long current = 0;
-  long long max_value = std::numeric_limits<long long>::min();
+  long long max_value = std::numeric_limits< long long >::min();
 
   int triples_count = 0;
   int elements_after_max = 0;
@@ -25,9 +25,10 @@ int main()
     }
 
     if (prev_prev > 0 && prev > 0 && current > 0) {
-      const bool fits = prev_prev <= max_limit / prev_prev &&
-                        prev <= max_limit / prev &&
-                        current <= max_limit / current;
+      const bool fits_prev_prev = prev_prev <= max_limit / prev_prev;
+      const bool fits_prev = prev <= max_limit / prev;
+      const bool fits_current = current <= max_limit / current;
+      const bool fits = fits_prev_prev && fits_prev && fits_current;
 
       if (fits && current * current - prev_prev * prev_prev == prev * prev) {
         triples_count++;
