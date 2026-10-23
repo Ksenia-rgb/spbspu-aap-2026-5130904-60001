@@ -16,8 +16,8 @@ int main()
     std::cerr << "Invalid input\n";
     return 1;
   }
-  while (number != 0){
-    if (count < 2){
+  while (number != 0) {
+    if (count < 2) {
       count++;
     }
     if (number > max_first) {
