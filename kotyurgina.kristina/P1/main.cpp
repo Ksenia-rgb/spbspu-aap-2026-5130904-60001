@@ -3,15 +3,15 @@
 int main()
 {
   int number = 0;
-  int count = 0;
+  size_t count = 0;
   int max_first = 0;
   int max_second = 0;
-  int div_count = 0;
+  size_t div_count = 0;
   int last_number = 0;
 
   while (true) {
     if (!(std::cin >> number)) {
-      std::cerr << "Ошибка ввода\n";
+      std::cerr << "Invalid input\n";
       return 1;
     }
     if (number == 0) {
@@ -33,8 +33,8 @@ int main()
         max_first = number;
       }
       if (current_number % last_number == 0) {
-        if (div_count == std::numeric_limits< int >::max()) {
-          std::cerr << "Слишком длинная последовательность\n";
+        if (div_count == std::numeric_limits< size_t >::max()) {
+          std::cerr << "Sequence is too long\n";
           return 2;
         }
         div_count++;
@@ -48,8 +48,8 @@ int main()
         max_second = number;
       }
       if (current_number % last_number == 0) {
-        if (div_count == std::numeric_limits< int >::max()) {
-          std::cerr << "Слишком длинная последовательность\n";
+        if (div_count == std::numeric_limits< size_t >::max()) {
+          std::cerr << "Sequence is too long\n";
           return 2;
         }
         div_count++;
@@ -59,7 +59,7 @@ int main()
   }
 
   if (count < 2) {
-    std::cerr << "Недостаточно элементов последовательности\n";
+    std::cerr << "Not enough elements\n";
     std::cout << div_count << "\n";
     return 2;
   }
