@@ -2,15 +2,15 @@
 #include <fstream>
 #include <cstdlib>
 
-size_t CNT_COL_NSM(const int * mtx, int rows, int cols)
+int cnt_col_nsm(const int *mtx, int rows, int cols)
 {
-  size_t count = 0;
-  for (size_t i = 0; i < cols; ++i)
+  int count = 0;
+  for (int i = 0; i < cols; ++i)
   {
-    size_t flag = 0;
-    for (size_t j = 1; j < rows; ++j)
+    int flag = 0;
+    for (int j = 1; j < rows; ++j)
     {
-      int preel = mtx[(j-1) * cols + i];
+      const int preel = mtx[(j - 1) * cols + i];
       if (mtx[j * cols + i] == preel)
       {
         flag = 1;
@@ -18,22 +18,22 @@ size_t CNT_COL_NSM(const int * mtx, int rows, int cols)
       }
     }
     if (flag == 0)
-      {
-        ++count;
-      }
+    {
+      ++count;
+    }
   }
   return count;
 }
 
-size_t CNT_COL_NSM(const int * const * mtx, int rows, int cols)
+int cnt_col_nsm(const int *const *mtx, int rows, int cols)
 {
-  size_t count = 0;
-  for (size_t i = 0; i < cols; ++i)
+  int count = 0;
+  for (int i = 0; i < cols; ++i)
   {
-    size_t flag = 0;
-    for (size_t j = 1; j < rows; ++j)
+    int flag = 0;
+    for (int j = 1; j < rows; ++j)
     {
-      int preel = mtx[j-1][i];
+      const int preel = mtx[j - 1][i];
       if (mtx[j][i] == preel)
       {
         flag = 1;
@@ -48,15 +48,15 @@ size_t CNT_COL_NSM(const int * const * mtx, int rows, int cols)
   return count;
 }
 
-bool UPP_TRI_MTX(const int * mtx, int rows, int cols)
+bool upp_tri_mtx(const int *mtx, int rows, int cols)
 {
   if (rows == 0 || cols == 0)
   {
     return false;
   }
-  for (size_t i = 0; i < rows; ++i) 
+  for (int i = 0; i < rows; ++i)
   {
-    for (size_t j = 0; j < cols; ++j)
+    for (int j = 0; j < cols; ++j)
     {
       if (i > j && mtx[i * cols + j] != 0)
       {
@@ -67,15 +67,15 @@ bool UPP_TRI_MTX(const int * mtx, int rows, int cols)
   return true;
 }
 
-bool UPP_TRI_MTX(const int * const * mtx, int rows, int cols)
+bool upp_tri_mtx(const int *const *mtx, int rows, int cols)
 {
   if (rows == 0 || cols == 0)
   {
     return false;
   }
-  for (size_t i = 0; i < rows; ++i)
+  for (int i = 0; i < rows; ++i)
   {
-    for (size_t j = 0; j < cols; ++j)
+    for (int j = 0; j < cols; ++j)
     {
       if (i > j && mtx[i][j] != 0)
       {
@@ -86,61 +86,67 @@ bool UPP_TRI_MTX(const int * const * mtx, int rows, int cols)
   return true;
 }
 
-void freeMtx(int** mtx, size_t rows)
+void freeMtx(int **mtx, int rows)
 {
-  for (size_t i = 0; i < rows; ++i)
+  for (int i = 0; i < rows; ++i)
   {
     std::free(mtx[i]);
   }
   std::free(mtx);
 }
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
-  if (argc<4)
+  const int argsCount = 4;
+  const int inputArg = 2;
+  const int outputArg = 3;
+  const int fileError = 2;
+
+  if (argc < argsCount)
   {
     std::cerr << "Not enough arguments";
     return 1;
   }
-  if (argc > 4)
+  if (argc > argsCount)
   {
     std::cerr << "Too many arguments";
     return 1;
-  } 
+  }
 
   switch (*argv[1])
   {
   case '1':
   {
-    std::ifstream in(argv[2]);
-    int rows, cols; 
+    std::ifstream in(argv[inputArg]);
+    int rows = 0;
+    int cols = 0;
     if (!(in >> rows >> cols) || rows < 0 || cols < 0)
-    { 
+    {
       std::cerr << "Error reading file\n";
-      return 2;
+      return fileError;
     }
 
     const int kmax = 10000;
     if (rows * cols > kmax)
     {
       std::cerr << "Matrix size exceeds maximum allowed size\n";
-      return 2;
+      return fileError;
     }
 
     int mtx[kmax];
-    for (size_t i = 0; i < rows; ++i)
+    for (int i = 0; i < rows; ++i)
     {
-      for (size_t j = 0; j < cols; ++j)
-      {   
+      for (int j = 0; j < cols; ++j)
+      {
         if (!(in >> mtx[i * cols + j]))
         {
-            std::cerr << "Error reading file\n";
-            return 2;
+          std::cerr << "Error reading file\n";
+          return fileError;
         }
       }
     }
 
-    if (UPP_TRI_MTX(mtx, rows, cols))
+    if (upp_tri_mtx(mtx, rows, cols))
     {
       std::cout << "true\n";
     }
@@ -149,61 +155,72 @@ int main(int argc, char* argv[])
       std::cout << "false\n";
     }
 
-    std::cout << CNT_COL_NSM(mtx, rows, cols) << '\n';
+    std::cout << cnt_col_nsm(mtx, rows, cols) << '\n';
 
-    std::ofstream out(argv[3]);
+    std::ofstream out(argv[outputArg]);
     out << rows << " " << cols;
-    for (size_t i = 0; i < rows; ++i)
+    for (int i = 0; i < rows; ++i)
     {
-      for (size_t j = 0; j < cols; ++j)
-      {   
+      for (int j = 0; j < cols; ++j)
+      {
         out << " " << mtx[i * cols + j];
       }
     }
+    out << '\n';
+    if (upp_tri_mtx(mtx, rows, cols))
+    {
+      out << "true\n";
+    }
+    else
+    {
+      out << "false\n";
+    }
+    out << cnt_col_nsm(mtx, rows, cols) << '\n';
     std::cout << '\n';
     return 0;
   }
   case '2':
   {
-    std::ifstream in(argv[2]);
-    int rows, cols;
+    std::ifstream in(argv[inputArg]);
+    int rows = 0;
+    int cols = 0;
     if (!(in >> rows >> cols) || rows < 0 || cols < 0)
     {
       std::cerr << "Error reading file\n";
-      return 2;
+      return fileError;
     }
 
-    int **mtx = static_cast< int** >(std::malloc(rows * sizeof(int*)));
+    int **const mtx = static_cast< int ** >(std::malloc(rows * sizeof(int *)));
     if (mtx == nullptr && rows > 0)
     {
       std::cerr << "Not enough memory\n";
-      return 2;
+      return fileError;
     }
-    for (size_t i = 0; i < rows; ++i)
+    for (int i = 0; i < rows; ++i)
     {
-      mtx[i] = static_cast< int* >(std::malloc(cols * sizeof(int)));
+      mtx[i] = static_cast< int * >(std::malloc(cols * sizeof(int)));
       if (mtx[i] == nullptr && cols > 0)
       {
         freeMtx(mtx, i);
         std::cerr << "Not enough memory\n";
-        return 2;
+        return fileError;
       }
     }
 
-    for (size_t i = 0; i < rows; ++i)
+    for (int i = 0; i < rows; ++i)
     {
-      for (size_t j = 0; j < cols; ++j)
+      for (int j = 0; j < cols; ++j)
       {
         if (!(in >> mtx[i][j]))
         {
           std::cerr << "Error reading file\n";
           freeMtx(mtx, rows);
-          return 2;
+          return fileError;
         }
       }
     }
 
-    if (UPP_TRI_MTX(mtx, rows, cols))
+    if (upp_tri_mtx(mtx, rows, cols))
     {
       std::cout << "true\n";
     }
@@ -212,18 +229,28 @@ int main(int argc, char* argv[])
       std::cout << "false\n";
     }
 
-    std::cout << CNT_COL_NSM(mtx, rows, cols) << '\n';
+    std::cout << cnt_col_nsm(mtx, rows, cols) << '\n';
 
-    std::ofstream out(argv[3]);
+    std::ofstream out(argv[outputArg]);
     out << rows << " " << cols;
 
-    for (size_t i = 0; i < rows; ++i)
+    for (int i = 0; i < rows; ++i)
     {
-      for (size_t j = 0; j < cols; ++j)
+      for (int j = 0; j < cols; ++j)
       {
         out << " " << mtx[i][j];
       }
     }
+    out << '\n';
+    if (upp_tri_mtx(mtx, rows, cols))
+    {
+      out << "true\n";
+    }
+    else
+    {
+      out << "false\n";
+    }
+    out << cnt_col_nsm(mtx, rows, cols) << '\n';
     std::cout << '\n';
     freeMtx(mtx, rows);
     return 0;
