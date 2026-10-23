@@ -1,10 +1,50 @@
 #include <iostream>
 #include <fstream>
+#include <cstdlib>
+
+bool UPP_TRI_MTX(const int * mtx, int rows, int cols)
+{
+  for (size_t i = 0; i < rows; ++i) 
+  {
+    for (size_t j = 0; j < cols; ++j)
+    {
+      if (i > j && mtx[i * cols + j] != 0)
+      {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+bool UPP_TRI_MTX(const int * const * mtx, int rows, int cols)
+{
+  for (size_t i = 0; i < rows; ++i)
+  {
+    for (size_t j = 0; j < cols; ++j)
+    {
+      if (i > j && mtx[i][j] != 0)
+      {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+// освобождаем первые rows рядов и сам массив указателей
+void freeMtx(int** mtx, size_t rows)
+{
+  for (size_t i = 0; i < rows; ++i)
+  {
+    std::free(mtx[i]);
+  }
+  std::free(mtx);
+}
+
 
 int main(int argc, char* argv[])
 {
-
-    // проверка количества аргументов
   if (argc<4)
   {
     std::cerr << "Not enough arguments";
@@ -14,9 +54,8 @@ int main(int argc, char* argv[])
   {
     std::cerr << "Too many arguments";
     return 1;
-  }
-  
-  // начало проверки первого аргумента
+  } 
+
   switch (*argv[1])
   {
     // если первый арг равен 1 то статический массив
@@ -30,8 +69,8 @@ int main(int argc, char* argv[])
       return 2;
     }
 
-    const int kmax = 10000; // задаем максимальный размер массива
-    if (rows * cols > kmax) // проверка на превышение максимального размера
+    const int kmax = 10000;
+    if (rows * cols > kmax)
     {
       std::cerr << "Matrix size exceeds maximum allowed size\n";
       return 2;
@@ -47,8 +86,16 @@ int main(int argc, char* argv[])
             std::cerr << "Error reading file\n";
             return 2;
         }
-
       }
+    }
+
+    if (UPP_TRI_MTX(mtx, rows, cols))
+    {
+      std::cout << "true";
+    }
+    else
+    {
+      std::cout << "false";
     }
 
     std::ofstream out(argv[3]); // вывод в файл
@@ -73,11 +120,22 @@ int main(int argc, char* argv[])
       std::cerr << "Error reading file\n";
       return 2;
     }
-    //тут нужна ошибка выделения памяти, доделать!!!!!
-    int **mtx = new int* [rows]; // создаем динамический массив
+
+    int **mtx = static_cast< int** >(std::malloc(rows * sizeof(int*)));
+    if (mtx == nullptr)
+    {
+      std::cerr << "Not enough memory\n";
+      return 2;
+    }
     for (size_t i = 0; i < rows; ++i)
     {
-      mtx[i] = new int [cols]; // так же выделяем память под каждый ряд
+      mtx[i] = static_cast< int* >(std::malloc(cols * sizeof(int))); // так же выделяем память под каждый ряд
+      if (mtx[i] == nullptr)
+      {
+        freeMtx(mtx, i); // освобождаем уже выделенные ряды
+        std::cerr << "Not enough memory\n";
+        return 2;
+      }
     }
 
     for (size_t i = 0; i < rows; ++i)
@@ -87,9 +145,19 @@ int main(int argc, char* argv[])
         if (!(in >> mtx[i][j]))
         {
           std::cerr << "Error reading file\n"; // провверка ввода
+          freeMtx(mtx, rows);
           return 2;
         }
       }
+    }
+
+    if (UPP_TRI_MTX(mtx, rows, cols))
+    {
+      std::cout << "true";
+    }
+    else
+    {
+      std::cout << "false";
     }
 
     std::ofstream out(argv[3]); // вывод в файл
@@ -102,7 +170,8 @@ int main(int argc, char* argv[])
         out << " " << mtx[i][j];
       }
     }
-    std::cout << '\n'; 
+    std::cout << '\n';
+    freeMtx(mtx, rows);
     return 0;
   }
 
@@ -111,4 +180,3 @@ int main(int argc, char* argv[])
     return 1;
   }
 }
-
