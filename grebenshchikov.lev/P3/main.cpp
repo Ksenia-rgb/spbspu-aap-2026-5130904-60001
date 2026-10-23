@@ -2,7 +2,7 @@
 #include <fstream>
 #include <cstdlib>
 
-int cnt_col_nsm(const int *mtx, int rows, int cols)
+int cntColNsm(const int *mtx, int rows, int cols)
 {
   int count = 0;
   for (int i = 0; i < cols; ++i)
@@ -25,7 +25,7 @@ int cnt_col_nsm(const int *mtx, int rows, int cols)
   return count;
 }
 
-int cnt_col_nsm(const int *const *mtx, int rows, int cols)
+int cntColNsm(const int *const *mtx, int rows, int cols)
 {
   int count = 0;
   for (int i = 0; i < cols; ++i)
@@ -48,7 +48,7 @@ int cnt_col_nsm(const int *const *mtx, int rows, int cols)
   return count;
 }
 
-bool upp_tri_mtx(const int *mtx, int rows, int cols)
+bool uppTriMtx(const int *mtx, int rows, int cols)
 {
   if (rows == 0 || cols == 0)
   {
@@ -67,7 +67,7 @@ bool upp_tri_mtx(const int *mtx, int rows, int cols)
   return true;
 }
 
-bool upp_tri_mtx(const int *const *mtx, int rows, int cols)
+bool uppTriMtx(const int *const *mtx, int rows, int cols)
 {
   if (rows == 0 || cols == 0)
   {
@@ -146,7 +146,7 @@ int main(int argc, char *argv[])
       }
     }
 
-    if (upp_tri_mtx(mtx, rows, cols))
+    if (uppTriMtx(mtx, rows, cols))
     {
       std::cout << "true\n";
     }
@@ -155,7 +155,7 @@ int main(int argc, char *argv[])
       std::cout << "false\n";
     }
 
-    std::cout << cnt_col_nsm(mtx, rows, cols) << '\n';
+    std::cout << cntColNsm(mtx, rows, cols) << '\n';
 
     std::ofstream out(argv[outputArg]);
     out << rows << " " << cols;
@@ -167,7 +167,7 @@ int main(int argc, char *argv[])
       }
     }
     out << '\n';
-    if (upp_tri_mtx(mtx, rows, cols))
+    if (uppTriMtx(mtx, rows, cols))
     {
       out << "true\n";
     }
@@ -175,7 +175,7 @@ int main(int argc, char *argv[])
     {
       out << "false\n";
     }
-    out << cnt_col_nsm(mtx, rows, cols) << '\n';
+    out << cntColNsm(mtx, rows, cols) << '\n';
     std::cout << '\n';
     return 0;
   }
@@ -220,7 +220,7 @@ int main(int argc, char *argv[])
       }
     }
 
-    if (upp_tri_mtx(mtx, rows, cols))
+    if (uppTriMtx(mtx, rows, cols))
     {
       std::cout << "true\n";
     }
@@ -229,7 +229,7 @@ int main(int argc, char *argv[])
       std::cout << "false\n";
     }
 
-    std::cout << cnt_col_nsm(mtx, rows, cols) << '\n';
+    std::cout << cntColNsm(mtx, rows, cols) << '\n';
 
     std::ofstream out(argv[outputArg]);
     out << rows << " " << cols;
@@ -242,7 +242,7 @@ int main(int argc, char *argv[])
       }
     }
     out << '\n';
-    if (upp_tri_mtx(mtx, rows, cols))
+    if (uppTriMtx(mtx, rows, cols))
     {
       out << "true\n";
     }
@@ -250,7 +250,7 @@ int main(int argc, char *argv[])
     {
       out << "false\n";
     }
-    out << cnt_col_nsm(mtx, rows, cols) << '\n';
+    out << cntColNsm(mtx, rows, cols) << '\n';
     std::cout << '\n';
     freeMtx(mtx, rows);
     return 0;
