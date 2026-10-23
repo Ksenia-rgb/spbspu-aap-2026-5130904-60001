@@ -1,13 +1,14 @@
 #include <iostream>
 #include <limits>
+#include <cstddef>
 
 int main()
 {
   int number = 0;
-  size_t count = 0;
+  std::size_t count = 0;
   int max_first = std::numeric_limits< int >::min();
   int max_second = std::numeric_limits< int >::min();
-  size_t div_count = 0;
+  std::size_t div_count = 0;
   int last_number = 0;
   bool div_overflow = false;
 
@@ -26,10 +27,10 @@ int main()
       max_second = number;
     }
 
-    if (count >= 2){
+    if (count >= 2) {
       const long long current_number = number;
       if (current_number % last_number == 0) {
-        if (div_count == std::numeric_limits< size_t >::max()) {
+        if (div_count == std::numeric_limits< std::size_t >::max()) {
           div_overflow = true;
         } else {
           div_count++;
