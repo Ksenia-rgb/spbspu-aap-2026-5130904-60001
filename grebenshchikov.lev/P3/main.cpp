@@ -2,8 +2,58 @@
 #include <fstream>
 #include <cstdlib>
 
+size_t CNT_COL_NSM(const int * mtx, int rows, int cols)
+{
+  size_t count = 0;
+  for (size_t i = 0; i < cols; ++i)
+  {
+    size_t flag = 0;
+    for (size_t j = 1; j < rows; ++j)
+    {
+      int preel = mtx[(j-1) * cols + i];
+      if (mtx[j * cols + i] == preel)
+      {
+        flag = 1;
+        break;
+      }
+    }
+    if (flag == 0)
+      {
+        ++count;
+      }
+  }
+  return count;
+}
+
+size_t CNT_COL_NSM(const int * const * mtx, int rows, int cols)
+{
+  size_t count = 0;
+  for (size_t i = 0; i < cols; ++i)
+  {
+    size_t flag = 0;
+    for (size_t j = 1; j < rows; ++j)
+    {
+      int preel = mtx[j-1][i];
+      if (mtx[j][i] == preel)
+      {
+        flag = 1;
+        break;
+      }
+    }
+    if (flag == 0)
+    {
+      ++count;
+    }
+  }
+  return count;
+}
+
 bool UPP_TRI_MTX(const int * mtx, int rows, int cols)
 {
+  if (rows == 0 || cols == 0)
+  {
+    return false;
+  }
   for (size_t i = 0; i < rows; ++i) 
   {
     for (size_t j = 0; j < cols; ++j)
@@ -19,6 +69,10 @@ bool UPP_TRI_MTX(const int * mtx, int rows, int cols)
 
 bool UPP_TRI_MTX(const int * const * mtx, int rows, int cols)
 {
+  if (rows == 0 || cols == 0)
+  {
+    return false;
+  }
   for (size_t i = 0; i < rows; ++i)
   {
     for (size_t j = 0; j < cols; ++j)
@@ -32,7 +86,6 @@ bool UPP_TRI_MTX(const int * const * mtx, int rows, int cols)
   return true;
 }
 
-// освобождаем первые rows рядов и сам массив указателей
 void freeMtx(int** mtx, size_t rows)
 {
   for (size_t i = 0; i < rows; ++i)
@@ -41,7 +94,6 @@ void freeMtx(int** mtx, size_t rows)
   }
   std::free(mtx);
 }
-
 
 int main(int argc, char* argv[])
 {
@@ -58,12 +110,11 @@ int main(int argc, char* argv[])
 
   switch (*argv[1])
   {
-    // если первый арг равен 1 то статический массив
   case '1':
   {
-    std::ifstream in(argv[2]); // читаем из файла
+    std::ifstream in(argv[2]);
     int rows, cols; 
-    if (!(in >> rows >> cols) || rows <= 0 || cols <= 0) // проверка на корректность ввода
+    if (!(in >> rows >> cols) || rows < 0 || cols < 0)
     { 
       std::cerr << "Error reading file\n";
       return 2;
@@ -76,12 +127,12 @@ int main(int argc, char* argv[])
       return 2;
     }
 
-    int mtx[kmax]; // создаем массив статического размера
+    int mtx[kmax];
     for (size_t i = 0; i < rows; ++i)
     {
       for (size_t j = 0; j < cols; ++j)
       {   
-        if (!(in >> mtx[i * cols + j])) // проверяем ошибку ввода
+        if (!(in >> mtx[i * cols + j]))
         {
             std::cerr << "Error reading file\n";
             return 2;
@@ -91,14 +142,16 @@ int main(int argc, char* argv[])
 
     if (UPP_TRI_MTX(mtx, rows, cols))
     {
-      std::cout << "true";
+      std::cout << "true\n";
     }
     else
     {
-      std::cout << "false";
+      std::cout << "false\n";
     }
 
-    std::ofstream out(argv[3]); // вывод в файл
+    std::cout << CNT_COL_NSM(mtx, rows, cols) << '\n';
+
+    std::ofstream out(argv[3]);
     out << rows << " " << cols;
     for (size_t i = 0; i < rows; ++i)
     {
@@ -110,29 +163,28 @@ int main(int argc, char* argv[])
     std::cout << '\n';
     return 0;
   }
-  // если первый арг равен 2 то динамический массив
   case '2':
   {
-    std::ifstream in(argv[2]); // читаем из файла
+    std::ifstream in(argv[2]);
     int rows, cols;
-    if (!(in >> rows >> cols))
+    if (!(in >> rows >> cols) || rows < 0 || cols < 0)
     {
       std::cerr << "Error reading file\n";
       return 2;
     }
 
     int **mtx = static_cast< int** >(std::malloc(rows * sizeof(int*)));
-    if (mtx == nullptr)
+    if (mtx == nullptr && rows > 0)
     {
       std::cerr << "Not enough memory\n";
       return 2;
     }
     for (size_t i = 0; i < rows; ++i)
     {
-      mtx[i] = static_cast< int* >(std::malloc(cols * sizeof(int))); // так же выделяем память под каждый ряд
-      if (mtx[i] == nullptr)
+      mtx[i] = static_cast< int* >(std::malloc(cols * sizeof(int)));
+      if (mtx[i] == nullptr && cols > 0)
       {
-        freeMtx(mtx, i); // освобождаем уже выделенные ряды
+        freeMtx(mtx, i);
         std::cerr << "Not enough memory\n";
         return 2;
       }
@@ -144,7 +196,7 @@ int main(int argc, char* argv[])
       {
         if (!(in >> mtx[i][j]))
         {
-          std::cerr << "Error reading file\n"; // провверка ввода
+          std::cerr << "Error reading file\n";
           freeMtx(mtx, rows);
           return 2;
         }
@@ -153,14 +205,16 @@ int main(int argc, char* argv[])
 
     if (UPP_TRI_MTX(mtx, rows, cols))
     {
-      std::cout << "true";
+      std::cout << "true\n";
     }
     else
     {
-      std::cout << "false";
+      std::cout << "false\n";
     }
 
-    std::ofstream out(argv[3]); // вывод в файл
+    std::cout << CNT_COL_NSM(mtx, rows, cols) << '\n';
+
+    std::ofstream out(argv[3]);
     out << rows << " " << cols;
 
     for (size_t i = 0; i < rows; ++i)
@@ -176,7 +230,7 @@ int main(int argc, char* argv[])
   }
 
   default:
-    std::cout << "First parameter isnt a number or out of range\n"; // если первый арг не 1 и не 2
+    std::cout << "First parameter isnt a number or out of range\n";
     return 1;
   }
 }
