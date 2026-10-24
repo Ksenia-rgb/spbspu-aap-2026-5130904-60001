@@ -12,7 +12,7 @@ int main()
   }
   int max_e = first;
   size_t count_max = 0;
-  size_t max_size_t = -1;
+  const size_t max_size_t = -1;
   size_t count_del = 0;
   int after_first = first;
   while (std::cin >> first && first != 0)
