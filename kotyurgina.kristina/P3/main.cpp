@@ -3,6 +3,33 @@
 #include <fstream>
 #include <new>
 
+namespace kotyurgina
+{
+  void increaseWaves (int* matrix, int rows, int cols)
+  {
+    for (int i = 0; i < rows; i++)
+    {
+      for (int j = 0; j < cols; j++)
+      {
+        int layer = i;
+        if (j < layer)
+        {
+          layer = j;
+        }
+        if (rows - i - 1 < layer)
+        {
+          layer = rows - i - 1;
+        }
+        if (cols - j - 1 < layer)
+        {
+          layer = cols - j - 1;
+        }
+        matrix[i * cols + j] += layer + 1;
+      }
+    }
+  }
+}
+
 int main(int argc, char* argv[])
 {
   if (argc != 4)
@@ -38,6 +65,13 @@ int main(int argc, char* argv[])
     return 2;
   }
 
+  std::ofstream output(argv[3]);
+  if (!output)
+  {
+    std::cerr << "cannot open output file\n";
+    return 2;
+  }
+
   if (num == "1")
   {
     const int max_elements = 10000;
@@ -54,6 +88,18 @@ int main(int argc, char* argv[])
         std::cerr << "invalid matrix elements";
         return 2;
       }
+    }
+    kotyurgina::increaseWaves(matrix, rows, cols);
+
+    output << rows << " " << cols << '\n';
+
+    for (int i = 0; i < rows; i++)
+    {
+      for (int j = 0; j < cols; j++)
+      {
+        output << matrix[i * cols + j] << " ";
+      }
+      output << "\n";
     }
   }
   else
@@ -72,6 +118,20 @@ int main(int argc, char* argv[])
           return 2;
         }
       }
+
+      kotyurgina::increaseWaves(matrix, rows, cols);
+
+      output << rows << " " << cols << '\n';
+
+      for (int i = 0; i < rows; i++)
+      {
+        for (int j = 0; j < cols; j++)
+        {
+          output << matrix[i * cols + j] << " ";
+        }
+        output << "\n";
+      }
+
       delete[] matrix;
     }
     catch (const std::bad_alloc&)
@@ -85,12 +145,6 @@ int main(int argc, char* argv[])
   if (input >> extra)
   {
     std::cerr << "extra data in input file\n";
-    return 2;
-  }
-  const std::ofstream output(argv[3]);
-  if (!output)
-  {
-    std::cerr << "cannot open output file\n";
     return 2;
   }
   return 0;
