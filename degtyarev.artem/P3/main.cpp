@@ -138,17 +138,17 @@ int main(int argc,char *argv[])
   case '2':
   {
     std::ifstream in(argv[2]);
-    int rows, cols;
+    size_t rows, cols;
     if (!(in >> rows >> cols) || (rows <= 0 && cols != 0) || (cols <= 0 && rows != 0))
     {
       std::cerr << "Error reading file\n";
       return 2;
     }
 
-    int  **arr = (int **)malloc(rows * sizeof(int*));
+    int **arr = static_cast< int ** >(malloc(rows * sizeof(int *)));
     for (size_t i = 0; i < rows; ++i)
     {
-      arr[i] = (int *)malloc(cols * sizeof(int));
+      arr[i] = static_cast< int * >(malloc(cols * sizeof(int)));
     }
 
     for (size_t i = 0; i < rows; ++i)
