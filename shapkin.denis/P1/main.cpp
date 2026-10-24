@@ -1,8 +1,9 @@
 #include <iostream>
+#include <cstddef>
 
 int main()
 {
-  long long num;
+  long long num = 0;
   size_t count = 0;
   long long prev2 = 0;
   long long prev1 = 0;
