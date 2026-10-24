@@ -12,49 +12,52 @@ void lftBotClk(int* mass, const size_t n, const size_t m)
   size_t bottom_border = n - 1;
   size_t right_border = m - 1;
   size_t top_border = 0;
-  size_t direction = 1;
+
+  const size_t direction_up = 1;
+  const size_t direction_right = 2;
+  const size_t direction_down = 3;
+  const size_t direction_left = 4;
+  size_t direction = direction_up;
   size_t i = 0;
   const size_t nm = n * m;
-  while (true) {
-    if (i == nm) {
-      return;
-    }
+  while (i != nm) {
     mass[row * m + column] -= ++i;
-    if (direction == 1) {
-      if (row > top_border) {
-        row--;
-        continue;
-      } else {
-        direction--;
-        top_border++;
-      }
-    }
-    if (direction == 0) {
-      if (column < right_border) {
-        column++;
-        continue;
-      } else {
-        direction = 3;
-        right_border--;
-      }
-    }
-    if (direction == 3) {
-      if (row < bottom_border) {
-        row++;
-        continue;
-      } else {
-        direction--;
-        bottom_border--;
-      }
-    }
-    if (direction == 2) {
-      if (column > left_border) {
-        column--;
-        continue;
-      } else {
-        direction--;
-        left_border++;
-      }
+    switch (direction){
+      case direction_right:
+        if (column < right_border) {
+          column++;
+          continue;
+        } else {
+          direction = direction_down;
+          right_border--;
+          [[fallthrough]];
+        }
+      case direction_up:
+        if (row > top_border) {
+          row--;
+          continue;
+        } else {
+          direction = direction_left;
+          top_border++;
+          [[fallthrough]];
+        }
+      case direction_left:
+        if (column > left_border) {
+          column--;
+          continue;
+        } else {
+          direction = direction_down;
+          left_border++;
+          [[fallthrough]];
+        }
+      case direction_down:
+        if (row < bottom_border) {
+          row++;
+          continue;
+        } else {
+          direction = direction_left;
+          bottom_border--;
+        }
     }
     mass[row * m + column] += i--;
   }
