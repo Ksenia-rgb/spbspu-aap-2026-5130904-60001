@@ -28,6 +28,38 @@ namespace kotyurgina
       }
     }
   }
+  long long minSumMdg(const int* matrix, int rows, int cols)
+  {
+    if (rows == 0 || cols == 0)
+    {
+      return 0;
+    }
+    long long minimumSum = 0;
+    for (long long diagonal = 0; diagonal < static_cast < long long >(rows) + cols - 1; diagonal++)
+    {
+      long long diagonalSum = 0;
+      long long firstRow = diagonal - cols + 1;
+      if (firstRow < 0)
+      {
+        firstRow = 0;
+      }
+      long long lastRow = diagonal;
+      if (lastRow >= rows)
+      {
+        lastRow = rows - 1;
+      }
+      for (long long i = firstRow; i <= lastRow; i++)
+      {
+        const long long j = diagonal - i;
+        diagonalSum += matrix[i * cols + j];
+      }
+      if (diagonal == 0 || diagonalSum < minimumSum)
+      {
+        minimumSum = diagonalSum;
+      }
+    }
+    return minimumSum;
+  }
 }
 
 int main(int argc, char* argv[])
@@ -89,6 +121,10 @@ int main(int argc, char* argv[])
         return 2;
       }
     }
+    const long long minimumSum = kotyurgina::minSumMdg(matrix, rows, cols);
+
+    output << minimumSum << '\n';
+
     kotyurgina::increaseWaves(matrix, rows, cols);
 
     output << rows << " " << cols << '\n';
@@ -118,6 +154,9 @@ int main(int argc, char* argv[])
           return 2;
         }
       }
+      const long long minimumSum = kotyurgina::minSumMdg(matrix, rows, cols);
+
+      output << minimumSum << '\n';
 
       kotyurgina::increaseWaves(matrix, rows, cols);
 
