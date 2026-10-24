@@ -7,8 +7,8 @@ int main()
   size_t count = 0;
   long long prev2 = 0;
   long long prev1 = 0;
-  size_t  sum_dup = 0;
-  size_t  inc_seq = 0;
+  size_t sum_dup = 0;
+  size_t inc_seq = 0;
   while (std::cin >> num && num != 0)
   {
     if (count >= 1 && num > prev1)
