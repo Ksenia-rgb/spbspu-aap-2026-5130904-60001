@@ -1,41 +1,34 @@
-#include <iostream>
 #include <cstddef>
+#include <iostream>
 
 int main()
 {
-  const size_t min_len = 2;
+  constexpr size_t min_len = 2;
   size_t count = 0;
   int prev = 0;
-  size_t cng = 0;
+  size_t sign_changes = 0;
   size_t div_rem = 0;
-  while (true) {
-    int n = 0;
-    std::cin >> n;
-    if (std::cin.fail()) {
-      std::cerr << "Число не распознано\n";
-      return 1;
-    }
-    if (n == 0) {
-      break;
-    }
-    if (count == 0) {
-      prev = n;
-      count++;
-      continue;
-    }
-    if ((prev < 0 && n > 0) || (prev > 0 && n < 0)) {
-      cng++;
-    }
-    if (n % prev == 0) {
-      div_rem++;
-    }
-    prev = n;
-    count++;
-  }
-  std::cout << cng << "\n";
+  int number = 0;
 
+  while (std::cin >> number && number != 0) {
+    if ((prev < 0 && number > 0) || (prev > 0 && number < 0)) {
+      ++sign_changes;
+    }
+    if (prev != 0 && number % prev == 0) {
+      ++div_rem;
+    }
+    prev = number;
+    ++count;
+  }
+
+  if (!std::cin) {
+    std::cerr << "Unexpected input\n";
+    return 1;
+  }
+
+  std::cout << sign_changes << "\n";
   if (count < min_len) {
-    std::cerr << "Недостаточно чисел, чтобы рассчитать характеристику\n";
+    std::cerr << "Sequence is too short to calculate divisible count\n";
     return 2;
   }
   std::cout << div_rem << "\n";
