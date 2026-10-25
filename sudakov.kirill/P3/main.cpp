@@ -12,28 +12,79 @@ namespace sudakov {
     return !input.fail();
   }
 
-  bool isLocalMax(const int* matrix, size_t cols, size_t row, size_t col)
-  {
-    const int current = matrix[row * cols + col];
-    for (size_t near_row = row - 1; near_row <= row + 1; ++near_row) {
-      for (size_t near_col = col - 1; near_col <= col + 1; ++near_col) {
-        if (near_row == row and near_col == col) {
-          continue;
-        }
-        if (current <= matrix[near_row * cols + near_col]) {
-          return false;
-        }
-      }
-    }
-    return true;
-  }
-
-  size_t countLocalMax(const int* matrix, size_t rows, size_t cols)
+  size_t cntLocMax(const int* matrix, size_t rows, size_t cols)
   {
     size_t count = 0;
     for (size_t row = 1; row + 1 < rows; ++row) {
       for (size_t col = 1; col + 1 < cols; ++col) {
-        if (isLocalMax(matrix, cols, row, col)) {
+        const size_t pos = row * cols + col;
+        const int value = matrix[pos];
+        bool is_max = true;
+        if (value <= matrix[pos - cols - 1]) {
+          is_max = false;
+        }
+        if (value <= matrix[pos - cols]) {
+          is_max = false;
+        }
+        if (value <= matrix[pos - cols + 1]) {
+          is_max = false;
+        }
+        if (value <= matrix[pos - 1]) {
+          is_max = false;
+        }
+        if (value <= matrix[pos + 1]) {
+          is_max = false;
+        }
+        if (value <= matrix[pos + cols - 1]) {
+          is_max = false;
+        }
+        if (value <= matrix[pos + cols]) {
+          is_max = false;
+        }
+        if (value <= matrix[pos + cols + 1]) {
+          is_max = false;
+        }
+        if (is_max) {
+          ++count;
+        }
+      }
+    }
+    return count;
+  }
+
+  size_t cntLocMin(const int* matrix, size_t rows, size_t cols)
+  {
+    size_t count = 0;
+    for (size_t row = 1; row + 1 < rows; ++row) {
+      for (size_t col = 1; col + 1 < cols; ++col) {
+        const size_t pos = row * cols + col;
+        const int value = matrix[pos];
+        bool is_min = true;
+        if (value >= matrix[pos - cols - 1]) {
+          is_min = false;
+        }
+        if (value >= matrix[pos - cols]) {
+          is_min = false;
+        }
+        if (value >= matrix[pos - cols + 1]) {
+          is_min = false;
+        }
+        if (value >= matrix[pos - 1]) {
+          is_min = false;
+        }
+        if (value >= matrix[pos + 1]) {
+          is_min = false;
+        }
+        if (value >= matrix[pos + cols - 1]) {
+          is_min = false;
+        }
+        if (value >= matrix[pos + cols]) {
+          is_min = false;
+        }
+        if (value >= matrix[pos + cols + 1]) {
+          is_min = false;
+        }
+        if (is_min) {
           ++count;
         }
       }
@@ -112,7 +163,8 @@ int main(int argc, char* argv[])
     return 2;
   }
 
-  output << sudakov::countLocalMax(matrix, rows, cols) << '\n';
+  output << sudakov::cntLocMax(matrix, rows, cols) << '\n';
+  output << sudakov::cntLocMin(matrix, rows, cols) << '\n';
 
   if (mode == 2) {
     free(matrix);
