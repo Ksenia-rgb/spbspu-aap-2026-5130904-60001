@@ -2,6 +2,42 @@
 #include <fstream>
 #include <cstdlib>
 
+void spiral(int** m, size_t rows, size_t cols) {
+  size_t top = 0, left = 0, bottom = rows, right = cols;
+  int step = 1;
+  while (top < bottom && left < right) {
+    for (size_t j = left; j < right; ++j) {          
+      m[top][j] -= step++;
+    }
+    ++top;
+    for (size_t i = top; i < bottom; ++i) {
+      m[i][right - 1] -= step++;
+    }
+    --right;
+    if (top < bottom) {
+      for (size_t j = right; j > left; --j) {
+        m[bottom - 1][j - 1] -= step++;
+      }
+      --bottom;
+    }
+    if (left < right) {
+      for (size_t i = bottom; i > top; --i) {
+        m[i - 1][left] -= step++;
+      }
+      ++left;
+    }
+  }
+}
+
+void printMatrix(int** m, size_t rows, size_t cols, std::ostream& out) {
+  out << rows << ' ' << cols;
+  for (size_t i = 0; i < rows; ++i) {
+    for (size_t j = 0; j < cols; ++j) {
+      out << ' ' << m[i][j];
+    }
+  }
+  out << '\n';
+}
 void printMatrix(int** m, size_t rows, size_t cols, std::ostream& out) {
   out << rows << ' ' << cols;
   for (size_t i = 0; i < rows; ++i) {
