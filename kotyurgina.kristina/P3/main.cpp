@@ -5,7 +5,7 @@
 
 namespace kotyurgina
 {
-  void increaseWaves (int* matrix, int rows, int cols)
+  void increaseWaves(int* matrix, int rows, int cols)
   {
     for (int i = 0; i < rows; i++)
     {
@@ -35,7 +35,8 @@ namespace kotyurgina
       return 0;
     }
     long long minimum_sum = 0;
-    for (long long diagonal = 0; diagonal < static_cast < long long >(rows) + cols - 1; diagonal++)
+    const long long diagonal_count = static_cast< long long >(rows) + cols - 1;
+    for (long long diagonal = 0; diagonal < diagonal_count; diagonal++)
     {
       long long diagonal_sum = 0;
       long long first_row = diagonal - cols + 1;
