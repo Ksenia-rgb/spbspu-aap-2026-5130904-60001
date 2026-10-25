@@ -2,17 +2,26 @@
 #include <fstream>
 #include <cstdlib>
 
+void printMatrix(int** m, size_t rows, size_t cols, std::ostream& out) {
+  out << rows << ' ' << cols;
+  for (size_t i = 0; i < rows; ++i) {
+    for (size_t j = 0; j < cols; ++j) {
+      out << ' ' << m[i][j];
+    }
+  }
+  out << '\n';
+}
+
 int main(int argc, char* argv[]) {
   const int argsCount = 4;
-  const size_t MAX_ROWS = 10000;
-  const size_t MAX_COLS = 10000;
+  const size_t MAX_ELEMENTS = 10000;
 
   if (argc < argsCount) {
     std::cerr << "Not enough arguments\n";
     return 1;
   }
   if (argc > argsCount) {
-    std::cerr << "Too much arguments\n";
+    std::cerr << "Too many arguments\n";
     return 1;
   }
   int num = std::atoi(argv[1]);
@@ -21,20 +30,25 @@ int main(int argc, char* argv[]) {
     {
       std::ifstream input(argv[2]);
       if (!input.is_open()) {
-          std::cerr << "Cannot open input file;\n";
+          std::cerr << "Cannot open input file\n";
           return 2;
       }
       size_t rows = 0;
       size_t cols = 0;
       if (!(input >> rows >> cols)) {
-        std::cout << "Unexpected input\n";
+        std::cerr << "Unexpected input\n";
         return 2;
       }
-      int arr[MAX_ROWS][MAX_COLS];
+
+      if (cols != 0 && rows > MAX_ELEMENTS / cols) {
+        std::cerr << "Matrix is too large\n";
+        return 2;
+      }
+      int arr[MAX_ELEMENTS] = {};
       for (size_t i = 0; i < rows; i++) {
         for (size_t j = 0; j < cols; j++) {
-          if(!(input >> arr[i][j])) {
-            std::cout << "Unexpected input\n";
+          if(!(input >> arr[i * cols + j])) {
+            std::cerr << "Unexpected input\n";
             return 2;
           }
         }
@@ -57,17 +71,17 @@ int main(int argc, char* argv[]) {
       size_t rows = 0;
       size_t cols = 0;
       if (!(input >> rows >> cols)) {
-        std::cout << "Unexpected input\n";
+        std::cerr << "Unexpected input\n";
         return 2;
       }
       int** arr = static_cast<int**>(std::malloc(rows * sizeof(*arr)));
-      if (arr == nullptr) {
+      if (arr == nullptr && rows > 0) {
         std::cerr << "Memory allocation failed\n";
         return 2;
       }
       for (size_t i = 0; i < rows; ++i) {
         arr[i] = static_cast<int*>(std::malloc(cols * sizeof(*arr[i])));
-        if (arr[i] == nullptr) {
+        if (arr[i] == nullptr && cols > 0) {
           for (size_t k = 0; k < i; ++k) {
             std::free(arr[k]);
           }
