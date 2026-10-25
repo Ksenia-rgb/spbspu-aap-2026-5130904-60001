@@ -4,6 +4,53 @@
 #include <iostream>
 #include <limits>
 
+namespace parshina
+{
+  size_t countSaddlePoints(const int * matrix, size_t rows, size_t cols);
+}
+
+size_t parshina::countSaddlePoints(const int * matrix, size_t rows, size_t cols)
+{
+  size_t count = 0;
+  if (rows == 0 || cols == 0)
+  {
+    return 0;
+  }
+
+  for (size_t i = 0; i < rows; ++i)
+  {
+    int row_min = matrix[i * cols];
+
+    for (size_t j = 1; j < cols; ++j)
+    {
+      if (matrix[i * cols + j] < row_min)
+      {
+        row_min = matrix[i * cols + j];
+      }
+    }
+
+    for (size_t j = 0; j < cols; ++j)
+    {
+      int col_max = matrix[j];
+
+      for(size_t k =1; k < rows; ++k)
+      {
+        if (matrix[k * cols + j] > col_max)
+        {
+          col_max = matrix[k * cols + j];
+        }
+      }
+
+      if (matrix[i * cols + j] == row_min && matrix[i * cols + j] == col_max)
+      {
+        ++count;
+      }
+    }
+  }
+
+  return count;
+}
+
 int main(int argc, char * argv[])
 {
   if (argc != 4)
@@ -47,7 +94,7 @@ int main(int argc, char * argv[])
 
   if (!use_heap && count > max_elements)
   {
-    std::cerr << "matrix is too large\n";
+    std::cerr << "Matrix is too large\n";
     return 2;
   }
 
@@ -87,6 +134,24 @@ int main(int argc, char * argv[])
   {
     std::free(heap_matrix);
     std::cerr << "Invalid matrix\n";
+    return 2;
+  }
+
+  std::ofstream output(argv[3]);
+  if (!output)
+  {
+    std::free(heap_matrix);
+    std::cerr << "Cannot open output file\n";
+    return 2;
+  }
+
+  output << parshina::countSaddlePoints(matrix, rows, cols) << '\n';
+  output.close();
+
+  if (!output)
+  {
+    std::free(heap_matrix);
+    std::cerr << "Output error\n";
     return 2;
   }
 
