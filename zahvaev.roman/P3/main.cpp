@@ -5,7 +5,6 @@
 #include <fstream>
 #include <iostream>
 #include <new>
-
 const size_t MAX_FIXED = 10000;
 void freeMatrix(int** m, size_t rows) {
     for (size_t i = 0; i < rows; ++i) {
@@ -105,32 +104,32 @@ if (mode == 1 && (count > MAX_FIXED || rows > MAX_FIXED)) {
 
 int fixedData[MAX_FIXED];
 int* fixedRows[MAX_FIXED];
+int* dynData = nullptr;
+int** dynRows = nullptr;
 int* data = fixedData;
 int** ptr = fixedRows;
-if (mode == 2) {
-    data = new int[count];
-    ptr = new int*[rows];
-}
-
 int code = 0;
-for (size_t i = 0; i < count && code == 0; ++i) {
-    if (!(in >> data[i])) {
-        std::cerr << "Error: invalid matrix content\n";
-        code = 2;
+
+try {
+    if (mode == 2) {
+        dynData = new int[count];
+        dynRows = new int*[rows];
+        data = dynData;
+        ptr = dynRows;
     }
-}
-if (code == 0) {
+    for (size_t i = 0; i < count; ++i) {
+        if (!(in >> data[i])) {
+            throw "Error: invalid matrix content";
+        }
+    }
     in >> std::ws;
     if (!in.eof()) {
-        std::cerr << "Error: invalid matrix content\n";
-        code = 2;
+        throw "Error: invalid matrix content";
     }
-}
-
-if (code == 0) {
     for (size_t i = 0; i < rows; ++i) {
         ptr[i] = data + i * cols;
     }
+
     int** result = matrix_change(ptr, rows, cols);
     out << rows << ' ' << cols;
     for (size_t i = 0; i < rows; ++i) {
@@ -141,10 +140,16 @@ if (code == 0) {
     out << '\n' << maxDiagonalSum(ptr, rows, cols) << '\n';
     freeMatrix(result, rows);
 }
-
-if (mode == 2) {
-    delete[] data;
-    delete[] ptr;
+catch (const std::bad_alloc&) {
+    std::cerr << "Error: not enough memory\n";
+    code = 2;
 }
+catch (const char* message) {
+    std::cerr << message << '\n';
+    code = 2;
+}
+
+delete[] dynData;
+delete[] dynRows;
 return code;
 }
