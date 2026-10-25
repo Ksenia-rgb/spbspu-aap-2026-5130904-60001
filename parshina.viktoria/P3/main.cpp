@@ -7,6 +7,8 @@
 namespace parshina
 {
   size_t countSaddlePoints(const int * matrix, size_t rows, size_t cols);
+  long long sumDiagonal(const int * matrix, size_t rows, size_t cols, size_t row, size_t col);
+  long long findMaxDiagonalSum(const int * matrix, size_t rows, size_t cols);
 }
 
 size_t parshina::countSaddlePoints(const int * matrix, size_t rows, size_t cols)
@@ -49,6 +51,55 @@ size_t parshina::countSaddlePoints(const int * matrix, size_t rows, size_t cols)
   }
 
   return count;
+}
+
+long long parshina::sumDiagonal(const int * matrix, size_t rows, size_t cols, size_t row, size_t col)
+{
+  long long sum = 0;
+
+  while (row < rows && col < cols)
+  {
+    sum += matrix[row * cols + col];
+    ++row;
+    ++col;
+  }
+
+  return sum;
+}
+
+long long parshina::findMaxDiagonalSum(const int * matrix, size_t rows, size_t cols)
+{
+  if (rows == 0 || cols == 0)
+  {
+    return 0;
+  }
+
+  long long max_sum = 0;
+  size_t diagonal_count = 0;
+
+  for (size_t col = 1; col < cols; ++col)
+  {
+    const long long sum = sumDiagonal(matrix, rows, cols, 0, col);
+
+    if (diagonal_count == 0 || sum > max_sum)
+    {
+      max_sum = sum;
+    }
+    ++diagonal_count;
+  }
+
+  for (size_t row = 1; row < rows; ++row)
+  {
+    const long long sum = sumDiagonal(matrix, rows, cols, row, 0);
+
+    if (diagonal_count == 0 || sum > max_sum)
+    {
+      max_sum = sum;
+    }
+    ++diagonal_count;
+  }
+
+  return max_sum;
 }
 
 int main(int argc, char * argv[])
@@ -146,8 +197,9 @@ int main(int argc, char * argv[])
   }
 
   output << parshina::countSaddlePoints(matrix, rows, cols) << '\n';
-  output.close();
+  output << parshina::findMaxDiagonalSum(matrix, rows, cols) << '\n';
 
+  output.close();
   if (!output)
   {
     std::free(heap_matrix);
