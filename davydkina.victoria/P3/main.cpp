@@ -19,3 +19,17 @@ int same(const char *a, const char *b)
 
     return a[i] == b[i];
 }
+
+int check_column(const int *matrix, int rows, int cols, int col)
+{
+    for (int row = 1; row < rows; row++)
+    {
+        if (matrix[row * cols + col] ==
+            matrix[(row - 1) * cols + col])
+        {
+            return 0;
+        }
+    }
+
+    return 1;
+}
