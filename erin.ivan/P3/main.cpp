@@ -79,6 +79,7 @@ int main(int argc, char ** argv)
     return 2;
   }
 
+  out << erin::cntLocMin(mtx, rows, cols) << "\n";
   erin::printMtx(out, mtx, rows, cols);
   out << "\n";
 
