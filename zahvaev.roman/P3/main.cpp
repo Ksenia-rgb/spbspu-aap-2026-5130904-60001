@@ -1,7 +1,11 @@
 #include <algorithm>
 #include <climits>
 #include <cstddef>
+#include <cstring>
+#include <fstream>
+#include <iostream>
 #include <new>
+
 void freeMatrix(int** m, size_t rows) {
     for (size_t i = 0; i < rows; ++i) {
         delete[] m[i];
@@ -57,6 +61,27 @@ long long maxDiagonalSum(int** a, size_t rows, size_t cols) {
     }
     return maxSum;
 }
-int main() {
-    return 0;
+int main(int argc, char* argv[]) {
+    if (argc != 4) {
+        std::cerr << "Error: wrong number of arguments\n";
+        return 1;
+    }
+    if (std::strcmp(argv[1], "1") != 0 && std::strcmp(argv[1], "2") != 0) {
+        std::cerr << "Error: first parameter must be 1 or 2\n";
+        return 1;
+    }
+std::ifstream in(argv[2]);
+std::ofstream out(argv[3]);
+if (!in || !out) {
+    std::cerr << "Error: cannot open file\n";
+    return 2;
+}
+
+long long r = 0;
+long long c = 0;
+if (!(in >> r >> c) || r < 0 || c < 0) {
+    std::cerr << "Error: invalid matrix size\n";
+    return 2;
+}
+return 0;
 }
