@@ -3,12 +3,10 @@
 
 namespace parshina
 {
-  void calculateCharacteristics(int num, int & max,
-      std::size_t & count_max, std::size_t & after_max);
+  void calculateCharacteristics(int num, int & max, std::size_t & count_max, std::size_t & after_max);
 }
 
-void parshina::calculateCharacteristics(int num, int & max,
-    std::size_t & count_max, std::size_t & after_max)
+void parshina::calculateCharacteristics(int num, int & max, std::size_t & count_max, std::size_t & after_max)
 {
   if (num > max)
   {
