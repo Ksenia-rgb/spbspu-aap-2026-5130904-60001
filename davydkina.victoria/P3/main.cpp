@@ -42,3 +42,30 @@ int count_columns(const int *matrix, int rows, int cols)
 
     return result;
 }
+
+int check_diagonal(const int *matrix, int rows, int cols,
+                   int start_row, int start_col)
+{
+    int row = start_row;
+    int col = start_col;
+    int length = 0;
+
+    while (row < rows && col < cols)
+    {
+        if (matrix[row * cols + col] == 0)
+        {
+            return 0;
+        }
+
+        length++;
+        row++;
+        col++;
+    }
+
+    if (length < 2)
+    {
+        return 0;
+    }
+
+    return 1;
+}
