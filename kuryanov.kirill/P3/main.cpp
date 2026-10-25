@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
+#include <cstddef>
 
 void spiral(int** m, size_t rows, size_t cols) {
   size_t top = 0, left = 0, bottom = rows, right = cols;
@@ -29,15 +30,6 @@ void spiral(int** m, size_t rows, size_t cols) {
   }
 }
 
-void printMatrix(int** m, size_t rows, size_t cols, std::ostream& out) {
-  out << rows << ' ' << cols;
-  for (size_t i = 0; i < rows; ++i) {
-    for (size_t j = 0; j < cols; ++j) {
-      out << ' ' << m[i][j];
-    }
-  }
-  out << '\n';
-}
 void printMatrix(int** m, size_t rows, size_t cols, std::ostream& out) {
   out << rows << ' ' << cols;
   for (size_t i = 0; i < rows; ++i) {
@@ -94,6 +86,15 @@ int main(int argc, char* argv[]) {
         std::cerr << "Cannot open output file\n";
         return 2;
       }
+      int* rowPtrs[MAX_ELEMENTS];
+      if (cols != 0) {
+        for (size_t i = 0; i < rows; ++i) {
+          rowPtrs[i] = arr + i * cols;
+        }
+      }
+      spiral(rowPtrs, rows, cols);
+      printMatrix(rowPtrs, rows, cols, out);
+    
       break; 
     }
     
@@ -148,13 +149,13 @@ int main(int argc, char* argv[]) {
         std::free(arr);
         return 2;
       }
+      spiral(arr, rows, cols);
+      printMatrix(arr, rows, cols, out);
       for (size_t i = 0; i < rows; ++i) {
         std::free(arr[i]);
       }
       std::free(arr);
-
       break;
-
     }
     default:
     {
