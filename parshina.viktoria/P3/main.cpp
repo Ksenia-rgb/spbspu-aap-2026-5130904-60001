@@ -35,7 +35,7 @@ size_t parshina::countSaddlePoints(const int * matrix, size_t rows, size_t cols)
     {
       int col_max = matrix[j];
 
-      for(size_t k =1; k < rows; ++k)
+      for (size_t k = 1; k < rows; ++k)
       {
         if (matrix[k * cols + j] > col_max)
         {
@@ -125,7 +125,7 @@ int main(int argc, char * argv[])
 
   int input_rows = 0;
   int input_cols = 0;
-  if(!(input >> input_rows >> input_cols) || input_rows < 0 || input_cols < 0)
+  if (!(input >> input_rows >> input_cols) || input_rows < 0 || input_cols < 0)
   {
     std::cerr << "Invalid matrix\n";
     return 2;
