@@ -80,6 +80,7 @@ int main(int argc, char ** argv)
   }
 
   out << erin::cntLocMin(mtx, rows, cols) << "\n";
+  erin::lftTopClk(mtx, rows, cols);
   erin::printMtx(out, mtx, rows, cols);
   out << "\n";
 
