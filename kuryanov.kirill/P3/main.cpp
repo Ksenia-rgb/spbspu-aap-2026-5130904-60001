@@ -3,8 +3,9 @@
 #include <cstdlib>
 
 int main(int argc, char* argv[]) {
-
   const int argsCount = 4;
+  const size_t MAX_ROWS = 10000;
+  const size_t MAX_COLS = 10000;
 
   if (argc < argsCount) {
     std::cerr << "Not enough arguments\n";
@@ -29,7 +30,7 @@ int main(int argc, char* argv[]) {
         std::cout << "Unexpected input\n";
         return 2;
       }
-      int arr[rows][cols];
+      int arr[MAX_ROWS][MAX_COLS];
       for (size_t i = 0; i < rows; i++) {
         for (size_t j = 0; j < cols; j++) {
           if(!(input >> arr[i][j])) {
