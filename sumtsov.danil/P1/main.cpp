@@ -7,18 +7,18 @@ namespace sumtsov
   struct SequenceResult
   {
     bool valid;
-    size_t maxEqlRun;
-    size_t maxIncRun;
+    size_t max_eql_run;
+    size_t max_inc_run;
   };
 
   SequenceResult analyzeSequence(std::istream & in)
   {
     SequenceResult result{false, 0, 0};
 
-    bool hasPrev = false;
-    int prevValue = 0;
-    size_t currentEqlRun = 0;
-    size_t currentIncRun = 0;
+    bool has_prev = false;
+    int prev_value = 0;
+    size_t current_eql_run = 0;
+    size_t current_inc_run = 0;
 
     int value = 0;
     bool terminated = false;
@@ -31,22 +31,22 @@ namespace sumtsov
         break;
       }
 
-      if (!hasPrev)
+      if (!has_prev)
       {
-        currentEqlRun = 1;
-        currentIncRun = 1;
+        current_eql_run = 1;
+        current_inc_run = 1;
       }
       else
       {
-        currentEqlRun = (value == prevValue) ? (currentEqlRun + 1) : 1;
-        currentIncRun = (value >= prevValue) ? (currentIncRun + 1) : 1;
+        current_eql_run = (value == prev_value) ? (current_eql_run + 1) : 1;
+        current_inc_run = (value >= prev_value) ? (current_inc_run + 1) : 1;
       }
 
-      result.maxEqlRun = std::max(result.maxEqlRun, currentEqlRun);
-      result.maxIncRun = std::max(result.maxIncRun, currentIncRun);
+      result.max_eql_run = std::max(result.max_eql_run, current_eql_run);
+      result.max_inc_run = std::max(result.max_inc_run, current_inc_run);
 
-      prevValue = value;
-      hasPrev = true;
+      prev_value = value;
+      has_prev = true;
     }
 
     result.valid = terminated;
@@ -57,7 +57,7 @@ namespace sumtsov
 
 int main()
 {
-  sumtsov::SequenceResult result = sumtsov::analyzeSequence(std::cin);
+  const sumtsov::SequenceResult result = sumtsov::analyzeSequence(std::cin);
 
   if (!result.valid)
   {
@@ -65,8 +65,8 @@ int main()
     return 1;
   }
 
-  std::cout << result.maxEqlRun << '\n';
-  std::cout << result.maxIncRun << '\n';
+  std::cout << result.max_eql_run << '\n';
+  std::cout << result.max_inc_run << '\n';
 
   return 0;
 }
