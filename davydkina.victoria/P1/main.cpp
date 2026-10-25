@@ -4,9 +4,9 @@ int main()
 {
   int prev = 0;
   int curr = 0;
-  int v1_c = 0;
+  size_t v1_c = 0;
   int max = 0;
-  int v2_c = 0;
+  size_t v2_c = 0;
 
   if (!(std::cin >> prev)) {
     std::cerr << "error: the input data cannot be identified as a sequence\n";
@@ -22,11 +22,7 @@ int main()
   max = prev;
   v2_c = 1;
 
-  while (std::cin >> curr) {
-    if (curr == 0) {
-      break;
-    }
-
+  while (std::cin >> curr && curr != 0) {
     if (curr > prev) {
       v1_c++;
     }
