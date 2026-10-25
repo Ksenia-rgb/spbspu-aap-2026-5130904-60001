@@ -3,27 +3,27 @@
 #include <cstdlib>
 #include <cstddef>
 
-void spiralTopClk(int** m, size_t rows, size_t cols) {
+void spiralTopClk(int** m, size_t rows, size_t cols, int sign) {
   size_t top = 0, left = 0, bottom = rows, right = cols;
   int step = 1;
   while (top < bottom && left < right) {
-    for (size_t j = left; j < right; ++j) {          
-      m[top][j] -= step++;
+    for (size_t j = left; j < right; ++j) {
+      m[top][j] -= sign * step++;
     }
     ++top;
     for (size_t i = top; i < bottom; ++i) {
-      m[i][right - 1] -= step++;
+      m[i][right - 1] -= sign * step++;
     }
     --right;
     if (top < bottom) {
       for (size_t j = right; j > left; --j) {
-        m[bottom - 1][j - 1] -= step++;
+        m[bottom - 1][j - 1] -= sign * step++;
       }
       --bottom;
     }
     if (left < right) {
       for (size_t i = bottom; i > top; --i) {
-        m[i - 1][left] -= step++;
+        m[i - 1][left] -= sign * step++;
       }
       ++left;
     }
@@ -67,6 +67,14 @@ void printMatrix(int** m, size_t rows, size_t cols, std::ostream& out) {
   out << '\n';
 }
 
+void solve(int** m, size_t rows, size_t cols, std::ostream& out) {
+  spiralTopClk(m, rows, cols, 1); 
+  printMatrix(m, rows, cols, out);
+  spiralTopClk(m, rows, cols, -1);
+  spiralBotCnt(m, rows, cols);
+  printMatrix(m, rows, cols, out);
+}
+
 int main(int argc, char* argv[]) {
   const int argsCount = 4;
   const size_t MAX_ELEMENTS = 10000;
@@ -79,7 +87,12 @@ int main(int argc, char* argv[]) {
     std::cerr << "Too many arguments\n";
     return 1;
   }
-  int num = std::atoi(argv[1]);
+  char* end = nullptr;
+  int num = std::strtol(argv[1], &end, 10);
+  if (end == argv[1] || *end != '\0') {
+    std::cerr << "First parameter is not a number\n";
+    return 1;
+  }
   switch (num) {
     case 1:
     {
@@ -119,8 +132,7 @@ int main(int argc, char* argv[]) {
           rowPtrs[i] = arr + i * cols;
         }
       }
-      spiralTopClk(rowPtrs, rows, cols);
-      printMatrix(rowPtrs, rows, cols, out);
+      solve(rowPtrs, rows, cols, out);
     
       break; 
     }
@@ -176,8 +188,8 @@ int main(int argc, char* argv[]) {
         std::free(arr);
         return 2;
       }
-      spiralTopClk(arr, rows, cols);
-      printMatrix(arr, rows, cols, out);
+      solve(arr, rows, cols, out);
+
       for (size_t i = 0; i < rows; ++i) {
         std::free(arr[i]);
       }
