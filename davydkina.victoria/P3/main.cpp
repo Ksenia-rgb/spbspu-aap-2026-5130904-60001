@@ -69,3 +69,20 @@ int check_diagonal(const int *matrix, int rows, int cols,
 
     return 1;
 }
+
+int count_diagonals(const int *matrix, int rows, int cols)
+{
+    int result = 0;
+
+    for (int col = 0; col < cols; col++)
+    {
+        result += check_diagonal(matrix, rows, cols, 0, col);
+    }
+
+    for (int row = 1; row < rows; row++)
+    {
+        result += check_diagonal(matrix, rows, cols, row, 0);
+    }
+
+    return result;
+}
