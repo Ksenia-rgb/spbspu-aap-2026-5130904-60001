@@ -67,8 +67,15 @@ int main(int argc, char* argv[]) {
         std::cerr << "Error: wrong number of arguments\n";
         return 1;
     }
-    if (std::strcmp(argv[1], "1") != 0) {
-        std::cerr << "Error: first parameter must be 1\n";
+    int mode = 0;
+    if (std::strcmp(argv[1], "1") == 0) {
+        mode = 1;
+    }
+    else if (std::strcmp(argv[1], "2") == 0) {
+        mode = 2;
+    }
+    else {
+        std::cerr << "Error: first parameter must be 1 or 2\n";
         return 1;
     }
 std::ifstream in(argv[2]);
@@ -86,32 +93,58 @@ if (!(in >> r >> c) || r < 0 || c < 0) {
 }
 size_t rows = static_cast\<size_t>(r);
 size_t cols = static_cast\<size_t>(c);
+if (cols != 0 && rows > static_cast\<size_t>(-1) / cols) {
+    std::cerr << "Error: matrix is too large\n";
+    return 2;
+}
 size_t count = rows * cols;
-if (count > MAX_FIXED) {
+if (mode == 1 && (count > MAX_FIXED || rows > MAX_FIXED)) {
     std::cerr << "Error: matrix does not fit into fixed array\n";
     return 2;
 }
 
 int fixedData[MAX_FIXED];
 int* fixedRows[MAX_FIXED];
-for (size_t i = 0; i < count; ++i) {
-    if (!(in >> fixedData[i])) {
-        std::cerr << "Error: invalid matrix content\n";
-        return 2;
-    }
-}
-for (size_t i = 0; i < rows; ++i) {
-    fixedRows[i] = fixedData + i * cols;
+int* data = fixedData;
+int** ptr = fixedRows;
+if (mode == 2) {
+    data = new int[count];
+    ptr = new int*[rows];
 }
 
-int** result = matrix_change(fixedRows, rows, cols);
-out << rows << ' ' << cols;
-for (size_t i = 0; i < rows; ++i) {
-    for (size_t j = 0; j < cols; ++j) {
-        out << ' ' << result[i][j];
+int code = 0;
+for (size_t i = 0; i < count && code == 0; ++i) {
+    if (!(in >> data[i])) {
+        std::cerr << "Error: invalid matrix content\n";
+        code = 2;
     }
 }
-out << '\n' << maxDiagonalSum(fixedRows, rows, cols) << '\n';
-freeMatrix(result, rows);
-return 0;
+if (code == 0) {
+    in >> std::ws;
+    if (!in.eof()) {
+        std::cerr << "Error: invalid matrix content\n";
+        code = 2;
+    }
+}
+
+if (code == 0) {
+    for (size_t i = 0; i < rows; ++i) {
+        ptr[i] = data + i * cols;
+    }
+    int** result = matrix_change(ptr, rows, cols);
+    out << rows << ' ' << cols;
+    for (size_t i = 0; i < rows; ++i) {
+        for (size_t j = 0; j < cols; ++j) {
+            out << ' ' << result[i][j];
+        }
+    }
+    out << '\n' << maxDiagonalSum(ptr, rows, cols) << '\n';
+    freeMatrix(result, rows);
+}
+
+if (mode == 2) {
+    delete[] data;
+    delete[] ptr;
+}
+return code;
 }
