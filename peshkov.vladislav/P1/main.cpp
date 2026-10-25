@@ -1,54 +1,49 @@
+#include <cstddef>
 #include <iostream>
 
-int main() {
-    long long a = 0;
-    long long b = 0;
-    long long c = 0;
-    int k10 = 0;
+int main()
+{
+  long long prev = 0;
+  long long curr = 0;
+  long long next = 0;
+  size_t count_grt_lss = 0;
 
-    long long m = 0;
-    long long k12 = 0;
+  long long max_val = 0;
+  size_t count_aft_max = 0;
 
-    int n = 0;
+  size_t total_count = 0;
 
-    while (std::cin >> c) {
-        if (c == 0) {
-            break;
-        }
+  while (std::cin >> next && next != 0) {
+    ++total_count;
 
-        n++;
-
-        if (n >= 3) {
-            if (b < a && b > c) {
-                k10++;
-            }
-        }
-        a = b;
-        b = c;
-
-        if (n == 1) {
-            m = c;
-            k12 = 0;
-        } else if (c > m) {
-            m = c;
-            k12 = 0;
-        } else {
-            k12++;
-        }
+    if (total_count >= 3) {
+      if (curr < prev && curr > next) {
+        ++count_grt_lss;
+      }
     }
+    prev = curr;
+    curr = next;
 
-    if (c != 0 || std::cin.fail()) {
-        std::cerr << "Error: invalid input\n";
-        return 1;
+    if (total_count == 1 || next > max_val) {
+      max_val = next;
+      count_aft_max = 0;
+    } else {
+      ++count_aft_max;
     }
+  }
 
-    if (n == 0) {
-        std::cerr << "Error: sequence is too short\n";
-        return 2;
-    }
+  if (next != 0 || std::cin.fail()) {
+    std::cerr << "Error: invalid input\n";
+    return 1;
+  }
 
-    std::cout << k10 << "\n";
-    std::cout << k12 << "\n";
+  if (total_count == 0) {
+    std::cerr << "Error: sequence is too short\n";
+    return 2;
+  }
 
-    return 0;
+  std::cout << count_grt_lss << "\n";
+  std::cout << count_aft_max << "\n";
+
+  return 0;
 }
