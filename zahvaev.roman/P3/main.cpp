@@ -6,6 +6,7 @@
 #include <iostream>
 #include <new>
 
+const size_t MAX_FIXED = 10000;
 void freeMatrix(int** m, size_t rows) {
     for (size_t i = 0; i < rows; ++i) {
         delete[] m[i];
@@ -66,8 +67,8 @@ int main(int argc, char* argv[]) {
         std::cerr << "Error: wrong number of arguments\n";
         return 1;
     }
-    if (std::strcmp(argv[1], "1") != 0 && std::strcmp(argv[1], "2") != 0) {
-        std::cerr << "Error: first parameter must be 1 or 2\n";
+    if (std::strcmp(argv[1], "1") != 0) {
+        std::cerr << "Error: first parameter must be 1\n";
         return 1;
     }
 std::ifstream in(argv[2]);
@@ -83,5 +84,34 @@ if (!(in >> r >> c) || r < 0 || c < 0) {
     std::cerr << "Error: invalid matrix size\n";
     return 2;
 }
+size_t rows = static_cast\<size_t>(r);
+size_t cols = static_cast\<size_t>(c);
+size_t count = rows * cols;
+if (count > MAX_FIXED) {
+    std::cerr << "Error: matrix does not fit into fixed array\n";
+    return 2;
+}
+
+int fixedData[MAX_FIXED];
+int* fixedRows[MAX_FIXED];
+for (size_t i = 0; i < count; ++i) {
+    if (!(in >> fixedData[i])) {
+        std::cerr << "Error: invalid matrix content\n";
+        return 2;
+    }
+}
+for (size_t i = 0; i < rows; ++i) {
+    fixedRows[i] = fixedData + i * cols;
+}
+
+int** result = matrix_change(fixedRows, rows, cols);
+out << rows << ' ' << cols;
+for (size_t i = 0; i < rows; ++i) {
+    for (size_t j = 0; j < cols; ++j) {
+        out << ' ' << result[i][j];
+    }
+}
+out << '\n' << maxDiagonalSum(fixedRows, rows, cols) << '\n';
+freeMatrix(result, rows);
 return 0;
 }
