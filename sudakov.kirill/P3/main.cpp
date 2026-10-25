@@ -59,32 +59,9 @@ namespace sudakov {
       for (size_t col = 1; col + 1 < cols; ++col) {
         const size_t pos = row * cols + col;
         const int value = matrix[pos];
-        bool is_min = true;
-        if (value >= matrix[pos - cols - 1]) {
-          is_min = false;
-        }
-        if (value >= matrix[pos - cols]) {
-          is_min = false;
-        }
-        if (value >= matrix[pos - cols + 1]) {
-          is_min = false;
-        }
-        if (value >= matrix[pos - 1]) {
-          is_min = false;
-        }
-        if (value >= matrix[pos + 1]) {
-          is_min = false;
-        }
-        if (value >= matrix[pos + cols - 1]) {
-          is_min = false;
-        }
-        if (value >= matrix[pos + cols]) {
-          is_min = false;
-        }
-        if (value >= matrix[pos + cols + 1]) {
-          is_min = false;
-        }
-        if (is_min) {
+        if (value < matrix[pos - cols - 1] and value < matrix[pos - cols] and value < matrix[pos - cols + 1]
+            and value < matrix[pos - 1] and value < matrix[pos + 1] and value < matrix[pos + cols - 1]
+            and value < matrix[pos + cols] and value < matrix[pos + cols + 1]) {
           ++count;
         }
       }
