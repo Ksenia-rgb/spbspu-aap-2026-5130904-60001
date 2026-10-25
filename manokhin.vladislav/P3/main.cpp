@@ -1,21 +1,24 @@
 #include <fstream>
 #include <iostream>
 
-void copy(size_t size, int * old_arr, int * new_arr) {
+void copy(size_t size, int * old_arr, int * new_arr)
+{
   for (const int * i = old_arr; i != size + old_arr; i++) {
     *new_arr = *i;
     new_arr++;
   }
 }
 
-int * extendArr(size_t n, size_t m, size_t size, int * arr) {
+int * extendArr(size_t n, size_t m, size_t size, int * arr)
+{
   int * new_arr = new int[size + n*m+2];
   copy(size, arr, new_arr);
   delete [] arr;
   return new_arr;
 }
 
-void outputArr(int * arr, size_t size, std::ofstream & output) {
+void outputArr(int * arr, size_t size, std::ofstream & output)
+{
   size_t p = 0;
   while (p < size) {
     output << ' ' << arr[p++];
@@ -23,7 +26,8 @@ void outputArr(int * arr, size_t size, std::ofstream & output) {
   output << '\n';
 }
 
-void lft_bot_cnt(int * arr, const long long n, const long long m, const size_t orig_m, size_t p, size_t k) {
+void lft_bot_cnt(int * arr, const long long n, const long long m, const size_t orig_m, size_t p, size_t k)
+{
   if (n <= 0 || m <= 0) {
     return;
   }
@@ -51,7 +55,8 @@ void lft_bot_cnt(int * arr, const long long n, const long long m, const size_t o
   lft_bot_cnt(arr, n-2, m-2, orig_m, ++p, k);
 }
 
-void fll_inc_wav(int * arr, const long long n, const long long m, const size_t orig_m, size_t p, size_t k) {
+void fll_inc_wav(int * arr, const long long n, const long long m, const size_t orig_m, size_t p, size_t k)
+{
   if (n <= 0 || m <= 0) {
     return;
   }
@@ -98,8 +103,7 @@ int main(int argc, char ** argv)
     return 2;
   }
 
-  if (argv[1][0] == '1' && argv[1][1] == '\0')
-  {
+  if (argv[1][0] == '1' && argv[1][1] == '\0') {
     int arr[10000] = {0};
     size_t n = 0, m = 0, p = 0, cnt = 0;
 
@@ -145,9 +149,7 @@ int main(int argc, char ** argv)
       output << n << ' ' << m;
       outputArr(matrix, n*m, output);
     }
-  }
-  else if (argv[1][0] == '2' && argv[1][1] == '\0')
-  {
+  } else if (argv[1][0] == '2' && argv[1][1] == '\0') {
     int * arr = nullptr;
     size_t n = 0, m = 0, p = 0, cnt = 0;
 
