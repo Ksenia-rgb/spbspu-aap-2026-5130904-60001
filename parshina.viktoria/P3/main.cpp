@@ -1,6 +1,8 @@
+#include <cstdlib>
 #include <cstring>
 #include <fstream>
 #include <iostream>
+#include <limits>
 
 int main(int argc, char * argv[])
 {
@@ -31,5 +33,63 @@ int main(int argc, char * argv[])
     return 2;
   }
 
+  const size_t rows = input_rows;
+  const size_t cols = input_cols;
+  if (rows != 0 && cols > std::numeric_limits< size_t >::max() / rows)
+  {
+    std::cerr << "Invalid matrix dimensions\n";
+    return 2;
+  }
+
+  const size_t count = rows * cols;
+  const size_t max_elements = 10000;
+  const bool use_heap = std::strcmp(argv[1], "2") == 0;
+
+  if (!use_heap && count > max_elements)
+  {
+    std::cerr << "matrix is too large\n";
+    return 2;
+  }
+
+  if (use_heap && count > std::numeric_limits< size_t >::max() / sizeof(int))
+  {
+    std::cerr << "Matrix is too large\n";
+    return 2;
+  }
+
+  int fixed_matrix[max_elements] = {};
+  int * heap_matrix = nullptr;
+  int * matrix = fixed_matrix;
+
+  if (use_heap && count != 0)
+  {
+    heap_matrix = static_cast< int * >(std::malloc(count * sizeof(int)));
+    if (heap_matrix == nullptr)
+    {
+      std::cerr << "Not enough memory\n";
+      return 2;
+    }
+    matrix = heap_matrix;
+  }
+
+  for (size_t i = 0; i < count; ++i)
+  {
+    if (!(input >> matrix[i]))
+    {
+      std::free(heap_matrix);
+      std::cerr << "Invalid matrix\n";
+      return 2;
+    }
+  }
+
+  input >> std::ws;
+  if (!input.eof() || input.bad())
+  {
+    std::free(heap_matrix);
+    std::cerr << "Invalid matrix\n";
+    return 2;
+  }
+
+  std::free(heap_matrix);
   return 0;
 }
