@@ -1,3 +1,6 @@
+#include <iostream>
+#include <fstream>
+
 const int max_size = 10000;
 
 int same(const char *a, const char *b)
