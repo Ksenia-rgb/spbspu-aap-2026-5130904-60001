@@ -51,8 +51,28 @@ void lft_bot_cnt(int * arr, const long long n, const long long m, const size_t o
   lft_bot_cnt(arr, n-2, m-2, orig_m, ++p, k);
 }
 
-void fll_inc_wav(int * arr, size_t size) {
-
+void fll_inc_wav(int * arr, const long long n, const long long m, const size_t orig_m, size_t p, size_t k) {
+  if (n <= 0 || m <= 0) {
+    return;
+  }
+  for (long long i = 0; i < m; i++) {
+    arr[p] += k;
+    p++;
+  }
+  p--;
+  for (long long i = 0; i < n-1; i++) {
+    p+=orig_m;
+    arr[p] += k;
+  }
+  for (long long i = 0; i < m-1; i++) {
+    p--;
+    arr[p] += k;
+  }
+  for (long long i = 0; i < n-2; i++) {
+    p-=orig_m;
+    arr[p] += k;
+  }
+  fll_inc_wav(arr, n-2, m-2, orig_m, ++p, ++k);
 }
 
 int main(int argc, char ** argv)
@@ -113,6 +133,18 @@ int main(int argc, char ** argv)
       output << n << ' ' << m;
       outputArr(matrix, n*m, output);
     }
+    p = 0;
+    for (size_t i = 0; i < cnt; i++) {
+      n = arr[p++];
+      m = arr[p++];
+      copy(n*m, arr+p, matrix);
+      p += n*m;
+
+      fll_inc_wav(matrix, static_cast<long long>(n), static_cast<long long>(m), m, 0, 1);
+
+      output << n << ' ' << m;
+      outputArr(matrix, n*m, output);
+    }
   }
   else if (argv[1][0] == '2' && argv[1][1] == '\0')
   {
@@ -169,26 +201,28 @@ int main(int argc, char ** argv)
       delete [] matrix;
     }
 
-    // int * matrix2 = nullptr;
-    //
-    // try {
-    //   matrix2 = new int[p];
-    // } catch (const std::bad_alloc &) {
-    //   std::cerr << "Bad alloc" << '\n';
-    //   delete [] matrix1;
-    //   delete [] arr;
-    //   return 2;
-    // }
-    //
-    // fll_inc_wav(arr, p);
-    //
-    // outputArr(matrix1, p, output);
-    // output << '\n';
-    // outputArr(matrix2, p, output);
+    p = 0;
+    for (size_t i = 0; i < cnt; i++) {
+      n = arr[p++];
+      m = arr[p++];
+      try {
+        matrix = new int[n*m];
+      } catch (const std::bad_alloc &) {
+        std::cerr << "Bad alloc" << '\n';
+        delete [] arr;
+        return 2;
+      }
+      copy(n*m, arr+p, matrix);
+      p += n*m;
+
+      fll_inc_wav(matrix, static_cast<long long>(n), static_cast<long long>(m), m, 0, 1);
+
+      output << n << ' ' << m;
+      outputArr(matrix, n*m, output);
+      delete [] matrix;
+    }
 
     delete [] arr;
-    // delete [] matrix;
-    // delete [] matrix2;
   }
   else {
     if (argv[1][0] >= '0' && argv[1][0] <= '9') {
