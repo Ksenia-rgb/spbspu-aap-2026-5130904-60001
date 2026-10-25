@@ -2,8 +2,9 @@
 #include <iostream>
 
 void copy(size_t size, int * old_arr, int * new_arr) {
-  for (size_t i = 0; i < size; i++) {
-    new_arr[i] = old_arr[i];
+  for (const int * i = old_arr; i != size + old_arr; i++) {
+    *new_arr = *i;
+    new_arr++;
   }
 }
 
@@ -15,20 +16,39 @@ int * extendArr(size_t n, size_t m, size_t size, int * arr) {
 }
 
 void outputArr(int * arr, size_t size, std::ofstream & output) {
-  size_t p = 0, n = 0, m = 0;
+  size_t p = 0;
   while (p < size) {
-    n = arr[p++];
-    m = arr[p++];
-    output << n << " " << m;
-    for (size_t i = 0; i < n*m; i++) {
-      output << ' ' << arr[p++];
-    }
-    output << '\n';
+    output << ' ' << arr[p++];
   }
+  output << '\n';
 }
 
-void lft_bot_cnt(int * arr, size_t size) {
-
+void lft_bot_cnt(int * arr, const long long n, const long long m, const size_t orig_m, size_t p, size_t k) {
+  if (n <= 0 || m <= 0) {
+    return;
+  }
+  for (long long i = 0; i < m; i++) {
+    arr[p] += k;
+    k++;
+    p++;
+  }
+  p--;
+  for (long long i = 0; i < n-1; i++) {
+    p-=orig_m;
+    arr[p] += k;
+    k++;
+  }
+  for (long long i = 0; i < m-1; i++) {
+    p--;
+    arr[p] += k;
+    k++;
+  }
+  for (long long i = 0; i < n-2; i++) {
+    p+=orig_m;
+    arr[p] += k;
+    k++;
+  }
+  lft_bot_cnt(arr, n-2, m-2, orig_m, ++p, k);
 }
 
 void fll_inc_wav(int * arr, size_t size) {
@@ -61,10 +81,18 @@ int main(int argc, char ** argv)
   if (argv[1][0] == '1' && argv[1][1] == '\0')
   {
     int arr[10000] = {0};
-    size_t a = 0, p = 0;
+    size_t n = 0, m = 0, p = 0, cnt = 0;
 
-    while (input >> a) {
-      arr[p++] = a;
+    while (input >> n >> m) {
+      arr[p++] = n;
+      arr[p++] = m;
+      for (size_t i = 0; i < n*m; i++) {
+        if (!(input >> arr[p++])) {
+          std::cerr << "Bad input" << '\n';
+          return 2;
+        }
+      }
+      cnt++;
     }
 
     if (!input.eof()) {
@@ -72,24 +100,26 @@ int main(int argc, char ** argv)
       return 2;
     }
 
-    int matrix1[10000] = {};
-    copy(p, arr, matrix1);
-    lft_bot_cnt(arr, p);
+    int matrix[10000] = {0};
+    p = 0;
+    for (size_t i = 0; i < cnt; i++) {
+      n = arr[p++];
+      m = arr[p++];
+      copy(n*m, arr+p, matrix);
+      p += n*m;
 
-    int matrix2[10000] = {};
-    copy(p, arr, matrix2);
-    fll_inc_wav(arr, p);
+      lft_bot_cnt(matrix, static_cast<long long>(n), static_cast<long long>(m), m, (n-1)*m, 1);
 
-    outputArr(matrix1, p, output);
-    output << '\n';
-    outputArr(matrix2, p, output);
+      output << n << ' ' << m;
+      outputArr(matrix, n*m, output);
+    }
   }
   else if (argv[1][0] == '2' && argv[1][1] == '\0')
   {
     int * arr = nullptr;
-    size_t n = 0, m = 0, p = 0;
+    size_t n = 0, m = 0, p = 0, cnt = 0;
 
-    while (input >> n >> m) {  // shlyapa
+    while (input >> n >> m) {
       try {
         arr = extendArr(n, m, p, arr);
       } catch (std::bad_alloc &) {
@@ -101,13 +131,14 @@ int main(int argc, char ** argv)
       arr[p++] = n;
       arr[p++] = m;
 
-      for (int i = 0; i < n*m; i++) {
+      for (size_t i = 0; i < n*m; i++) {
         if (!(input >> arr[p++])) {
           std::cerr << "Bad input" << '\n';
           delete [] arr;
           return 2;
         }
       }
+      cnt++;
     }
 
     if (!input.eof()) {
@@ -116,39 +147,48 @@ int main(int argc, char ** argv)
       return 2;
     }
 
-    int * matrix1 = nullptr;
+    int * matrix = nullptr;
+    p = 0;
+    for (size_t i = 0; i < cnt; i++) {
+      n = arr[p++];
+      m = arr[p++];
+      try {
+        matrix = new int[n*m];
+      } catch (const std::bad_alloc &) {
+        std::cerr << "Bad alloc" << '\n';
+        delete [] arr;
+        return 2;
+      }
+      copy(n*m, arr+p, matrix);
+      p += n*m;
 
-    try {
-      matrix1 = new int[p];
-    } catch (const std::bad_alloc &) {
-      std::cerr << "Bad alloc" << '\n';
-      delete [] arr;
-      return 2;
+      lft_bot_cnt(matrix, static_cast<long long>(n), static_cast<long long>(m), m, (n-1)*m, 1);
+
+      output << n << ' ' << m;
+      outputArr(matrix, n*m, output);
+      delete [] matrix;
     }
 
-    copy(p, arr, matrix1);
-    lft_bot_cnt(arr, p);
-
-    int * matrix2 = nullptr;
-
-    try {
-      matrix2 = new int[p];
-    } catch (const std::bad_alloc &) {
-      std::cerr << "Bad alloc" << '\n';
-      delete [] matrix1;
-      delete [] arr;
-      return 2;
-    }
-
-    fll_inc_wav(arr, p);
-
-    outputArr(matrix1, p, output);
-    output << '\n';
-    outputArr(matrix2, p, output);
+    // int * matrix2 = nullptr;
+    //
+    // try {
+    //   matrix2 = new int[p];
+    // } catch (const std::bad_alloc &) {
+    //   std::cerr << "Bad alloc" << '\n';
+    //   delete [] matrix1;
+    //   delete [] arr;
+    //   return 2;
+    // }
+    //
+    // fll_inc_wav(arr, p);
+    //
+    // outputArr(matrix1, p, output);
+    // output << '\n';
+    // outputArr(matrix2, p, output);
 
     delete [] arr;
-    delete [] matrix1;
-    delete [] matrix2;
+    // delete [] matrix;
+    // delete [] matrix2;
   }
   else {
     if (argv[1][0] >= '0' && argv[1][0] <= '9') {
