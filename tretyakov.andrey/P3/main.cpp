@@ -3,10 +3,38 @@
 #include <cstddef>
 #include <cstdlib>
 
+bool LwrTriMtx(const int * matrix, size_t rows, size_t cols)
+{
+    size_t k;
+    if (rows < cols)
+    {
+        k = rows;
+    }
+    else
+    {
+        k = cols;
+    }
+    if (k == 0)
+    {
+        return false;
+    }
+    for (size_t i = 0; i < rows; ++i)
+    {
+        for (size_t j = 0; j < k; ++j)
+        {
+            if (matrix[i * cols + j] != 0)
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+}
 
 int main(int argc, char * argv[])
 {
     const size_t countElements = 10000;
+    bool TrianMtx = false;
     if (argc < 4)
     {
        std::cerr << "Not enough arguments\n";
@@ -80,5 +108,6 @@ int main(int argc, char * argv[])
                 }
             }
         }
+        bool TrianMtx = LwrTriMtx(matrix, rows, cols);
     }
 }
