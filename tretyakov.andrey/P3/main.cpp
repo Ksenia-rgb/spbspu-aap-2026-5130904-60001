@@ -3,7 +3,7 @@
 #include <cstddef>
 #include <cstdlib>
 
-bool LwrTriMtx(const int * matrix, size_t rows, size_t cols)
+bool solveLwrTriMtx(const int * matrix, size_t rows, size_t cols)
 {
     size_t k;
     if (rows < cols)
@@ -31,10 +31,49 @@ bool LwrTriMtx(const int * matrix, size_t rows, size_t cols)
     return true;
 }
 
+size_t solveCntLocMax(const int * matrix, size_t rows, size_t cols)
+{
+    size_t count = 0;
+    int currentElement = 0;
+    for (size_t i = 1; i < rows - 1; ++i)
+    {
+        for (size_t j = 1; j < cols - 1; ++j)
+        {
+            currentElement = matrix[i * cols + j];
+            bool isElementMax = true;
+            for (int deltaI = -1; deltaI <= 1; ++deltaI)
+            {
+                for (int deltaJ = -1; deltaJ <= 1; ++deltaJ)
+                {
+                    if (deltaI == 0 && deltaJ == 0)
+                    {
+                        continue;
+                    }
+                    if (matrix[(i + deltaI) * cols + (j + deltaJ)] >= currentElement)
+                    {
+                        isElementMax = false;
+                        break;
+                    }
+                }
+                if (!isElementMax)
+                {
+                    break;
+                }
+            }
+            if (isElementMax)
+            {
+                ++count;
+            }
+        }
+    }
+    return count;
+}
+
 int main(int argc, char * argv[])
 {
     const size_t countElements = 10000;
-    bool TrianMtx = false;
+    bool lowerTriangleMtx = false;
+    size_t counterOfLocalMaximum = 0;
     if (argc < 4)
     {
        std::cerr << "Not enough arguments\n";
@@ -88,6 +127,7 @@ int main(int argc, char * argv[])
     if (rows == 0 && cols == 0)
     {
         outFile << 0 << " " << 0;
+        return 0;
     }
     if (num == 1)
     {
@@ -101,13 +141,16 @@ int main(int argc, char * argv[])
         {
             for (size_t j = 0; j < cols; ++j)
             {
-                if ((!inFile >> matrix[i * cols + j]))
+                if (!(inFile >> matrix[i * cols + j]))
                 {
                     std::cerr << "inFile error\n";
                     return 2;
                 }
             }
         }
-        bool TrianMtx = LwrTriMtx(matrix, rows, cols);
+        lowerTriangleMtx = solveLwrTriMtx(matrix, rows, cols);
+        counterOfLocalMaximum = solveCntLocMax(matrix, rows, cols);
+        outFile << lowerTriangleMtx << "\n";
+        outFile << counterOfLocalMaximum << "\n";
     }
 }
