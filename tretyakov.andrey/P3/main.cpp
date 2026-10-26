@@ -89,6 +89,14 @@ int main(int argc, char * argv[])
     return 1;
   }
   int num = 0;
+  for (int i = 0; argv[1][i] != '\0'; ++i)
+  {
+    if (argv[1][i] < '0' || argv[1][i] > '9')
+    {
+      std::cerr << "First parameter is not a number\n";
+      return 1;
+    }
+  }
   try
   {
     num = std::stoi(argv[1]);
