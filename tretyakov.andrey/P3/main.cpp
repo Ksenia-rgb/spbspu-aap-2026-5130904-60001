@@ -155,7 +155,6 @@ int main(int argc, char * argv[])
     }
     else if (num == 2)
     {
-        int * matrix = nullptr;
         int * matrix = (int *) malloc (countElements * sizeof(int));
         if (matrix == nullptr)
         {
