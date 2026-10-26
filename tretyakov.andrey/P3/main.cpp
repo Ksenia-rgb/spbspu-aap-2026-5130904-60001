@@ -143,7 +143,7 @@ int main(int argc, char * argv[])
             {
                 if (!(inFile >> matrix[i * cols + j]))
                 {
-                    std::cerr << "inFile error\n";
+                    std::cerr << "invalid elements\n";
                     return 2;
                 }
             }
@@ -152,5 +152,24 @@ int main(int argc, char * argv[])
         counterOfLocalMaximum = solveCntLocMax(matrix, rows, cols);
         outFile << lowerTriangleMtx << "\n";
         outFile << counterOfLocalMaximum << "\n";
+    }
+    else if (num == 2)
+    {
+        int * matrix = nullptr;
+        int * matrix = (int *) malloc (countElements * sizeof(int));
+        if (matrix == nullptr)
+        {
+            std::cerr << "Memory allocation failed\n";
+            return 2;
+        }
+        for (size_t i = 0; i < countElements; ++i)
+        {
+            if (!(inFile >> matrix[i]))
+            {
+                std::cerr << "Invalid elements\n";
+                free(matrix);
+                return 2;
+            }
+        }
     }
 }
