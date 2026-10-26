@@ -145,6 +145,7 @@ int main(int argc, char * argv[])
     outFile << 0 << " " << 0;
     return 0;
   }
+  outFile << std::boolalpha;
   if (num == 1)
   {
     if (rows > countElements / cols)
