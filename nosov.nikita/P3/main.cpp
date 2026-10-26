@@ -14,12 +14,28 @@ namespace nosov {
     return true;
   }
 
-  int processMatrix(std::istream& in, int* matrix, size_t rows, size_t cols)
+  void writeMatrix(std::ostream& out, const int* matrix, size_t rows, size_t cols)
+  {
+    out << rows << " " << cols;
+    for (size_t i = 0; i < rows * cols; ++i) {
+      out << " " << matrix[i];
+    }
+  }
+
+  int processMatrix(std::istream& in, const char* outputName, int* matrix, size_t rows, size_t cols)
   {
     if (!readMatrix(in, matrix, rows, cols)) {
       std::cerr << "Can not read matrix\n";
       return 2;
     }
+
+    std::ofstream out(outputName);
+    if (!out) {
+      std::cerr << "Can not open output file\n";
+      return 2;
+    }
+    writeMatrix(out, matrix, rows, cols);
+    out << "\n";
     return 0;
   }
 }
@@ -64,7 +80,7 @@ int main(int argc, char** argv)
       return 2;
     }
     int matrix[maxSize] = {};
-    return nosov::processMatrix(in, matrix, rows, cols);
+    return nosov::processMatrix(in, argv[3], matrix, rows, cols);
   }
 
   int* matrix = nullptr;
@@ -74,7 +90,7 @@ int main(int argc, char** argv)
     std::cerr << "Not enough memory\n";
     return 2;
   }
-  const int result = nosov::processMatrix(in, matrix, rows, cols);
+  const int result = nosov::processMatrix(in, argv[3], matrix, rows, cols);
   delete[] matrix;
   return result;
 }
