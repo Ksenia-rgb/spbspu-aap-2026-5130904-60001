@@ -132,57 +132,119 @@ namespace zhdaneev
 
     return quotient;
   }
-
   bool buildSmoothed(const Matrix& source, Matrix& result)
   {
-    result.rows = source.rows;
-    result.cols = source.cols;
-    result.data = nullptr;
+        result.rows = source.rows;
+        result.cols = source.cols;
+        result.data = nullptr;
 
-    if (source.rows == 0 || source.cols == 0)
-    {
-        return true;
-    }
-
-    const size_t count = source.rows * source.cols;
-    result.data = new long long[count];
-
-    for (size_t row = 0; row < source.rows; ++row)
-    {
-        for (size_t col = 0; col < source.cols; ++col)
+        if (source.rows == 0 || source.cols == 0)
         {
-            long long sum = 0;
-            long long neighbors = 0;
+            return true;
+        }
 
-            const size_t rowStart = row == 0 ? 0 : row - 1;
-            const size_t rowEnd =
-                row + 1 < source.rows ? row + 1 : row;
+        const size_t maxSize = static_cast<size_t>(-1);
 
-            const size_t colStart = col == 0 ? 0 : col - 1;
-            const size_t colEnd =
-                col + 1 < source.cols ? col + 1 : col;
+        if (source.rows > maxSize / source.cols)
+        {
+            return false;
+        }
 
-            for (size_t r = rowStart; r <= rowEnd; ++r)
+        const size_t count = source.rows * source.cols;
+
+        if (count > maxSize / sizeof(long long))
+        {
+            return false;
+        }
+
+        result.data = new long long[count];
+
+        for (size_t row = 0; row < source.rows; ++row)
+        {
+            for (size_t col = 0; col < source.cols; ++col)
             {
-                for (size_t c = colStart; c <= colEnd; ++c)
-                {
-                    if (r == row && c == col)
-                    {
-                        continue;
-                    }
+                long long sum = 0;
+                long long neighbors = 0;
 
-                    sum += source.data[r * source.cols + c];
-                    ++neighbors;
+                const size_t rowStart = row == 0 ? 0 : row - 1;
+                const size_t rowEnd =
+                    row + 1 < source.rows ? row + 1 : row;
+
+                const size_t colStart = col == 0 ? 0 : col - 1;
+                const size_t colEnd =
+                    col + 1 < source.cols ? col + 1 : col;
+
+                for (size_t r = rowStart; r <= rowEnd; ++r)
+                {
+                    for (size_t c = colStart; c <= colEnd; ++c)
+                    {
+                        if (r == row && c == col)
+                        {
+                            continue;
+                        }
+
+                        sum += source.data[r * source.cols + c];
+                        ++neighbors;
+                    }
+                }
+
+                const size_t index = row * source.cols + col;
+
+                if (index >= count)
+                {
+                    delete[] result.data;
+                    result.data = nullptr;
+                    return false;
+                }
+
+                if (neighbors == 0)
+                {
+                    result.data[index] =
+                        source.data[row * source.cols + col];
+                }
+                else
+                {
+                    result.data[index] =
+                        divideRounded(sum * 10, neighbors);
                 }
             }
+        }
 
-            result.data[row * result.cols + col] =
-                neighbors == 0 ? source.data[row * source.cols + col]
-                : divideRounded(sum * 10, neighbors);
+        return true;
+  }
+  void writeMatrix(std::ofstream& output, const Matrix& matrix)
+  {
+    output << matrix.rows << ' ' << matrix.cols;
+
+    for (size_t i = 0; i < matrix.rows * matrix.cols; ++i)
+    {
+        output << ' ' << matrix.data[i];
+    }
+
+    output << '\n';
+  }
+  void writeSmoothed(std::ofstream& output, const Matrix& matrix)
+  {
+    output << matrix.rows << ' ' << matrix.cols;
+
+    for (size_t i = 0; i < matrix.rows * matrix.cols; ++i)
+    {
+        const long long value = matrix.data[i];
+        const long long whole = value / 10;
+        const long long fraction =
+            value < 0 ? -(value % 10) : value % 10;
+
+        if (fraction == 0)
+        {
+            output << ' ' << whole;
+        }
+        else
+        {
+            output << ' ' << whole << '.' << fraction;
         }
     }
 
-    return true;
+    output << '\n';
   }
 }
 int main()
