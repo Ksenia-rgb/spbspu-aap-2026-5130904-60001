@@ -90,13 +90,13 @@ int main(int argc, char * argv[])
         num = std::stoi(argv[1]);
         if (!(num < 3 && num > 0))
         {
-            std::cerr << "First parametr is out of range\n";
+            std::cerr << "First parameter is out of range\n";
             return 1;
         }
     }
     catch (const std::invalid_argument & )
     {
-        std::cerr << "First parametr is not a number\n";
+        std::cerr << "First parameter is not a number\n";
         return 1;
     }
     std::ifstream inFile(argv[2]);
