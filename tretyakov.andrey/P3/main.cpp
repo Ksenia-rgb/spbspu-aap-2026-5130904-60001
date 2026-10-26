@@ -171,5 +171,10 @@ int main(int argc, char * argv[])
                 return 2;
             }
         }
+        lowerTriangleMtx = solveLwrTriMtx(matrix, rows, cols);
+        counterOfLocalMaximum = solveCntLocMax(matrix, rows, cols);
+        outFile << lowerTriangleMtx << " " << counterOfLocalMaximum << "\n";
+        free(matrix);
     }
+    return 0;
 }
