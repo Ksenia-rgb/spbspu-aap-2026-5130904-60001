@@ -116,6 +116,74 @@ namespace zhdaneev
         --right;
     }
   }
+  long long divideRounded(long long numerator, long long denominator)
+  {
+    long long quotient = numerator / denominator;
+    long long remainder = numerator % denominator;
+
+    if (remainder >= (denominator + 1) / 2)
+    {
+        ++quotient;
+    }
+    else if (remainder <= -((denominator + 1) / 2))
+    {
+        --quotient;
+    }
+
+    return quotient;
+  }
+
+  bool buildSmoothed(const Matrix& source, Matrix& result)
+  {
+    result.rows = source.rows;
+    result.cols = source.cols;
+    result.data = nullptr;
+
+    if (source.rows == 0 || source.cols == 0)
+    {
+        return true;
+    }
+
+    const size_t count = source.rows * source.cols;
+    result.data = new long long[count];
+
+    for (size_t row = 0; row < source.rows; ++row)
+    {
+        for (size_t col = 0; col < source.cols; ++col)
+        {
+            long long sum = 0;
+            long long neighbors = 0;
+
+            const size_t rowStart = row == 0 ? 0 : row - 1;
+            const size_t rowEnd =
+                row + 1 < source.rows ? row + 1 : row;
+
+            const size_t colStart = col == 0 ? 0 : col - 1;
+            const size_t colEnd =
+                col + 1 < source.cols ? col + 1 : col;
+
+            for (size_t r = rowStart; r <= rowEnd; ++r)
+            {
+                for (size_t c = colStart; c <= colEnd; ++c)
+                {
+                    if (r == row && c == col)
+                    {
+                        continue;
+                    }
+
+                    sum += source.data[r * source.cols + c];
+                    ++neighbors;
+                }
+            }
+
+            result.data[row * result.cols + col] =
+                neighbors == 0 ? source.data[row * source.cols + col]
+                : divideRounded(sum * 10, neighbors);
+        }
+    }
+
+    return true;
+  }
 }
 int main()
 {
