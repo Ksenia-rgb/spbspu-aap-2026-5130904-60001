@@ -46,6 +46,25 @@ namespace nosov {
     return bestColumn + 1;
   }
 
+  void fillIncreasingWave(int* matrix, size_t rows, size_t cols)
+  {
+    for (size_t i = 0; i < rows; ++i) {
+      for (size_t j = 0; j < cols; ++j) {
+        size_t level = i;
+        if (j < level) {
+          level = j;
+        }
+        if (rows - 1 - i < level) {
+          level = rows - 1 - i;
+        }
+        if (cols - 1 - j < level) {
+          level = cols - 1 - j;
+        }
+        matrix[i * cols + j] += level + 1;
+      }
+    }
+  }
+
   int processMatrix(std::istream& in, const char* outputName, int* matrix, size_t rows, size_t cols)
   {
     if (!readMatrix(in, matrix, rows, cols)) {
@@ -53,6 +72,7 @@ namespace nosov {
       return 2;
     }
     const size_t column = findSeriesColumn(matrix, rows, cols);
+    fillIncreasingWave(matrix, rows, cols);
 
     std::ofstream out(outputName);
     if (!out) {
