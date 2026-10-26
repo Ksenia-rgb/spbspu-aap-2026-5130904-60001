@@ -153,7 +153,7 @@ int main(int argc, char * argv[])
     }
     lowerTriangleMtx = solveLwrTriMtx(matrix, rows, cols);
     counterOfLocalMaximum = solveCntLocMax(matrix, rows, cols);
-    outFile << lowerTriangleMtx << "\n" << " " << counterOfLocalMaximum << "\n";
+    outFile << lowerTriangleMtx << " " << counterOfLocalMaximum << "\n";
   }
   else if (num == 2)
   {
@@ -163,7 +163,7 @@ int main(int argc, char * argv[])
       std::cerr << "Memory allocation failed\n";
       return 2;
     }
-    for (size_t i = 0; i < countElements; ++i)
+    for (size_t i = 0; i < rows * cols; ++i)
     {
       if (!(inFile >> matrix[i]))
       {
