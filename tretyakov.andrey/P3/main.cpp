@@ -20,7 +20,7 @@ bool solveLwrTriMtx(const int * matrix, size_t rows, size_t cols)
   }
   for (size_t i = 0; i < rows; ++i)
   {
-    for (size_t j = 0; j < k; ++j)
+    for (size_t j = i + 1; j < k; ++j)
     {
       if (matrix[i * cols + j] != 0)
       {
@@ -101,6 +101,11 @@ int main(int argc, char * argv[])
   catch (const std::invalid_argument & )
   {
     std::cerr << "First parameter is not a number\n";
+    return 1;
+  }
+  catch (const std::out_of_range &)
+  {
+    std::cerr << "First parameter is out of range\n";
     return 1;
   }
   std::ifstream inFile(argv[2]);
