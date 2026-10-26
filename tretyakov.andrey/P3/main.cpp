@@ -6,6 +6,7 @@
 
 int main(int argc, char * argv[])
 {
+    const size_t countElements = 10000;
     if (argc < 4)
     {
        std::cerr << "Not enough arguments\n";
@@ -48,7 +49,7 @@ int main(int argc, char * argv[])
     inFile >> rows >> cols;
     if (!(inFile >> rows >> cols) || (rows < 0) || (cols < 0))
     {
-        std::cerr << "Can't read matrix cols and rows\n";
+        std::cerr << "Can't read matrix cols and rows or matrix doesn't exist\n";
         return 2;
     }
     if ((rows == 0 && cols != 0) || (rows !=0 && cols == 0))
@@ -59,6 +60,25 @@ int main(int argc, char * argv[])
     if (rows == 0 && cols == 0)
     {
         outFile << 0 << " " << 0;
-        return 0;
+    }
+    if (num == 1)
+    {
+        if (rows > countElements / cols)
+        {
+            std::cerr << "Matrix is too large\n";
+            return 2;
+        }
+        int matrix[countElements] = {};
+        for (size_t i = 0; i < rows; ++i)
+        {
+            for (size_t j = 0; j < cols; ++j)
+            {
+                if ((!inFile >> matrix[i * cols + j]))
+                {
+                    std::cerr << "inFile error\n";
+                    return 2;
+                }
+            }
+        }
     }
 }
