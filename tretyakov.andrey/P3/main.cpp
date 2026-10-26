@@ -155,7 +155,7 @@ int main(int argc, char * argv[])
     }
     else if (num == 2)
     {
-        int * matrix = (int *) malloc (countElements * sizeof(int));
+        int * matrix = (int *) malloc (rows * cols * sizeof(int));
         if (matrix == nullptr)
         {
             std::cerr << "Memory allocation failed\n";
