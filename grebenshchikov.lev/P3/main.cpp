@@ -112,7 +112,11 @@ int main(int argc, char *argv[])
     std::cerr << "Too many arguments";
     return 1;
   }
-
+  if (argv[1][1] != '\0')
+  {
+    std::cerr << "First parameter isnt a number or out of range\n";
+    return 1;
+  }
   switch (*argv[1])
   {
   case '1':
