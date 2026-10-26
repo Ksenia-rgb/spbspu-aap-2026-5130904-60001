@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <new>
 
 namespace nosov {
   bool readMatrix(std::istream& in, int* matrix, size_t rows, size_t cols)
@@ -65,5 +66,15 @@ int main(int argc, char** argv)
     int matrix[maxSize] = {};
     return nosov::processMatrix(in, matrix, rows, cols);
   }
-  return 0;
+
+  int* matrix = nullptr;
+  try {
+    matrix = new int[rows * cols];
+  } catch (const std::bad_alloc&) {
+    std::cerr << "Not enough memory\n";
+    return 2;
+  }
+  const int result = nosov::processMatrix(in, matrix, rows, cols);
+  delete[] matrix;
+  return result;
 }
