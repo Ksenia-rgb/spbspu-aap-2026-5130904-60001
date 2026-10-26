@@ -22,12 +22,37 @@ namespace nosov {
     }
   }
 
+  size_t findSeriesColumn(const int* matrix, size_t rows, size_t cols)
+  {
+    if (rows == 0 || cols == 0) {
+      return 0;
+    }
+    size_t bestColumn = 0;
+    size_t bestLength = 1;
+    for (size_t j = 0; j < cols; ++j) {
+      size_t length = 1;
+      for (size_t i = 1; i < rows; ++i) {
+        if (matrix[i * cols + j] == matrix[(i - 1) * cols + j]) {
+          ++length;
+        } else {
+          length = 1;
+        }
+        if (length > bestLength) {
+          bestLength = length;
+          bestColumn = j;
+        }
+      }
+    }
+    return bestColumn + 1;
+  }
+
   int processMatrix(std::istream& in, const char* outputName, int* matrix, size_t rows, size_t cols)
   {
     if (!readMatrix(in, matrix, rows, cols)) {
       std::cerr << "Can not read matrix\n";
       return 2;
     }
+    const size_t column = findSeriesColumn(matrix, rows, cols);
 
     std::ofstream out(outputName);
     if (!out) {
@@ -36,6 +61,7 @@ namespace nosov {
     }
     writeMatrix(out, matrix, rows, cols);
     out << "\n";
+    out << column << "\n";
     return 0;
   }
 }
