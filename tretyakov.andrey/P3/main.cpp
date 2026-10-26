@@ -2,7 +2,6 @@
 #include <fstream>
 #include <cstddef>
 #include <cstdlib>
-#include <cstring>
 
 
 int main(int argc, char * argv[])
@@ -31,5 +30,35 @@ int main(int argc, char * argv[])
     {
         std::cerr << "First parametr is not a number\n";
         return 1;
+    }
+    std::ifstream inFile(argv[2]);
+    if (!inFile)
+    {
+        std::cerr << "Can't open input file\n";
+        return 2;
+    }
+    std::ofstream outFile(argv[3]);
+    if (!outFile)
+    {
+        std::cerr << "Can't open outFile\n";
+        return 2;
+    }
+    size_t rows = 0;
+    size_t cols = 0;
+    inFile >> rows >> cols;
+    if (!(inFile >> rows >> cols) || (rows < 0) || (cols < 0))
+    {
+        std::cerr << "Can't read matrix cols and rows\n";
+        return 2;
+    }
+    if ((rows == 0 && cols != 0) || (rows !=0 && cols == 0))
+    {
+        std::cerr << "Matrix doesn't exist\n";
+        return 2;
+    }
+    if (rows == 0 && cols == 0)
+    {
+        outFile << 0 << " " << 0;
+        return 0;
     }
 }
