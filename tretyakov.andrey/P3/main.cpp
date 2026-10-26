@@ -130,6 +130,7 @@ int main(int argc, char * argv[])
   }
   size_t rows = 0;
   size_t cols = 0;
+  outFile << std::boolalpha;
   if (!(inFile >> rows >> cols) || (rows < 0) || (cols < 0))
   {
     std::cerr << "Can't read matrix cols and rows or matrix doesn't exist\n";
@@ -145,7 +146,6 @@ int main(int argc, char * argv[])
     outFile << 0 << " " << 0;
     return 0;
   }
-  outFile << std::boolalpha;
   if (num == 1)
   {
     if (rows > countElements / cols)
