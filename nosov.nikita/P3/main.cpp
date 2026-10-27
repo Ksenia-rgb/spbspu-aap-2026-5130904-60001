@@ -1,11 +1,12 @@
-#include <iostream>
+#include <cstddef>
 #include <fstream>
+#include <iostream>
 #include <new>
 
 namespace nosov {
-  bool readMatrix(std::istream& in, int* matrix, size_t rows, size_t cols)
+  bool readMatrix(std::istream& in, int* matrix, std::size_t rows, std::size_t cols)
   {
-    for (size_t i = 0; i < rows * cols; ++i) {
+    for (std::size_t i = 0; i < rows * cols; ++i) {
       in >> matrix[i];
       if (!in) {
         return false;
@@ -14,67 +15,47 @@ namespace nosov {
     return true;
   }
 
-  void writeMatrix(std::ostream& out, const int* matrix, size_t rows, size_t cols)
+  void writeMatrix(std::ostream& out, const int* matrix, std::size_t rows, std::size_t cols)
   {
     out << rows << " " << cols;
-    for (size_t i = 0; i < rows * cols; ++i) {
+    for (std::size_t i = 0; i < rows * cols; ++i) {
       out << " " << matrix[i];
     }
   }
 
-  size_t findSeriesColumn(const int* matrix, size_t rows, size_t cols)
+  std::size_t findSeriesColumn(const int* matrix, std::size_t rows, std::size_t cols)
   {
     if (rows == 0 || cols == 0) {
       return 0;
     }
-    size_t bestColumn = 0;
-    size_t bestLength = 1;
-    for (size_t j = 0; j < cols; ++j) {
-      size_t length = 1;
-      for (size_t i = 1; i < rows; ++i) {
+    std::size_t best_column = 0;
+    std::size_t best_length = 1;
+    for (std::size_t j = 0; j < cols; ++j) {
+      std::size_t length = 1;
+      for (std::size_t i = 1; i < rows; ++i) {
         if (matrix[i * cols + j] == matrix[(i - 1) * cols + j]) {
           ++length;
         } else {
           length = 1;
         }
-        if (length > bestLength) {
-          bestLength = length;
-          bestColumn = j;
+        if (length > best_length) {
+          best_length = length;
+          best_column = j;
         }
       }
     }
-    return bestColumn + 1;
+    return best_column + 1;
   }
 
-  void fillIncreasingWave(int* matrix, size_t rows, size_t cols)
-  {
-    for (size_t i = 0; i < rows; ++i) {
-      for (size_t j = 0; j < cols; ++j) {
-        size_t level = i;
-        if (j < level) {
-          level = j;
-        }
-        if (rows - 1 - i < level) {
-          level = rows - 1 - i;
-        }
-        if (cols - 1 - j < level) {
-          level = cols - 1 - j;
-        }
-        matrix[i * cols + j] += level + 1;
-      }
-    }
-  }
-
-  int processMatrix(std::istream& in, const char* outputName, int* matrix, size_t rows, size_t cols)
+  int processMatrix(std::istream& in, const char* output_name, int* matrix, std::size_t rows, std::size_t cols)
   {
     if (!readMatrix(in, matrix, rows, cols)) {
       std::cerr << "Can not read matrix\n";
       return 2;
     }
-    const size_t column = findSeriesColumn(matrix, rows, cols);
-    fillIncreasingWave(matrix, rows, cols);
+    const std::size_t column = findSeriesColumn(matrix, rows, cols);
 
-    std::ofstream out(outputName);
+    std::ofstream out(output_name);
     if (!out) {
       std::cerr << "Can not open output file\n";
       return 2;
@@ -98,7 +79,7 @@ int main(int argc, char** argv)
     return 1;
   }
 
-  const char* num = argv[1];
+  const char* const num = argv[1];
   const bool isFixed = (num[0] == '1' && num[1] == '\0');
   const bool isDynamic = (num[0] == '2' && num[1] == '\0');
   if (!isFixed && !isDynamic) {
@@ -111,8 +92,8 @@ int main(int argc, char** argv)
     std::cerr << "Can not open input file\n";
     return 2;
   }
-  size_t rows = 0;
-  size_t cols = 0;
+  std::size_t rows = 0;
+  std::size_t cols = 0;
   in >> rows >> cols;
   if (!in) {
     std::cerr << "Can not read matrix size\n";
@@ -120,7 +101,7 @@ int main(int argc, char** argv)
   }
 
   if (isFixed) {
-    const size_t maxSize = 10000;
+    const std::size_t maxSize = 10000;
     if (rows * cols > maxSize) {
       std::cerr << "Matrix is too big\n";
       return 2;
