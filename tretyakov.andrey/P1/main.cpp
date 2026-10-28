@@ -1,52 +1,55 @@
 #include <iostream>
+#include <cstddef>
 
 int main()
 {
-  int kat1 = 1;
-  int kat2 = 0;
-  int gidrapousa = 0;
-  int pthtrp = 0;
-  int sumdup = 0;
-  int dvapred = 0;
-  int countvved = 1;
-  std::cin >> kat1;
+  int value1 = 1;
+  int value2 = 0;
+  int hypotenuse = 0;
+  size_t counter_of_pthtrp = 0;
+  size_t counter_of_sumdup = 0;
+  int two_previous = 0;
+  size_t count_of_entered_values = 1;
+  std::cin >> value1;
   if (!std::cin)
   {
-    std::cout << "Input error\n";
+    std::cerr << "Input error\n";
     return 1;
   }
-  kat2 = kat1;
-  while (kat1 != 0)
+  value2 = value1;
+  if (value1 != 0)
   {
-    std::cin >> kat1;
-    countvved = countvved + 1;
+    while (std::cin >> value1 && value1 != 0)
+    {
+      ++count_of_entered_values;
+      if (two_previous == value1)
+      {
+        ++counter_of_sumdup;
+      }
+      if (value1 == hypotenuse / value1 && value1 != 0)
+      {
+        ++counter_of_pthtrp;
+      }
+      hypotenuse = value1 * value1 + value2 * value2;
+      two_previous = value1 + value2;
+      value2 = value1;
+    }
     if (!std::cin)
     {
       std::cerr << "Input error\n";
       return 1;
     }
-    if (dvapred == kat1)
-    {
-      sumdup = sumdup + 1;
-    }
-    if (kat1 * kat1 == gidrapousa && kat1 != 0)
-    {
-      pthtrp = pthtrp + 1;
-    }
-    gidrapousa = kat1 * kat1 + kat2 * kat2;
-    dvapred = kat1 + kat2;
-    kat2 = kat1;
   }
-  if (countvved > 3)
+  if (count_of_entered_values > 2)
   {
-    std::cout << "PTH-TRP = " << pthtrp << "\n";
-    std::cout << "SUM-DUP = " << sumdup << "\n";
+    std::cout << "PTH-TRP = " << counter_of_pthtrp << "\n";
+    std::cout << "SUM-DUP = " << counter_of_sumdup << "\n";
     return 0;
   }
   else
   {
     std::cerr << "Sequence too short for SUM-DUP\n";
-    std::cout << "PTH-TRP = " << pthtrp << "\n";
+    std::cout << "PTH-TRP = " << counter_of_pthtrp << "\n";
     return 2;
   }
   return 0;
