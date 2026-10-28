@@ -44,7 +44,7 @@ namespace erin
 
 int main()
 {
-  const int max_int = std::numeric_limits< int >::max();
+  constexpr int max_int = std::numeric_limits< int >::max();
   int left = max_int;
   int mid = max_int;
   int right = max_int;
