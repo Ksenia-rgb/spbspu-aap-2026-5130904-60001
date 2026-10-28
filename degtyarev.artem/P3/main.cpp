@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <limits>
 #include <cstddef>
 #include <cstdlib>
 #include <fstream>
@@ -53,8 +54,12 @@ size_t countDifCols(const int *const *arr, size_t rows, size_t cols)
 int maxSumDiag(const int *arr, size_t rows, size_t cols)
 {
   const size_t n = std::min(rows, cols);
+  if (n < 2)
+  {
+    return 0;
+  }
 
-  int mx_sumd = 0;
+  int mx_sumd = std::numeric_limits <int>::min();
   for (size_t i = 1; i < n; ++i)
   {
     int cnt = arr[i];
@@ -72,12 +77,12 @@ int maxSumDiag(const int *arr, size_t rows, size_t cols)
 int maxSumDiag(const int *const *arr, size_t rows, size_t cols)
 {
   const size_t n = std::min(rows, cols);
-  if (n == 0)
+  if (n < 2)
   {
     return 0;
   }
 
-  int mx_sumd = 0;
+  int mx_sumd = std::numeric_limits <int>::min();
   const size_t kdiag = n - 1;
   for (size_t i = 0; i < kdiag; ++i)
   {
@@ -112,6 +117,11 @@ int main(int argc, char *argv[])
   if (argc > 4)
   {
     std::cerr << "Too many arguments";
+    return 1;
+  }
+  if (argv[1][1] != '\0')
+  {
+    std::cerr << "First parameter isnt a number or out of range\n";
     return 1;
   }
 
@@ -181,7 +191,7 @@ int main(int argc, char *argv[])
 
   default:
   {
-    std::cout << "First parameter isnt a number or out of range\n";
+    std::cerr << "First parameter isnt a number or out of range\n";
     return 1;
   }
   }
