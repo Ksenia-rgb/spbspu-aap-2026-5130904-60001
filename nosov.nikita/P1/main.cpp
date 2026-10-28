@@ -1,42 +1,51 @@
 #include <cstddef>
 #include <iostream>
+#include <limits>
 
 int main()
 {
   constexpr int invalid_input_code = 1;
   constexpr int internal_error_code = 2;
+  constexpr int max_int = std::numeric_limits< int >::max();
 
-  int current = 0;
-  int previous = 0;
-  int before_previous = 0;
+  int st = 0;
+  int nd = 0;
+  int rd = 0;
 
-  std::size_t length = 0;
-  std::size_t triples_count = 0;
-  std::size_t divisible_count = 0;
+  size_t length = 0;
+  size_t triples_count = 0;
+  size_t divisible_count = 0;
 
-  while ((std::cin >> current) && (current != 0))
+  while ((std::cin >> rd) && (rd != 0))
   {
     if (length >= 1)
     {
-      if ((current % previous) == 0)
+      if ((nd == -1) || ((rd % nd) == 0))
       {
         ++divisible_count;
       }
     }
 
-    if ((before_previous > 0) && (previous > 0) && (current > 0))
+    if ((st > 0) && (nd > 0) && (rd > 0))
     {
-      const long long a = before_previous;
-      const long long b = previous;
-      const long long c = current;
-      if (((a * a) + (b * b)) == (c * c))
+      if ((st > max_int / st) || (nd > max_int / nd) || (rd > max_int / rd))
+      {
+        std::cerr << "Error: overflow in pth-trp\n";
+        return internal_error_code;
+      }
+      if ((st * st) > (max_int - (nd * nd)))
+      {
+        std::cerr << "Error: overflow in pth-trp\n";
+        return internal_error_code;
+      }
+      if (((st * st) + (nd * nd)) == (rd * rd))
       {
         ++triples_count;
       }
     }
 
-    before_previous = previous;
-    previous = current;
+    st = nd;
+    nd = rd;
     ++length;
   }
 
