@@ -26,7 +26,7 @@ int main()
       {
         ++counter_of_sumdup;
       }
-      if (value1 == hypotenuse / value1 && value1 != 0)
+      if (value1 != 0 && value1 == hypotenuse / value1)
       {
         ++counter_of_pthtrp;
       }
