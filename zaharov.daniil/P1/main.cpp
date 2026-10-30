@@ -1,9 +1,47 @@
 #include <iostream>
 #include <cstddef>
+#include <climits>
+
+bool safeSquare(lon long val, long long& result)
+{
+  if (val == 0 || val == 1 || val == -1)
+  {
+    result = val * val;
+    return true;
+  }
+
+  if (val == LLONG_MIN)
+  {
+    return false;
+  }
+
+  long long abs_val = (val < 0) ? -val : val;
+  if (abs_val > LLONG_MAX / abs_val)
+  {
+    return false;
+  }
+
+  result = val * val;
+  return true;
+}
 
 bool isPythagorean(long long a, long long b, long long c)
 {
-  return a * a + b * b == c * c;
+  long long a2 = 0;
+  long long b2 = 0;
+  long long c2 = 0;
+
+  if (!safeSquare(a, a2) || !safeSquare(b, b2) || !safeSquare(c, c2)
+  {
+    return false;
+  }
+
+  if (a2 > LLONG_MAX - b2)
+  {
+    return false;
+  }
+
+  return a2 + b2 == c2;
 }
 
 int main()
