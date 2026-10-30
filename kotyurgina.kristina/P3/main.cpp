@@ -142,7 +142,7 @@ int main(int argc, char* argv[])
     const size_t max_elements = 10000;
     if (rows != 0 && cols > max_elements / rows)
     {
-      std:: cerr << "matrix is too large\n";
+      std::cerr << "matrix is too large\n";
       return 2;
     }
 
