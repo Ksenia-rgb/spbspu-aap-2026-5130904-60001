@@ -27,6 +27,7 @@ namespace kotyurgina
       }
     }
   }
+
   long long minSumMdg(const int* matrix, int rows, int cols)
   {
     if (rows == 0 || cols == 0)
@@ -59,6 +60,36 @@ namespace kotyurgina
       }
     }
     return minimum_sum;
+  }
+
+  int processMatrix(std::istream& input, std::ostream& output, int* matrix, int rows, int cols)
+  {
+    const long long count = static_cast< long long >(rows) * cols;
+
+    for (long long i = 0; i < count; i++)
+    {
+      if (!(input >> matrix[i]))
+      {
+        std::cerr << "invalid matrix elements\n";
+        return 2;
+      }
+    }
+
+    const long long minimum_sum = minSumMdg(matrix, rows, cols);
+    output << minimum_sum << '\n';
+
+    increaseWaves(matrix, rows, cols);
+
+    output << rows << " " << cols << '\n';
+    for (int i = 0; i < rows; i++)
+    {
+      for (int j = 0; j < cols; j++)
+      {
+        output << matrix[i * cols + j] << " ";
+      }
+      output << "\n";
+    }
+  return 0;
   }
 }
 
@@ -110,82 +141,26 @@ int main(int argc, char* argv[])
     const int max_elements = 10000;
     if (rows != 0 && cols > max_elements / rows)
     {
-      std::cerr << "matrix is too large\n";
+      std:: cerr << "matrix is too large\n";
       return 2;
     }
+
     int matrix[max_elements] = {};
-    for (int i = 0; i < rows * cols; i++)
-    {
-      if (!(input >> matrix[i]))
-      {
-        std::cerr << "invalid matrix elements";
-        return 2;
-      }
-    }
-    const long long minimum_sum = kotyurgina::minSumMdg(matrix, rows, cols);
-
-    output << minimum_sum << '\n';
-
-    kotyurgina::increaseWaves(matrix, rows, cols);
-
-    output << rows << " " << cols << '\n';
-
-    for (int i = 0; i < rows; i++)
-    {
-      for (int j = 0; j < cols; j++)
-      {
-        output << matrix[i * cols + j] << " ";
-      }
-      output << "\n";
-    }
+    return kotyurgina::processMatrix(input, output, matrix, rows, cols);
   }
-  else
+  try
   {
-    long long count = rows;
-    count *= cols;
-    try
-    {
-      int* const matrix = new int[count];
-      for (long long i = 0; i < count; i++)
-      {
-        if (!(input >> matrix[i]))
-        {
-          std::cerr << "invalid matrix elements";
-          delete[] matrix;
-          return 2;
-        }
-      }
-      const long long minimum_sum = kotyurgina::minSumMdg(matrix, rows, cols);
+    const long long count = static_cast< long long >(rows) * cols;
+    int* const matrix = new int[count];
 
-      output << minimum_sum << '\n';
+    const int result = kotyurgina::processMatrix(input, output, matrix, rows, cols);
 
-      kotyurgina::increaseWaves(matrix, rows, cols);
-
-      output << rows << " " << cols << '\n';
-
-      for (int i = 0; i < rows; i++)
-      {
-        for (int j = 0; j < cols; j++)
-        {
-          output << matrix[i * cols + j] << " ";
-        }
-        output << "\n";
-      }
-
-      delete[] matrix;
-    }
-    catch (const std::bad_alloc&)
-    {
-      std::cerr << "cannot allocate memory\n";
-      return 2;
-    }
+    delete[] matrix;
+    return result;
   }
-
-  char extra = '\0';
-  if (input >> extra)
+  catch (const std::bad_alloc&)
   {
-    std::cerr << "extra data in input file\n";
+    std::cerr << "cannot allocate memory\n";
     return 2;
   }
-  return 0;
 }
