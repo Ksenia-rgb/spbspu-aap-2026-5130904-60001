@@ -2,7 +2,10 @@
 #include <cstddef>
 #include <climits>
 
-bool safeSquare(lon long val, long long& result)
+namespace zaharov
+{
+
+bool safeSquare(long long val, long long& result)
 {
   if (val == 0 || val == 1 || val == -1)
   {
@@ -31,7 +34,7 @@ bool isPythagorean(long long a, long long b, long long c)
   long long b2 = 0;
   long long c2 = 0;
 
-  if (!safeSquare(a, a2) || !safeSquare(b, b2) || !safeSquare(c, c2)
+  if (!safeSquare(a, a2) || !safeSquare(b, b2) || !safeSquare(c, c2))
   {
     return false;
   }
@@ -41,10 +44,10 @@ bool isPythagorean(long long a, long long b, long long c)
     return false;
   }
 
-  return a2 + b2 == c2;
+  return (a2 + b2 == c2);
 }
 
-int main()
+int run()
 {
   size_t max_equal = 1;
   size_t cur_equal = 1;
@@ -79,7 +82,7 @@ int main()
 
     if (total_elements >= 3)
     {
-      if (isPythagorean(first, second, third)
+      if (isPythagorean(first, second, third))
       {
         ++pyth_count;
       }
@@ -95,9 +98,9 @@ int main()
 
   if (total_elements == 0)
   {
-  std::cout << 0 << '\n';
-  std::cerr << "Error: cannot compute PTH-TRP characteristic\n";
-  return 2;
+    std::cout << 0 << '\n';
+    std::cerr << "Error: cannot compute PTH-TRP characteristic\n";
+    return 2;
   }
 
   if (total_elements < 3)
@@ -110,4 +113,11 @@ int main()
   std::cout << pyth_count << "\n";
   std::cout << max_equal << '\n';
   return 0;
+}
+
+}
+
+int main()
+{
+  return zaharov::run();
 }
