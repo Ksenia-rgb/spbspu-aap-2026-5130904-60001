@@ -1,5 +1,4 @@
 #include <iostream>
-#include <string>
 #include <fstream>
 #include <new>
 
@@ -71,12 +70,13 @@ int main(int argc, char* argv[])
     return 1;
   }
 
-  const std::string num = argv[1];
-  if (num != "1" && num != "2")
+  if ((argv[1][0] != '1' && argv[1][0] != '2') || argv[1][1] != '\0')
   {
-    std::cerr << "invalid task number\n";
+    std::cerr << "invalid first argument\n";
     return 1;
   }
+
+  const char num = argv[1][0];
 
   std::ifstream input(argv[2]);
   if (!input)
@@ -105,7 +105,7 @@ int main(int argc, char* argv[])
     return 2;
   }
 
-  if (num == "1")
+  if (num == '1')
   {
     const int max_elements = 10000;
     if (rows != 0 && cols > max_elements / rows)
