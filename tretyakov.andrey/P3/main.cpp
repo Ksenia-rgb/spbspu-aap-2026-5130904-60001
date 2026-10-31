@@ -8,7 +8,7 @@
 
 namespace tretyakov
 {
-  bool solve_lwr_tri_mtx(const int * matrix, size_t rows, size_t cols)
+  bool solveLwrTriMtx(const int * matrix, size_t rows, size_t cols)
   {
     size_t k = 0;
     k = std::min(rows, cols);
@@ -29,7 +29,7 @@ namespace tretyakov
     return true;
   }
 
-  size_t solve_cnt_loc_max(const int * matrix, size_t rows, size_t cols)
+  size_t solveCntLocMax(const int * matrix, size_t rows, size_t cols)
   {
     if (rows < 3 || cols < 3)
     {
@@ -171,8 +171,8 @@ int main(int argc, char * argv[])
   }
   bool lower_triangle_mtx = false;
   size_t counter_of_local_maximum = 0;
-  lower_triangle_mtx = tretyakov::solve_lwr_tri_mtx(matrix, rows, cols);
-  counter_of_local_maximum = tretyakov::solve_cnt_loc_max(matrix, rows, cols);
+  lower_triangle_mtx = tretyakov::solveLwrTriMtx(matrix, rows, cols);
+  counter_of_local_maximum = tretyakov::solveCntLocMax(matrix, rows, cols);
   out_file << std::boolalpha;
   out_file << lower_triangle_mtx << " " << counter_of_local_maximum << "\n";
   if (num == 2)
