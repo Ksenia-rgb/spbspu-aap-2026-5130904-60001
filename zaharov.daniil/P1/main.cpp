@@ -18,7 +18,7 @@ namespace zaharov
       return false;
     }
 
-    long long abs_val = (val < 0) ? -val : val;
+    const long long abs_val = (val < 0) ? -val : val;
     if (abs_val > LLONG_MAX / abs_val)
     {
       return false;
