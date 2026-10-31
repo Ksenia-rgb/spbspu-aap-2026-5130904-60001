@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
+#include <memory>
 #include "matrix.hpp"
 
 int main(int argc, char ** argv)
@@ -12,7 +13,7 @@ int main(int argc, char ** argv)
   }
 
   char * end = nullptr;
-  long num = std::strtol(argv[1], &end, 10);
+  const long num = std::strtol(argv[1], std::addressof(end), 10);
   if (argv[1][0] == '\0' || *end != '\0' || (num != 1 && num != 2))
   {
     std::cerr << "Wrong first arg\n";
@@ -39,14 +40,15 @@ int main(int argc, char ** argv)
     return 2;
   }
 
-  size_t size = rows * cols;
-  if (num == 1 && size > 10000)
+  const size_t size = rows * cols;
+  constexpr size_t max_size = 10000;
+  if (num == 1 && size > max_size)
   {
     std::cerr << "Size too big\n";
     return 2;
   }
 
-  int fixed_arr[10000] = {};
+  int fixed_arr[max_size] = {};
   int * dyn_arr = nullptr;
   int * mtx = fixed_arr;
 
