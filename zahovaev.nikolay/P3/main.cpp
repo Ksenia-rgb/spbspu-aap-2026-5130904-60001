@@ -4,6 +4,50 @@
 #include <string>
 #include <cstddef>
 
+bool switch_direction(size_t& direction, size_t& row, size_t& column, size_t& left_border, size_t& bottom_border,
+ size_t& right_border, size_t& top_border, const size_t direction_down, const size_t direction_up,
+ const size_t direction_right, const size_t direcion_left)
+{
+    switch (direction){
+      case direction_right:
+        if (column < right_border) {
+          column++;
+          return 1;
+        } else {
+          direction = direction_down;
+          right_border--;
+          [[fallthrough]];
+        }
+      case direction_up:
+        if (row > top_border) {
+          row--;
+          return 1;
+        } else {
+          direction = direction_left;
+          top_border++;
+          [[fallthrough]];
+        }
+      case direction_left:
+        if (column > left_border) {
+          column--;
+          return 1;
+        } else {
+          direction = direction_down;
+          left_border++;
+          [[fallthrough]];
+        }
+      case direction_down:
+        if (row < bottom_border) {
+          row++;
+          return 1;
+        } else {
+          direction = direction_left;
+          bottom_border--;
+        }
+    }
+  return 0;
+}
+
 void lftBotClk(int* mass, const size_t n, const size_t m)
 {
   size_t row = n - 1;
@@ -22,44 +66,9 @@ void lftBotClk(int* mass, const size_t n, const size_t m)
   const size_t nm = n * m;
   while (i != nm) {
     mass[row * m + column] -= ++i;
-    switch (direction){
-      case direction_right:
-        if (column < right_border) {
-          column++;
-          continue;
-        } else {
-          direction = direction_down;
-          right_border--;
-          [[fallthrough]];
-        }
-      case direction_up:
-        if (row > top_border) {
-          row--;
-          continue;
-        } else {
-          direction = direction_left;
-          top_border++;
-          [[fallthrough]];
-        }
-      case direction_left:
-        if (column > left_border) {
-          column--;
-          continue;
-        } else {
-          direction = direction_down;
-          left_border++;
-          [[fallthrough]];
-        }
-      case direction_down:
-        if (row < bottom_border) {
-          row++;
-          continue;
-        } else {
-          direction = direction_left;
-          bottom_border--;
-        }
+    if (!switch_direction()) {
+      mass[row * m + column] += i--;
     }
-    mass[row * m + column] += i--;
   }
 }
 
@@ -126,7 +135,6 @@ int main(int lenargs, char* args[])
     return 1;
   }
   short num = 0;
-
   try {
     num = std::stoi(args[1]);
     if (!(0 < num && num < 3)) {
