@@ -40,7 +40,7 @@ int main()
           {
             throw std::overflow_error("Overflow value1 * value1");
           }
-          if (hypotenuse > max_int - value1 * value1)
+          if (value1 * value1 > max_int - value2 * value2)
           {
             throw std::overflow_error("Overflow hypotenuse");
           }
