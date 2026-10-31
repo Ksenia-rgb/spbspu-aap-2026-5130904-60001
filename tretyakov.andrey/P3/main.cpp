@@ -86,7 +86,7 @@ int main(int argc, char * argv[])
   }
   long num = 0;
   char * end_ptr = nullptr;
-  num = std::strtol(argv[1], & end_ptr, 10);
+  num = std::strtol(argv[1], &end_ptr, 10);
   if (end_ptr == argv[1])
   {
     std::cerr << "First parameter is not a number\n";
