@@ -140,7 +140,7 @@ int main(int argc, char * argv[])
   const size_t countElements = 10000;
   int staticMatrix[countElements] = {};
   if (num == 1)
-  { 
+  {
     if (rows > countElements / cols)
     {
       std::cerr << "Matrix is too large\n";
