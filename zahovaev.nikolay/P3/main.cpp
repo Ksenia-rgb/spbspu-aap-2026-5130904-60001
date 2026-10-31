@@ -4,11 +4,24 @@
 #include <string>
 #include <cstddef>
 
+const size_t direction_up = 1;
+const size_t direction_right = 2;
+const size_t direction_down = 3;
+const size_t direction_left = 4;
+
 bool switch_direction(size_t& direction, size_t& row, size_t& column, size_t& left_border, size_t& bottom_border,
- size_t& right_border, size_t& top_border, const size_t direction_down, const size_t direction_up,
- const size_t direction_right, const size_t direcion_left)
+ size_t& right_border, size_t& top_border)
 {
     switch (direction){
+      case direction_up:
+        if (row > top_border) {
+          row--;
+          return 1;
+        } else {
+          direction = direction_right;
+          top_border++;
+          [[fallthrough]];
+        }
       case direction_right:
         if (column < right_border) {
           column++;
@@ -18,24 +31,6 @@ bool switch_direction(size_t& direction, size_t& row, size_t& column, size_t& le
           right_border--;
           [[fallthrough]];
         }
-      case direction_up:
-        if (row > top_border) {
-          row--;
-          return 1;
-        } else {
-          direction = direction_left;
-          top_border++;
-          [[fallthrough]];
-        }
-      case direction_left:
-        if (column > left_border) {
-          column--;
-          return 1;
-        } else {
-          direction = direction_down;
-          left_border++;
-          [[fallthrough]];
-        }
       case direction_down:
         if (row < bottom_border) {
           row++;
@@ -43,6 +38,15 @@ bool switch_direction(size_t& direction, size_t& row, size_t& column, size_t& le
         } else {
           direction = direction_left;
           bottom_border--;
+          [[fallthrough]];
+        }
+      case direction_left:
+        if (column > left_border) {
+          column--;
+          return 1;
+        } else {
+          direction = direction_up;
+          left_border++;
         }
     }
   return 0;
@@ -57,16 +61,12 @@ void lftBotClk(int* mass, const size_t n, const size_t m)
   size_t right_border = m - 1;
   size_t top_border = 0;
 
-  const size_t direction_up = 1;
-  const size_t direction_right = 2;
-  const size_t direction_down = 3;
-  const size_t direction_left = 4;
   size_t direction = direction_up;
   size_t i = 0;
   const size_t nm = n * m;
   while (i != nm) {
     mass[row * m + column] -= ++i;
-    if (!switch_direction()) {
+    if (!switch_direction(direction, row, column, left_border, bottom_border, right_border, top_border)) {
       mass[row * m + column] += i--;
     }
   }
