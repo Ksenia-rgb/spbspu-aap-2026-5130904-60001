@@ -8,7 +8,7 @@
 
 namespace tretyakov
 {
-  bool solveLwrTriMtx(const int * matrix, size_t rows, size_t cols)
+  bool solve_lwr_tri_mtx(const int * matrix, size_t rows, size_t cols)
   {
     size_t k = 0;
     k = std::min(rows, cols);
@@ -29,40 +29,40 @@ namespace tretyakov
     return true;
   }
 
-  size_t solveCntLocMax(const int * matrix, size_t rows, size_t cols)
+  size_t solve_cnt_loc_max(const int * matrix, size_t rows, size_t cols)
   {
     if (rows < 3 || cols < 3)
     {
       return 0;
     }
     size_t count = 0;
-    int currentElement = 0;
+    int current_element = 0;
     for (size_t i = 1; i < rows - 1; ++i)
     {
       for (size_t j = 1; j < cols - 1; ++j)
       {
-        currentElement = matrix[i * cols + j];
-        bool isElementMax = true;
-        for (int deltaI = -1; deltaI <= 1; ++deltaI)
+        current_element = matrix[i * cols + j];
+        bool is_element_max = true;
+        for (int delta_i = -1; delta_i <= 1; ++delta_i)
         {
-          for (int deltaJ = -1; deltaJ <= 1; ++deltaJ)
+          for (int delta_j = -1; delta_j <= 1; ++delta_j)
           {
-            if (deltaI == 0 && deltaJ == 0)
+            if (delta_i == 0 && delta_j == 0)
             {
               continue;
             }
-            if (matrix[(i + deltaI) * cols + (j + deltaJ)] >= currentElement)
+            if (matrix[(i + delta_i) * cols + (j + delta_j)] >= current_element)
             {
-              isElementMax = false;
+              is_element_max = false;
               break;
             }
           }
-          if (!isElementMax)
+          if (!is_element_max)
           {
             break;
           }
         }
-        if (isElementMax)
+        if (is_element_max)
         {
           ++count;
         }
@@ -85,14 +85,14 @@ int main(int argc, char * argv[])
     return 1;
   }
   long num = 0;
-  char * endPtr = nullptr;
-  num = std::strtol(argv[1], & endPtr, 10);
-  if (endPtr == argv[1])
+  char * end_ptr = nullptr;
+  num = std::strtol(argv[1], & end_ptr, 10);
+  if (end_ptr == argv[1])
   {
     std::cerr << "First parameter is not a number\n";
     return 1;
   }
-  if (*endPtr != '\0')
+  if (*end_ptr != '\0')
   {
     std::cerr << "First parameter is not a number\n";
     return 1;
@@ -107,21 +107,21 @@ int main(int argc, char * argv[])
     std::cerr << "First parameter is out of range\n";
     return 1;
   }
-  std::ifstream inFile(argv[2]);
-  if (!inFile)
+  std::ifstream in_file(argv[2]);
+  if (!in_file)
   {
     std::cerr << "Can't open input file\n";
     return 2;
   }
-  std::ofstream outFile(argv[3]);
-  if (!outFile)
+  std::ofstream out_file(argv[3]);
+  if (!out_file)
   {
     std::cerr << "Can't open output file\n";
     return 2;
   }
   size_t rows = 0;
   size_t cols = 0;
-  if (!(inFile >> rows >> cols))
+  if (!(in_file >> rows >> cols))
   {
     std::cerr << "Can't read matrix cols and rows or matrix doesn't exist\n";
     return 2;
@@ -133,20 +133,20 @@ int main(int argc, char * argv[])
   }
   if (rows == 0 && cols == 0)
   {
-    outFile << "false " << 0 << "\n";
+    out_file << "false " << 0 << "\n";
     return 0;
   }
   int * matrix = nullptr;
-  const size_t countElements = 10000;
-  int staticMatrix[countElements] = {};
+  const size_t count_elements = 10000;
+  int static_matrix[count_elements] = {};
   if (num == 1)
   {
-    if (rows > countElements / cols)
+    if (rows > count_elements / cols)
     {
       std::cerr << "Matrix is too large\n";
       return 2;
     }
-    matrix = staticMatrix;
+    matrix = static_matrix;
   }
   else if (num == 2)
   {
@@ -159,7 +159,7 @@ int main(int argc, char * argv[])
   }
   for (size_t i = 0; i < rows * cols; ++i)
   {
-    if (!(inFile >> matrix[i]))
+    if (!(in_file >> matrix[i]))
     {
       std::cerr << "Invalid elements\n";
       if (num == 2)
@@ -169,12 +169,12 @@ int main(int argc, char * argv[])
       return 2;
     }
   }
-  bool lowerTriangleMtx = false;
-  size_t counterOfLocalMaximum = 0;
-  lowerTriangleMtx = tretyakov::solveLwrTriMtx(matrix, rows, cols);
-  counterOfLocalMaximum = tretyakov::solveCntLocMax(matrix, rows, cols);
-  outFile << std::boolalpha;
-  outFile << lowerTriangleMtx << " " << counterOfLocalMaximum << "\n";
+  bool lower_triangle_mtx = false;
+  size_t counter_of_local_maximum = 0;
+  lower_triangle_mtx = tretyakov::solve_lwr_tri_mtx(matrix, rows, cols);
+  counter_of_local_maximum = tretyakov::solve_cnt_loc_max(matrix, rows, cols);
+  out_file << std::boolalpha;
+  out_file << lower_triangle_mtx << " " << counter_of_local_maximum << "\n";
   if (num == 2)
   {
     free(matrix);
