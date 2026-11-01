@@ -1,18 +1,18 @@
 #include <algorithm>
-#include <climits>
 #include <cstddef>
 #include <cstdlib>
 #include <cstring>
 #include <exception>
 #include <fstream>
 #include <iostream>
+#include <limits>
 #include <new>
 #include <stdexcept>
 
 namespace zahvaev
 {
   const std::size_t maxFixedSize = 10000;
-  const std::size_t maxSize = static_cast< std::size_t >(-1);
+  const std::size_t maxSize = std::numeric_limits< std::size_t >::max();
   const int argsCount = 4;
   const int modeArg = 1;
   const int inputArg = 2;
@@ -20,7 +20,7 @@ namespace zahvaev
   const int paramsError = 1;
   const int internalError = 2;
 
-  static void *allocateZeroed(std::size_t count, std::size_t size)
+  void *allocateZeroed(std::size_t count, std::size_t size)
   {
     void *const memory = std::calloc(count, size);
     if (memory == nullptr && count > 0)
@@ -30,7 +30,7 @@ namespace zahvaev
     return memory;
   }
 
-  static void freeMatrix(int **matrix, std::size_t rows)
+  void freeMatrix(int **matrix, std::size_t rows)
   {
     for (std::size_t i = 0; i < rows; ++i)
     {
@@ -39,7 +39,7 @@ namespace zahvaev
     std::free(matrix);
   }
 
-  static int **changeMatrix(const int *const *matrix, std::size_t rows, std::size_t cols)
+  int **changeMatrix(const int *const *matrix, std::size_t rows, std::size_t cols)
   {
     int **const result = static_cast< int ** >(allocateZeroed(rows, sizeof(int *)));
     try
@@ -53,14 +53,12 @@ namespace zahvaev
         for (std::size_t j = 0; j < cols; ++j)
         {
           const std::size_t layer = std::min({i, j, rows - 1 - i, cols - 1 - j});
-          const long long element = matrix[i][j];
-          const long long offset = static_cast< long long >(layer) + 1;
-          const long long value = element + offset;
-          if (value > INT_MAX)
+          const int offset = static_cast< int >(layer) + 1;
+          if (matrix[i][j] > std::numeric_limits< int >::max() - offset)
           {
             throw std::overflow_error("integer overflow");
           }
-          result[i][j] = static_cast< int >(value);
+          result[i][j] = matrix[i][j] + offset;
         }
       }
     }
@@ -72,7 +70,7 @@ namespace zahvaev
     return result;
   }
 
-  static long long calcMaxDiagonalSum(const int *const *matrix, std::size_t rows, std::size_t cols)
+  long long calcMaxDiagonalSum(const int *const *matrix, std::size_t rows, std::size_t cols)
   {
     if (rows == 0 || cols == 0)
     {
