@@ -2,12 +2,9 @@
 #include <cstddef>
 #include <cstdlib>
 #include <cstring>
-#include <exception>
 #include <fstream>
 #include <iostream>
 #include <limits>
-#include <new>
-#include <stdexcept>
 
 namespace zahvaev
 {
@@ -20,54 +17,35 @@ namespace zahvaev
   const int paramsError = 1;
   const int internalError = 2;
 
-  void *allocateZeroed(std::size_t count, std::size_t size)
+  bool readMatrix(std::istream &in, int *data, std::size_t count)
   {
-    void *const memory = std::calloc(count, size);
-    if (memory == nullptr && count > 0)
+    for (std::size_t i = 0; i < count; ++i)
     {
-      throw std::bad_alloc();
+      if (!(in >> data[i]))
+      {
+        return false;
+      }
     }
-    return memory;
+    in >> std::ws;
+    return in.eof();
   }
 
-  void freeMatrix(int **matrix, std::size_t rows)
+  bool changeMatrix(int **matrix, std::size_t rows, std::size_t cols)
   {
     for (std::size_t i = 0; i < rows; ++i)
     {
-      std::free(matrix[i]);
-    }
-    std::free(matrix);
-  }
-
-  int **changeMatrix(const int *const *matrix, std::size_t rows, std::size_t cols)
-  {
-    int **const result = static_cast< int ** >(allocateZeroed(rows, sizeof(int *)));
-    try
-    {
-      for (std::size_t i = 0; i < rows; ++i)
+      for (std::size_t j = 0; j < cols; ++j)
       {
-        result[i] = static_cast< int * >(allocateZeroed(cols, sizeof(int)));
-      }
-      for (std::size_t i = 0; i < rows; ++i)
-      {
-        for (std::size_t j = 0; j < cols; ++j)
+        const std::size_t layer = std::min({i, j, rows - 1 - i, cols - 1 - j});
+        const int offset = static_cast< int >(layer) + 1;
+        if (matrix[i][j] > std::numeric_limits< int >::max() - offset)
         {
-          const std::size_t layer = std::min({i, j, rows - 1 - i, cols - 1 - j});
-          const int offset = static_cast< int >(layer) + 1;
-          if (matrix[i][j] > std::numeric_limits< int >::max() - offset)
-          {
-            throw std::overflow_error("integer overflow");
-          }
-          result[i][j] = matrix[i][j] + offset;
+          return false;
         }
+        matrix[i][j] += offset;
       }
     }
-    catch (...)
-    {
-      freeMatrix(result, rows);
-      throw;
-    }
-    return result;
+    return true;
   }
 
   long long calcMaxDiagonalSum(const int *const *matrix, std::size_t rows, std::size_t cols)
@@ -138,7 +116,7 @@ int main(int argc, char *argv[])
   }
   const std::size_t rows = static_cast< std::size_t >(raw_rows);
   const std::size_t cols = static_cast< std::size_t >(raw_cols);
-  if (cols != 0 && rows > zahvaev::maxSize / cols)
+  if ((cols != 0 && rows > zahvaev::maxSize / sizeof(int) / cols) || rows > zahvaev::maxSize / sizeof(int *))
   {
     std::cerr << "Error: matrix is too large\n";
     return zahvaev::internalError;
@@ -156,57 +134,57 @@ int main(int argc, char *argv[])
   int **dynamic_rows = nullptr;
   int *data = fixed_data;
   int **row_pointers = fixed_rows;
-  int code = 0;
-
-  try
+  if (isDynamic)
   {
-    if (isDynamic)
+    dynamic_data = static_cast< int * >(std::malloc(count * sizeof(int)));
+    dynamic_rows = static_cast< int ** >(std::malloc(rows * sizeof(int *)));
+    if ((dynamic_data == nullptr && count > 0) || (dynamic_rows == nullptr && rows > 0))
     {
-      dynamic_data = static_cast< int * >(zahvaev::allocateZeroed(count, sizeof(int)));
-      dynamic_rows = static_cast< int ** >(zahvaev::allocateZeroed(rows, sizeof(int *)));
-      data = dynamic_data;
-      row_pointers = dynamic_rows;
+      std::free(dynamic_data);
+      std::free(dynamic_rows);
+      std::cerr << "Error: not enough memory\n";
+      return zahvaev::internalError;
     }
-    for (std::size_t i = 0; i < count; ++i)
-    {
-      if (!(in >> data[i]))
-      {
-        throw std::runtime_error("invalid matrix content");
-      }
-    }
-    in >> std::ws;
-    if (!in.eof())
-    {
-      throw std::runtime_error("invalid matrix content");
-    }
-    for (std::size_t i = 0; i < rows; ++i)
-    {
-      row_pointers[i] = data + i * cols;
-    }
-
-    int **const result = zahvaev::changeMatrix(row_pointers, rows, cols);
-    out << rows << ' ' << cols;
-    for (std::size_t i = 0; i < rows; ++i)
-    {
-      for (std::size_t j = 0; j < cols; ++j)
-      {
-        out << ' ' << result[i][j];
-      }
-    }
-    out << '\n' << zahvaev::calcMaxDiagonalSum(row_pointers, rows, cols) << '\n';
-    zahvaev::freeMatrix(result, rows);
-    if (!out)
-    {
-      throw std::runtime_error("cannot write output file");
-    }
-  }
-  catch (const std::exception &error)
-  {
-    std::cerr << "Error: " << error.what() << '\n';
-    code = zahvaev::internalError;
+    data = dynamic_data;
+    row_pointers = dynamic_rows;
   }
 
+  if (!zahvaev::readMatrix(in, data, count))
+  {
+    std::free(dynamic_data);
+    std::free(dynamic_rows);
+    std::cerr << "Error: invalid matrix content\n";
+    return zahvaev::internalError;
+  }
+  for (std::size_t i = 0; i < rows; ++i)
+  {
+    row_pointers[i] = data + i * cols;
+  }
+
+  const long long max_sum = zahvaev::calcMaxDiagonalSum(row_pointers, rows, cols);
+  if (!zahvaev::changeMatrix(row_pointers, rows, cols))
+  {
+    std::free(dynamic_data);
+    std::free(dynamic_rows);
+    std::cerr << "Error: integer overflow\n";
+    return zahvaev::internalError;
+  }
+
+  out << rows << ' ' << cols;
+  for (std::size_t i = 0; i < rows; ++i)
+  {
+    for (std::size_t j = 0; j < cols; ++j)
+    {
+      out << ' ' << row_pointers[i][j];
+    }
+  }
+  out << '\n' << max_sum << '\n';
   std::free(dynamic_data);
   std::free(dynamic_rows);
-  return code;
+  if (!out)
+  {
+    std::cerr << "Error: cannot write output file\n";
+    return zahvaev::internalError;
+  }
+  return 0;
 }
