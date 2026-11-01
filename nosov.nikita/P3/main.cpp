@@ -4,23 +4,21 @@
 #include <new>
 
 namespace nosov {
-  bool readMatrix(std::istream& in, int* matrix, std::size_t rows, std::size_t cols)
+  std::istream& readMatrix(std::istream& in, int* matrix, std::size_t size)
   {
-    for (std::size_t i = 0; i < rows * cols; ++i) {
+    for (std::size_t i = 0; i < size; ++i) {
       in >> matrix[i];
-      if (!in) {
-        return false;
-      }
     }
-    return true;
+    return in;
   }
 
-  void writeMatrix(std::ostream& out, const int* matrix, std::size_t rows, std::size_t cols)
+  std::ostream& writeMatrix(std::ostream& out, const int* matrix, std::size_t rows, std::size_t cols)
   {
     out << rows << " " << cols;
     for (std::size_t i = 0; i < rows * cols; ++i) {
       out << " " << matrix[i];
     }
+    return out;
   }
 
   std::size_t findSeriesColumn(const int* matrix, std::size_t rows, std::size_t cols)
@@ -28,8 +26,8 @@ namespace nosov {
     if (rows == 0 || cols == 0) {
       return 0;
     }
-    std::size_t best_column = 0;
-    std::size_t best_length = 1;
+    std::size_t bestColumn = 0;
+    std::size_t bestLength = 1;
     for (std::size_t j = 0; j < cols; ++j) {
       std::size_t length = 1;
       for (std::size_t i = 1; i < rows; ++i) {
@@ -38,51 +36,29 @@ namespace nosov {
         } else {
           length = 1;
         }
-        if (length > best_length) {
-          best_length = length;
-          best_column = j;
+        if (length > bestLength) {
+          bestLength = length;
+          bestColumn = j;
         }
       }
     }
-    return best_column + 1;
-  }
-
-  int processMatrix(std::istream& in, const char* output_name, int* matrix, std::size_t rows, std::size_t cols)
-  {
-    if (!readMatrix(in, matrix, rows, cols)) {
-      std::cerr << "Can not read matrix\n";
-      return 2;
-    }
-    const std::size_t column = findSeriesColumn(matrix, rows, cols);
-
-    std::ofstream out(output_name);
-    if (!out) {
-      std::cerr << "Can not open output file\n";
-      return 2;
-    }
-    writeMatrix(out, matrix, rows, cols);
-    out << "\n";
-    out << column << "\n";
-    return 0;
+    return bestColumn + 1;
   }
 }
 
 int main(int argc, char** argv)
 {
-  const int argumentsCount = 4;
-  if (argc < argumentsCount) {
+  if (argc < 4) {
     std::cerr << "Not enough arguments\n";
     return 1;
   }
-  if (argc > argumentsCount) {
+  if (argc > 4) {
     std::cerr << "Too many arguments\n";
     return 1;
   }
 
-  const char* const num = argv[1];
-  const bool isFixed = (num[0] == '1' && num[1] == '\0');
-  const bool isDynamic = (num[0] == '2' && num[1] == '\0');
-  if (!isFixed && !isDynamic) {
+  const char* num = argv[1];
+  if ((num[0] != '1' && num[0] != '2') || num[1] != '\0') {
     std::cerr << "First parameter is wrong\n";
     return 1;
   }
@@ -94,30 +70,39 @@ int main(int argc, char** argv)
   }
   std::size_t rows = 0;
   std::size_t cols = 0;
-  in >> rows >> cols;
-  if (!in) {
+  if (!(in >> rows >> cols)) {
     std::cerr << "Can not read matrix size\n";
     return 2;
   }
 
-  if (isFixed) {
-    const std::size_t maxSize = 10000;
-    if (rows * cols > maxSize) {
+  int fixedMatrix[10000] = {};
+  int* dynamicMatrix = nullptr;
+  int* matrix = fixedMatrix;
+
+  if (num[0] == '1') {
+    if (rows * cols > 10000) {
       std::cerr << "Matrix is too big\n";
       return 2;
     }
-    int matrix[maxSize] = {};
-    return nosov::processMatrix(in, argv[3], matrix, rows, cols);
+  } else {
+    try {
+      dynamicMatrix = new int[rows * cols];
+    } catch (const std::bad_alloc&) {
+      std::cerr << "Not enough memory\n";
+      return 2;
+    }
+    matrix = dynamicMatrix;
   }
 
-  int* matrix = nullptr;
-  try {
-    matrix = new int[rows * cols];
-  } catch (const std::bad_alloc&) {
-    std::cerr << "Not enough memory\n";
+  if (!nosov::readMatrix(in, matrix, rows * cols)) {
+    std::cerr << "Can not read matrix\n";
+    delete[] dynamicMatrix;
     return 2;
   }
-  const int result = nosov::processMatrix(in, argv[3], matrix, rows, cols);
-  delete[] matrix;
-  return result;
+
+  std::ofstream out(argv[3]);
+  nosov::writeMatrix(out, matrix, rows, cols) << "\n";
+  out << nosov::findSeriesColumn(matrix, rows, cols) << "\n";
+  delete[] dynamicMatrix;
+  return 0;
 }
