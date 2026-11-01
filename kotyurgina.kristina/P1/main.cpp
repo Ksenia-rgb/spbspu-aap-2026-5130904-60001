@@ -30,8 +30,8 @@ int main()
           return 2;
         }
         div_count++;
-        }
       }
+    }
 
     last_number = number;
   }
