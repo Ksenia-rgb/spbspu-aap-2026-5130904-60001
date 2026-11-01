@@ -17,11 +17,11 @@ namespace zahvaev
   const int paramsError = 1;
   const int internalError = 2;
 
-  bool readMatrix(std::istream &in, int *data, std::size_t count)
+  bool readMatrix(std::istream &in, int *matrix, std::size_t count)
   {
     for (std::size_t i = 0; i < count; ++i)
     {
-      if (!(in >> data[i]))
+      if (!(in >> matrix[i]))
       {
         return false;
       }
@@ -30,7 +30,7 @@ namespace zahvaev
     return in.eof();
   }
 
-  bool changeMatrix(int **matrix, std::size_t rows, std::size_t cols)
+  bool changeMatrix(int *matrix, std::size_t rows, std::size_t cols)
   {
     for (std::size_t i = 0; i < rows; ++i)
     {
@@ -38,17 +38,17 @@ namespace zahvaev
       {
         const std::size_t layer = std::min({i, j, rows - 1 - i, cols - 1 - j});
         const int offset = static_cast< int >(layer) + 1;
-        if (matrix[i][j] > std::numeric_limits< int >::max() - offset)
+        if (matrix[i * cols + j] > std::numeric_limits< int >::max() - offset)
         {
           return false;
         }
-        matrix[i][j] += offset;
+        matrix[i * cols + j] += offset;
       }
     }
     return true;
   }
 
-  long long calcMaxDiagonalSum(const int *const *matrix, std::size_t rows, std::size_t cols)
+  long long calcMaxDiagonalSum(const int *matrix, std::size_t rows, std::size_t cols)
   {
     if (rows == 0 || cols == 0)
     {
@@ -70,7 +70,7 @@ namespace zahvaev
         {
           if (i + j == diagonal)
           {
-            sum += matrix[i][j];
+            sum += matrix[i * cols + j];
           }
         }
       }
@@ -116,71 +116,54 @@ int main(int argc, char *argv[])
   }
   const std::size_t rows = static_cast< std::size_t >(raw_rows);
   const std::size_t cols = static_cast< std::size_t >(raw_cols);
-  if ((cols != 0 && rows > zahvaev::maxSize / sizeof(int) / cols) || rows > zahvaev::maxSize / sizeof(int *))
+  if (cols != 0 && rows > zahvaev::maxSize / sizeof(int) / cols)
   {
     std::cerr << "Error: matrix is too large\n";
     return zahvaev::internalError;
   }
   const std::size_t count = rows * cols;
-  if (isFixed && (count > zahvaev::maxFixedSize || rows > zahvaev::maxFixedSize))
+  if (isFixed && count > zahvaev::maxFixedSize)
   {
     std::cerr << "Error: matrix does not fit into fixed array\n";
     return zahvaev::internalError;
   }
 
   int fixed_data[zahvaev::maxFixedSize] = {};
-  int *fixed_rows[zahvaev::maxFixedSize] = {};
   int *dynamic_data = nullptr;
-  int **dynamic_rows = nullptr;
   int *data = fixed_data;
-  int **row_pointers = fixed_rows;
   if (isDynamic)
   {
-    dynamic_data = static_cast< int * >(std::malloc(count * sizeof(int)));
-    dynamic_rows = static_cast< int ** >(std::malloc(rows * sizeof(int *)));
-    if ((dynamic_data == nullptr && count > 0) || (dynamic_rows == nullptr && rows > 0))
+    dynamic_data = reinterpret_cast< int * >(std::malloc(count * sizeof(int)));
+    if (dynamic_data == nullptr && count > 0)
     {
-      std::free(dynamic_data);
-      std::free(dynamic_rows);
       std::cerr << "Error: not enough memory\n";
       return zahvaev::internalError;
     }
     data = dynamic_data;
-    row_pointers = dynamic_rows;
   }
 
   if (!zahvaev::readMatrix(in, data, count))
   {
     std::free(dynamic_data);
-    std::free(dynamic_rows);
     std::cerr << "Error: invalid matrix content\n";
     return zahvaev::internalError;
   }
-  for (std::size_t i = 0; i < rows; ++i)
-  {
-    row_pointers[i] = data + i * cols;
-  }
 
-  const long long max_sum = zahvaev::calcMaxDiagonalSum(row_pointers, rows, cols);
-  if (!zahvaev::changeMatrix(row_pointers, rows, cols))
+  const long long max_sum = zahvaev::calcMaxDiagonalSum(data, rows, cols);
+  if (!zahvaev::changeMatrix(data, rows, cols))
   {
     std::free(dynamic_data);
-    std::free(dynamic_rows);
     std::cerr << "Error: integer overflow\n";
     return zahvaev::internalError;
   }
 
   out << rows << ' ' << cols;
-  for (std::size_t i = 0; i < rows; ++i)
+  for (std::size_t i = 0; i < count; ++i)
   {
-    for (std::size_t j = 0; j < cols; ++j)
-    {
-      out << ' ' << row_pointers[i][j];
-    }
+    out << ' ' << data[i];
   }
   out << '\n' << max_sum << '\n';
   std::free(dynamic_data);
-  std::free(dynamic_rows);
   if (!out)
   {
     std::cerr << "Error: cannot write output file\n";
