@@ -7,33 +7,33 @@ namespace borsch {
   constexpr int invalidInputCode = 1;
   constexpr int tooLongCode = 2;
 
-  void updateMax(size_t length, size_t &maxValue)
+  void updateMax(size_t length, size_t &max_value)
   {
-    if (length > maxValue) {
-      maxValue = length;
+    if (length > max_value) {
+      max_value = length;
     }
   }
 
-  void processEqual(int previous, int current, size_t &length, size_t &maxLength)
+  void processEqual(int previous, int current, size_t &length, size_t &max_length)
   {
     if (current == previous) {
       if (length < lengthLimit) {
         ++length;
       }
     } else {
-      updateMax(length, maxLength);
+      updateMax(length, max_length);
       length = singleElementLength;
     }
   }
 
-  void processIncreasing(int previous, int current, size_t &length, size_t &maxLength)
+  void processIncreasing(int previous, int current, size_t &length, size_t &max_length)
   {
     if (current >= previous) {
       if (length < lengthLimit) {
         ++length;
       }
     } else {
-      updateMax(length, maxLength);
+      updateMax(length, max_length);
       length = singleElementLength;
     }
   }
@@ -51,16 +51,16 @@ namespace borsch {
 
 int main()
 {
-  size_t maxEqualLength = 0;
-  size_t equalLength = 0;
-  size_t maxIncreasingLength = 0;
-  size_t increasingLength = 0;
+  size_t max_equal_length = 0;
+  size_t equal_length = 0;
+  size_t max_increasing_length = 0;
+  size_t increasing_length = 0;
   int previous = 0;
   int current = 0;
 
   while (std::cin >> current && current != 0) {
-    borsch::processEqual(previous, current, equalLength, maxEqualLength);
-    borsch::processIncreasing(previous, current, increasingLength, maxIncreasingLength);
+    borsch::processEqual(previous, current, equal_length, max_equal_length);
+    borsch::processIncreasing(previous, current, increasing_length, max_increasing_length);
     previous = current;
   }
 
@@ -69,11 +69,11 @@ int main()
     return borsch::invalidInputCode;
   }
 
-  borsch::updateMax(equalLength, maxEqualLength);
-  borsch::updateMax(increasingLength, maxIncreasingLength);
+  borsch::updateMax(equal_length, max_equal_length);
+  borsch::updateMax(increasing_length, max_increasing_length);
 
-  const int equalCode = borsch::printLength(maxEqualLength, "equal fragment");
-  const int increasingCode = borsch::printLength(maxIncreasingLength, "increasing fragment");
+  const int equalCode = borsch::printLength(max_equal_length, "equal fragment");
+  const int increasingCode = borsch::printLength(max_increasing_length, "increasing fragment");
 
   if (equalCode != 0) {
     return equalCode;
