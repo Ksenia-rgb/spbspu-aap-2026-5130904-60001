@@ -16,6 +16,32 @@ namespace borsch {
     }
     return true;
   }
+
+  static bool isLowerTriangular(const int* matrix, const int rows, const int cols)
+  {
+    const int size = (rows < cols) ? rows : cols;
+    if (size == 0) {
+      return false;
+    }
+    for (int row = 0; row < size; ++row) {
+      for (int col = row + 1; col < size; ++col) {
+        if (matrix[row * cols + col] != 0) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  static bool writeResults(const char* path, const int* matrix, const int rows, const int cols)
+  {
+    std::ofstream output(path);
+    if (!output) {
+      return false;
+    }
+    output << std::boolalpha << isLowerTriangular(matrix, rows, cols) << '\n';
+    return output.good();
+  }
 }
 
 int main(int argc, char* argv[])
@@ -25,6 +51,7 @@ int main(int argc, char* argv[])
   const int argCount = 4;
   const int modeArg = 1;
   const int inputArg = 2;
+  const int outputArg = 3;
   const char fixedMode = '1';
   const char dynamicMode = '2';
 
@@ -56,6 +83,7 @@ int main(int argc, char* argv[])
   const std::size_t count = static_cast< std::size_t >(rows) * static_cast< std::size_t >(cols);
 
   try {
+    bool isWritten = false;
     if (isFixed) {
       if (count > borsch::maxFixedSize) {
         std::cerr << "Matrix is too big for fixed array\n";
@@ -66,12 +94,18 @@ int main(int argc, char* argv[])
         std::cerr << "Invalid matrix elements\n";
         return exitBadData;
       }
+      isWritten = borsch::writeResults(argv[outputArg], matrix, rows, cols);
     } else {
       const std::unique_ptr< int[] > matrix = std::make_unique< int[] >(count);
       if (!borsch::readElements(input, matrix.get(), count)) {
         std::cerr << "Invalid matrix elements\n";
         return exitBadData;
       }
+      isWritten = borsch::writeResults(argv[outputArg], matrix.get(), rows, cols);
+    }
+    if (!isWritten) {
+      std::cerr << "Cannot write output file\n";
+      return exitBadData;
     }
   } catch (const std::bad_alloc&) {
     std::cerr << "Not enough memory\n";
