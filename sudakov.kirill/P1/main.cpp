@@ -1,12 +1,13 @@
 #include <iostream>
 #include <limits>
+#include <cstddef>
 
 int main()
 {
   int fst_el = 1;
   int snd_el = std::numeric_limits< int >::min();
-  size_t max_len = 0;
   int loc_min = std::numeric_limits< int >::max();
+  size_t max_len = 0;
   size_t seq = 0;
 
   while (std::cin >> fst_el && fst_el != 0) {
@@ -29,9 +30,10 @@ int main()
     return 1;
   }
   if (fst_el == 0 && seq == 0) {
-      std::cerr << "The sequence is too short\n";
-      return 2;
-    }
+    std::cerr << "The sequence is too short\n";
+    return 2;
+  }
+
   std::cout << max_len << "\n";
   std::cout << loc_min << "\n";
 }
