@@ -14,21 +14,21 @@ int main()
   {
     if (count >= 1 && num > prev1)
     {
-      if (inc_seq < std::numeric_limits<size_t>::max())
+      if (inc_seq < std::numeric_limits< size_t >::max())
       {
         inc_seq++;
       }
     }
     if (count >= 2 && (num - prev1 == prev2))
     {
-      if (sum_dup < std::numeric_limits<size_t>::max())
+      if (sum_dup < std::numeric_limits< size_t >::max())
       {
         sum_dup++;
       }
     }
     prev2 = prev1;
     prev1 = num;
-    if (count < std::numeric_limits<size_t>::max())
+    if (count < std::numeric_limits< size_t >::max())
     {
       count++;
     }
