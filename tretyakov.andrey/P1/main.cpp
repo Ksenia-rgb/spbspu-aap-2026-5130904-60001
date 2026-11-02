@@ -11,7 +11,7 @@ int main()
   size_t counter_of_sumdup = 0;
   int two_previous = 0;
   size_t count_of_entered_values = 0;
-  const int max_int = std::numeric_limits< int >::max();
+  constexpr int max_int = std::numeric_limits< int >::max();
   while (std::cin >> value1 && value1 != 0)
   {
     ++count_of_entered_values;
