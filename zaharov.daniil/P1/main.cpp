@@ -63,8 +63,8 @@ namespace zaharov
     }
   }
 
-  void updatePythagorean(long long cur, size_t total_elements, long long& first,
-                         long long& second, long long& third, size_t& pyth_count)
+  void updatePythagorean(
+      long long cur, size_t total_elements, long long& first, long long& second, long long& third, size_t& pyth_count)
   {
     first = second;
     second = third;
