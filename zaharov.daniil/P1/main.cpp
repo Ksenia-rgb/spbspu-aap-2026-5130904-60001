@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cstddef>
-#include <climits>
+#include <limits>
 
 namespace zaharov
 {
@@ -13,13 +13,13 @@ namespace zaharov
       return true;
     }
 
-    if (val == LLONG_MIN)
+    if (val == std::numeric_limits< long long >::min())
     {
       return false;
     }
 
     const long long abs_val = (val < 0) ? -val : val;
-    if (abs_val > LLONG_MAX / abs_val)
+    if (abs_val > std::numeric_limits< long long >::max() / abs_val)
     {
       return false;
     }
@@ -39,12 +39,44 @@ namespace zaharov
       return false;
     }
 
-    if (a2 > LLONG_MAX - b2)
+    if (a2 > std::numeric_limits< long long >::max() - b2)
     {
       return false;
     }
 
     return a2 + b2 == c2;
+  }
+
+  void updateMaxEqual(long long cur, long long prev, size_t& cur_equal, size_t& max_equal)
+  {
+    if (cur == prev)
+    {
+      ++cur_equal;
+      if (cur_equal > max_equal)
+      {
+        max_equal = cur_equal;
+      }
+    }
+    else
+    {
+      cur_equal = 1;
+    }
+  }
+
+  void updatePythagorean(long long cur, size_t total_elements, long long& first
+                         long long& second, long long& third, size_t& pyth_count)
+  {
+    first = second;
+    second = third;
+    third = cur;
+
+    if (total_elements >= 3)
+    {
+      if (isPythagorean(first, second, third))
+      {
+        ++pyth_count;
+      }
+    }
   }
 
   int run()
@@ -63,30 +95,10 @@ namespace zaharov
     {
       ++total_elements;
 
-      if (cur == prev)
-      {
-        ++cur_equal;
-        if (cur_equal > max_equal)
-        {
-          max_equal = cur_equal;
-        }
-      }
-      else
-      {
-        cur_equal = 1;
-      }
+      updateMaxEqual(cur, prev, cur_equal, max_equal);
 
-      first = second;
-      second = third;
-      third = cur;
+      updatePythagorean(cur, total_elements, first, second, third, pyth_count);
 
-      if (total_elements >= 3)
-      {
-        if (isPythagorean(first, second, third))
-        {
-          ++pyth_count;
-        }
-      }
       prev = cur;
     }
 
