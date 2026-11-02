@@ -1,5 +1,6 @@
 #include <cstddef>
 #include <iostream>
+#include <limits>
 
 int main()
 {
@@ -14,6 +15,10 @@ int main()
   size_t total_count = 0;
 
   while (std::cin >> next && next != 0) {
+    if (total_count == std::numeric_limits< size_t >::max()) {
+      std::cerr << "Error: sequence is too long\n";
+      return 3;
+    }
     ++total_count;
 
     if (total_count >= 3) {
