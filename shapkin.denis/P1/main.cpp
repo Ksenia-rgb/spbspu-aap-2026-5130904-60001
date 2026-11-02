@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstddef>
+#include <limits>
 
 int main()
 {
@@ -13,15 +14,24 @@ int main()
   {
     if (count >= 1 && num > prev1)
     {
-      inc_seq++;
+      if (inc_seq < std::numeric_limits<size_t>::max())
+      {
+        inc_seq++;
+      }
     }
     if (count >= 2 && (num - prev1 == prev2))
     {
-      sum_dup++;
+      if (sum_dup < std::numeric_limits<size_t>::max())
+      {
+        sum_dup++;
+      }
     }
     prev2 = prev1;
     prev1 = num;
-    count++;
+    if (count < std::numeric_limits<size_t>::max())
+    {
+      count++;
+    }
   }
   if (std::cin.fail())
   {
