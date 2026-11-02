@@ -33,6 +33,35 @@ namespace borsch {
     return true;
   }
 
+  static bool isLocalMaximum(const int* matrix, const int cols, const int row, const int col)
+  {
+    const int radius = 1;
+    const int value = matrix[row * cols + col];
+    for (int i = row - radius; i <= row + radius; ++i) {
+      for (int j = col - radius; j <= col + radius; ++j) {
+        const bool isSelf = (i == row) && (j == col);
+        if (!isSelf && (matrix[i * cols + j] >= value)) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  static std::size_t countLocalMaxima(const int* matrix, const int rows, const int cols)
+  {
+    const int border = 1;
+    std::size_t count = 0;
+    for (int row = border; row < rows - border; ++row) {
+      for (int col = border; col < cols - border; ++col) {
+        if (isLocalMaximum(matrix, cols, row, col)) {
+          ++count;
+        }
+      }
+    }
+    return count;
+  }
+
   static bool writeResults(const char* path, const int* matrix, const int rows, const int cols)
   {
     std::ofstream output(path);
@@ -40,6 +69,7 @@ namespace borsch {
       return false;
     }
     output << std::boolalpha << isLowerTriangular(matrix, rows, cols) << '\n';
+    output << countLocalMaxima(matrix, rows, cols) << '\n';
     return output.good();
   }
 }
