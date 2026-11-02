@@ -1,6 +1,8 @@
 #include <cstddef>
 #include <fstream>
 #include <iostream>
+#include <memory>
+#include <new>
 
 namespace borsch {
   constexpr std::size_t maxFixedSize = 10000;
@@ -53,16 +55,27 @@ int main(int argc, char* argv[])
   }
   const std::size_t count = static_cast< std::size_t >(rows) * static_cast< std::size_t >(cols);
 
-  if (isFixed) {
-    if (count > borsch::maxFixedSize) {
-      std::cerr << "Matrix is too big for fixed array\n";
-      return exitBadData;
+  try {
+    if (isFixed) {
+      if (count > borsch::maxFixedSize) {
+        std::cerr << "Matrix is too big for fixed array\n";
+        return exitBadData;
+      }
+      int matrix[borsch::maxFixedSize] = {};
+      if (!borsch::readElements(input, matrix, count)) {
+        std::cerr << "Invalid matrix elements\n";
+        return exitBadData;
+      }
+    } else {
+      const std::unique_ptr< int[] > matrix = std::make_unique< int[] >(count);
+      if (!borsch::readElements(input, matrix.get(), count)) {
+        std::cerr << "Invalid matrix elements\n";
+        return exitBadData;
+      }
     }
-    int matrix[borsch::maxFixedSize] = {};
-    if (!borsch::readElements(input, matrix, count)) {
-      std::cerr << "Invalid matrix elements\n";
-      return exitBadData;
-    }
+  } catch (const std::bad_alloc&) {
+    std::cerr << "Not enough memory\n";
+    return exitBadData;
   }
   return 0;
 }
