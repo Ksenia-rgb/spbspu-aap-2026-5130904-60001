@@ -1,82 +1,68 @@
 #include <cstddef>
+#include <fstream>
 #include <iostream>
 
 namespace borsch {
-  constexpr size_t singleElementLength = 1;
-  constexpr size_t lengthLimit = ~static_cast< size_t >(0);
-  constexpr int invalidInputCode = 1;
-  constexpr int tooLongCode = 2;
+  constexpr std::size_t maxFixedSize = 10000;
 
-  void updateMax(size_t length, size_t &max_value)
+  static bool readElements(std::istream& in, int* matrix, const std::size_t count)
   {
-    if (length > max_value) {
-      max_value = length;
-    }
-  }
-
-  void processEqual(int previous, int current, size_t &length, size_t &max_length)
-  {
-    if (current == previous) {
-      if (length < lengthLimit) {
-        ++length;
+    for (std::size_t i = 0; i < count; ++i) {
+      if (!(in >> matrix[i])) {
+        return false;
       }
-    } else {
-      updateMax(length, max_length);
-      length = singleElementLength;
     }
-  }
-
-  void processIncreasing(int previous, int current, size_t &length, size_t &max_length)
-  {
-    if (current >= previous) {
-      if (length < lengthLimit) {
-        ++length;
-      }
-    } else {
-      updateMax(length, max_length);
-      length = singleElementLength;
-    }
-  }
-
-  int printLength(size_t length, const char *description)
-  {
-    if (length == lengthLimit) {
-      std::cerr << "Error: " << description << " is too long to be calculated\n";
-      return tooLongCode;
-    }
-    std::cout << length << "\n";
-    return 0;
+    return true;
   }
 }
 
-int main()
+int main(int argc, char* argv[])
 {
-  size_t max_equal_length = 0;
-  size_t equal_length = 0;
-  size_t max_increasing_length = 0;
-  size_t increasing_length = 0;
-  int previous = 0;
-  int current = 0;
+  const int exitBadArguments = 1;
+  const int exitBadData = 2;
+  const int argCount = 4;
+  const int modeArg = 1;
+  const int inputArg = 2;
+  const char fixedMode = '1';
+  const char dynamicMode = '2';
 
-  while (std::cin >> current && current != 0) {
-    borsch::processEqual(previous, current, equal_length, max_equal_length);
-    borsch::processIncreasing(previous, current, increasing_length, max_increasing_length);
-    previous = current;
+  if (argc != argCount) {
+    std::cerr << "Usage: ./lab num input output\n";
+    return exitBadArguments;
   }
 
-  if (!std::cin) {
-    std::cerr << "Error: input is not a valid sequence\n";
-    return borsch::invalidInputCode;
+  const char* mode = argv[modeArg];
+  const bool isFixed = (mode[0] == fixedMode) && (mode[1] == '\0');
+  const bool isDynamic = (mode[0] == dynamicMode) && (mode[1] == '\0');
+  if (!isFixed && !isDynamic) {
+    std::cerr << "First parameter must be 1 or 2\n";
+    return exitBadArguments;
   }
 
-  borsch::updateMax(equal_length, max_equal_length);
-  borsch::updateMax(increasing_length, max_increasing_length);
-
-  const int equalCode = borsch::printLength(max_equal_length, "equal fragment");
-  const int increasingCode = borsch::printLength(max_increasing_length, "increasing fragment");
-
-  if (equalCode != 0) {
-    return equalCode;
+  std::ifstream input(argv[inputArg]);
+  if (!input) {
+    std::cerr << "Cannot open input file\n";
+    return exitBadData;
   }
-  return increasingCode;
+
+  int rows = 0;
+  int cols = 0;
+  if (!(input >> rows >> cols) || (rows < 0) || (cols < 0)) {
+    std::cerr << "Invalid matrix size\n";
+    return exitBadData;
+  }
+  const std::size_t count = static_cast< std::size_t >(rows) * static_cast< std::size_t >(cols);
+
+  if (isFixed) {
+    if (count > borsch::maxFixedSize) {
+      std::cerr << "Matrix is too big for fixed array\n";
+      return exitBadData;
+    }
+    int matrix[borsch::maxFixedSize] = {};
+    if (!borsch::readElements(input, matrix, count)) {
+      std::cerr << "Invalid matrix elements\n";
+      return exitBadData;
+    }
+  }
+  return 0;
 }
