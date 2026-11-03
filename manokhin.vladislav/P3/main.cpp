@@ -138,10 +138,10 @@ int main(int argc, char **argv)
       arr = static_arr;
     }
 
-    bool isData = false;
+    bool is_data = false;
 
     while (input >> n >> m) {
-      isData = true;
+      is_data = true;
       if (par == '2') {
         try {
           int *const new_arr = extendArr(n, m, p, arr);
@@ -169,7 +169,7 @@ int main(int argc, char **argv)
       cnt++;
     }
 
-    if (!input.eof() || !isData) {
+    if (!input.eof() || !is_data) {
       std::cerr << "Bad input" << '\n';
       if (par == '2') {
         delete[] arr;
