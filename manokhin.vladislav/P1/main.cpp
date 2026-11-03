@@ -2,59 +2,42 @@
 
 int main()
 {
-  int prev = 0;
-  std::cin >> prev;
+  int prev = 0, a = 0, far = 0;
+  int loc_min = 0;
+  int grt_lss = 0;
 
-  if (!std::cin) {
-    std::cerr << "Unexpected input" << '\n';
+  while (std::cin >> far && far != 0) {
+    if (prev == 0) {
+      prev = far;
+      continue;
+    } else if (a == 0) {
+      a = far;
+      continue;
+    }
+
+    if (a < prev && a < far) {
+      loc_min++;
+    }
+    if (a < prev && a > far) {
+      grt_lss++;
+    }
+
+    prev = a;
+    a = far;
+  }
+
+  if (std::cin.fail()) {
+    std::cerr << "Unexpected input";
     return 1;
   }
 
   if (prev == 0) {
-    std::cerr << "No sequence" << '\n';
+    std::cerr << "Too short sequence";
     return 2;
   }
 
-  int a = 0;
-  std::cin >> a;
+  std::cout << loc_min << '\n';
+  std::cout << grt_lss << '\n';
 
-  if (!std::cin) {
-    std::cerr << "Unexpected input" << '\n';
-    return 1;
-  }
-
-  if (a == 0) {
-    std::cout << 0 << '\n' << 0 << '\n';
-    return 0;
-  }
-  int fath = 0;
-  std::cin >> fath;
-
-  if (!std::cin) {
-    std::cerr << "Unexpected input" << '\n';
-    return 1;
-  }
-
-  int mn = 0;
-  int grt = 0;
-  while (fath != 0) {
-    if (a < prev && a < fath) {
-      mn++;
-    }
-    if (a < prev && a > fath) {
-      grt++;
-    }
-
-    prev = a;
-    a = fath;
-    std::cin >> fath;
-
-    if (!std::cin) {
-      std::cerr << "Unexpected input" << '\n';
-      return 1;
-    }
-  }
-  std::cout << mn << '\n';
-  std::cout << grt << '\n';
   return 0;
 }
