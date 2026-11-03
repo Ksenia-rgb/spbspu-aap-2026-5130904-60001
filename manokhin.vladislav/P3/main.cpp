@@ -14,69 +14,87 @@ namespace manokhin{
   {
     int * new_arr = new int[size + n * m+ 2];
     copy(size, arr, new_arr);
-    delete [] arr;
     return new_arr;
   }
 
- std::ofstream & outputArr(std::ofstream & output, int * arr, size_t size)
+ std::ofstream & outputMatrix(std::ofstream & output, int * arr, size_t n, size_t m)
   {
     size_t p = 0;
-    while (p < size) {
+    output << n << ' ' << m;
+    while (p < n * m) {
       output << ' ' << arr[p++];
     }
     return output;
   }
 
-  void lft_bot_cnt(int * arr, const long long n, const long long m, const size_t orig_m, size_t p, size_t k)
+  void lft_bot_cnt(int * arr, const size_t n, const size_t m, const size_t orig_m, size_t p, size_t k)
   {
     if (n <= 0 || m <= 0) {
       return;
     }
-    for (long long i = 0; i < m; i++) {
+    for (size_t i = 0; i < m; i++) {
       arr[p] += k;
       k++;
       p++;
     }
+    if (n == 1) {
+      return;
+    }
     p--;
-    for (long long i = 0; i < n - 1; i++) {
+    for (size_t i = 0; i < n - 1; i++) {
       p -= orig_m;
       arr[p] += k;
       k++;
     }
-    for (long long i = 0; i < m - 1; i++) {
+    if (m == 1) {
+      return;
+    }
+    for (size_t i = 0; i < m - 1; i++) {
       p--;
       arr[p] += k;
       k++;
     }
-    for (long long i = 0; i < n - 2; i++) {
+    for (size_t i = 0; i < n - 2; i++) {
       p += orig_m;
       arr[p] += k;
       k++;
+    }
+    if (n <= 2 && m <= 2) {
+      return;
     }
     lft_bot_cnt(arr, n - 2, m - 2, orig_m, ++p, k);
   }
 
-  void fll_inc_wav(int * arr, const long long n, const long long m, const size_t orig_m, size_t p, size_t k)
+  void fll_inc_wav(int * arr, const size_t n, const size_t m, const size_t orig_m, size_t p, size_t k)
   {
-    if (n <= 0 || m <= 0) {
+    if (n == 0 || m == 0) {
       return;
     }
-    for (long long i = 0; i < m; i++) {
+    for (size_t i = 0; i < m; i++) {
       arr[p] += k;
       p++;
     }
+    if (n == 1) {
+      return;
+    }
     p--;
-    for (long long i = 0; i < n - 1; i++) {
+    for (size_t i = 0; i < n - 1; i++) {
       p += orig_m;
       arr[p] += k;
     }
-    for (long long i = 0; i < m - 1; i++) {
+    if (m == 1) {
+      return;
+    }
+    for (size_t i = 0; i < m - 1; i++) {
       p--;
       arr[p] += k;
     }
-    for (long long i = 0; i < n - 2; i++) {
+    for (size_t i = 0; i < n - 2; i++) {
       p -= orig_m;
       arr[p] += k;
+    }
+    if (n <= 2 && m <= 2) {
+      return;
     }
     fll_inc_wav(arr, n - 2, m - 2, orig_m, ++p, ++k);
   }
@@ -107,14 +125,127 @@ int main(int argc, char ** argv)
     return 2;
   }
 
-  char par = argv[1][0];
+  const char par = argv[1][0];
 
   if ((par == '1' || par == '2') && argv[1][1] == '\0') {
+    size_t p = 0, cnt = 0, n = 0, m = 0;
+    int * arr = nullptr;
+    int static_arr[10000] = {0};
+
     if (par == '1') {
-      int arr[10000] = {0};
-    } else {
-      int * arr = nullptr;
+      arr = static_arr;
     }
+
+    while (input >> n >> m) {
+      if (par == '2') {
+        try {
+          int * new_arr = extendArr(n, m, p, arr);
+          delete [] arr;
+          arr = new_arr;
+        } catch (std::bad_alloc &) {
+          std::cerr << "Bad alloc" << '\n';
+          delete [] arr;
+          return 2;
+        }
+      }
+
+      arr[p++] = n;
+      arr[p++] = m;
+
+      for (size_t i = 0; i < n * m; i++) {
+        if (!(input >> arr[p++])) {
+          std::cerr << "Bad input" << '\n';
+          if (par == '2') {
+            delete [] arr;
+          }
+          return 2;
+        }
+      }
+      cnt++;
+    }
+
+    if (!input.eof()) {
+      std::cerr << "Bad input" << '\n';
+      if (par == '2') {
+        delete [] arr;
+      }
+      return 2;
+    }
+
+    p = 0;
+    int * matrix = nullptr;
+    int static_matrix[10000] = {0};
+    if (par == '1') {
+      matrix = static_matrix;
+    }
+
+    for (size_t i = 0; i < cnt; i++) {
+      n = arr[p++];
+      m = arr[p++];
+
+      if (par == '2') {
+        try {
+          matrix = new int[n*m];
+        } catch (const std::bad_alloc &) {
+          std::cerr << "Bad alloc" << '\n';
+          delete [] arr;
+          return 2;
+        }
+      }
+
+      copy(n * m, arr + p, matrix);
+      p += n * m;
+
+      lft_bot_cnt(matrix, n, m, m, (n-1)*m, 1);
+
+      outputMatrix(output, matrix, n, m);
+      output << '\n';
+
+      if (par == '2') {
+        delete [] matrix;
+      }
+    }
+
+    p = 0;
+
+    for (size_t i = 0; i < cnt; i++) {
+      n = arr[p++];
+      m = arr[p++];
+
+      if (par == '2') {
+        try {
+          matrix = new int[n*m];
+        } catch (const std::bad_alloc &) {
+          std::cerr << "Bad alloc" << '\n';
+          delete [] arr;
+          return 2;
+        }
+      }
+
+      copy(n * m, arr + p, matrix);
+      p += n * m;
+
+      fll_inc_wav(matrix, n, m, m, 0, 1);
+
+      outputMatrix(output, matrix, n, m);
+      output << '\n';
+
+      if (par == '2') {
+        delete [] matrix;
+      }
+    }
+
+    if (par == '2') {
+      delete [] arr;
+    }
+  }
+  else {
+    if (par >= '0' && par <= '9') {
+      std::cerr << "First parameter is out of range" << '\n';
+    } else {
+      std::cerr << "First parameter is not a number" << '\n';
+    }
+    return 1;
   }
   return 0;
 }
