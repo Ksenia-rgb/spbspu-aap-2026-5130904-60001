@@ -2,7 +2,7 @@
 #include <iostream>
 
 namespace manokhin{
-  void copy(size_t size, int * old_arr, int * new_arr)
+  void copy(const size_t size, const int * old_arr, int * new_arr)
   {
     for (const int * i = old_arr; i != size + old_arr; i++) {
       *new_arr = *i;
@@ -10,14 +10,14 @@ namespace manokhin{
     }
   }
 
-  int * extendArr(size_t n, size_t m, size_t size, int * arr)
+  int * extendArr(const size_t n, const size_t m, const size_t size, const int * arr)
   {
     int * new_arr = new int[size + n * m+ 2];
     copy(size, arr, new_arr);
     return new_arr;
   }
 
- std::ofstream & outputMatrix(std::ofstream & output, int * arr, size_t n, size_t m)
+ std::ofstream & outputMatrix(std::ofstream & output, const int * arr, const size_t n, const size_t m)
   {
     size_t p = 0;
     output << n << ' ' << m;
