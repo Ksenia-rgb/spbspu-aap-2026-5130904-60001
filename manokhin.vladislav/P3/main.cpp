@@ -2,6 +2,8 @@
 #include <iostream>
 
 namespace manokhin {
+  constexpr size_t MAX_SIZE = 10000;
+
   void copy(const size_t size, const int *old_arr, int *new_arr)
   {
     for (const int *i = old_arr; i != size + old_arr; i++) {
@@ -12,7 +14,7 @@ namespace manokhin {
 
   int *extendArr(const size_t n, const size_t m, const size_t size, const int *arr)
   {
-    int *new_arr = new int[size + n * m + 2];
+    int * const new_arr = new int[size + n * m + 2];
     copy(size, arr, new_arr);
     return new_arr;
   }
@@ -27,7 +29,7 @@ namespace manokhin {
     return output;
   }
 
-  void lft_bot_cnt(int *arr, const size_t n, const size_t m, const size_t orig_m, size_t p, size_t k)
+  void lftBotCnt(int *arr, const size_t n, const size_t m, const size_t orig_m, size_t p, size_t k)
   {
     if (n <= 0 || m <= 0) {
       return;
@@ -62,10 +64,10 @@ namespace manokhin {
     if (n <= 2 && m <= 2) {
       return;
     }
-    lft_bot_cnt(arr, n - 2, m - 2, orig_m, ++p, k);
+    lftBotCnt(arr, n - 2, m - 2, orig_m, ++p, k);
   }
 
-  void fll_inc_wav(int *arr, const size_t n, const size_t m, const size_t orig_m, size_t p, size_t k)
+  void fllIncWav(int *arr, const size_t n, const size_t m, const size_t orig_m, size_t p, size_t k)
   {
     if (n == 0 || m == 0) {
       return;
@@ -96,9 +98,9 @@ namespace manokhin {
     if (n <= 2 && m <= 2) {
       return;
     }
-    fll_inc_wav(arr, n - 2, m - 2, orig_m, ++p, ++k);
+    fllIncWav(arr, n - 2, m - 2, orig_m, ++p, ++k);
   }
-} // namespace manokhin
+}
 
 using namespace manokhin;
 
@@ -130,7 +132,7 @@ int main(int argc, char **argv)
   if ((par == '1' || par == '2') && argv[1][1] == '\0') {
     size_t p = 0, cnt = 0, n = 0, m = 0;
     int *arr = nullptr;
-    int static_arr[10000] = {0};
+    int static_arr[MAX_SIZE] = {0};
 
     if (par == '1') {
       arr = static_arr;
@@ -139,7 +141,7 @@ int main(int argc, char **argv)
     while (input >> n >> m) {
       if (par == '2') {
         try {
-          int *new_arr = extendArr(n, m, p, arr);
+          int * const new_arr = extendArr(n, m, p, arr);
           delete[] arr;
           arr = new_arr;
         } catch (std::bad_alloc &) {
@@ -174,7 +176,7 @@ int main(int argc, char **argv)
 
     p = 0;
     int *matrix = nullptr;
-    int static_matrix[10000] = {0};
+    int static_matrix[MAX_SIZE] = {0};
     if (par == '1') {
       matrix = static_matrix;
     }
@@ -196,7 +198,7 @@ int main(int argc, char **argv)
       copy(n * m, arr + p, matrix);
       p += n * m;
 
-      lft_bot_cnt(matrix, n, m, m, (n - 1) * m, 1);
+      lftBotCnt(matrix, n, m, m, (n - 1) * m, 1);
 
       outputMatrix(output, matrix, n, m);
       output << '\n';
@@ -225,7 +227,7 @@ int main(int argc, char **argv)
       copy(n * m, arr + p, matrix);
       p += n * m;
 
-      fll_inc_wav(matrix, n, m, m, 0, 1);
+      fllIncWav(matrix, n, m, m, 0, 1);
 
       outputMatrix(output, matrix, n, m);
       output << '\n';
