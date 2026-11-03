@@ -14,7 +14,7 @@ namespace manokhin {
 
   int *extendArr(const size_t n, const size_t m, const size_t size, const int *arr)
   {
-    int * const new_arr = new int[size + n * m + 2];
+    int *const new_arr = new int[size + n * m + 2];
     copy(size, arr, new_arr);
     return new_arr;
   }
@@ -141,7 +141,7 @@ int main(int argc, char **argv)
     while (input >> n >> m) {
       if (par == '2') {
         try {
-          int * const new_arr = extendArr(n, m, p, arr);
+          int *const new_arr = extendArr(n, m, p, arr);
           delete[] arr;
           arr = new_arr;
         } catch (std::bad_alloc &) {
