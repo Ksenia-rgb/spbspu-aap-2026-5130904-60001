@@ -2,106 +2,108 @@
 #include <iostream>
 
 namespace manokhin {
-void copy(const size_t size, const int *old_arr, int *new_arr) {
-  for (const int *i = old_arr; i != size + old_arr; i++) {
-    *new_arr = *i;
-    new_arr++;
+  void copy(const size_t size, const int *old_arr, int *new_arr)
+  {
+    for (const int *i = old_arr; i != size + old_arr; i++) {
+      *new_arr = *i;
+      new_arr++;
+    }
   }
-}
 
-int *extendArr(
-    const size_t n, const size_t m, const size_t size, const int *arr) {
-  int *new_arr = new int[size + n * m + 2];
-  copy(size, arr, new_arr);
-  return new_arr;
-}
+  int *extendArr(const size_t n, const size_t m, const size_t size, const int *arr)
+  {
+    int *new_arr = new int[size + n * m + 2];
+    copy(size, arr, new_arr);
+    return new_arr;
+  }
 
-std::ofstream &outputMatrix(
-    std::ofstream &output, const int *arr, const size_t n, const size_t m) {
-  size_t p = 0;
-  output << n << ' ' << m;
-  while (p < n * m) {
-    output << ' ' << arr[p++];
+  std::ofstream &outputMatrix(std::ofstream &output, const int *arr, const size_t n, const size_t m)
+  {
+    size_t p = 0;
+    output << n << ' ' << m;
+    while (p < n * m) {
+      output << ' ' << arr[p++];
+    }
+    return output;
   }
-  return output;
-}
 
-void lft_bot_cnt(int *arr, const size_t n, const size_t m, const size_t orig_m,
-    size_t p, size_t k) {
-  if (n <= 0 || m <= 0) {
-    return;
-  }
-  for (size_t i = 0; i < m; i++) {
-    arr[p] += k;
-    k++;
-    p++;
-  }
-  if (n == 1) {
-    return;
-  }
-  p--;
-  for (size_t i = 0; i < n - 1; i++) {
-    p -= orig_m;
-    arr[p] += k;
-    k++;
-  }
-  if (m == 1) {
-    return;
-  }
-  for (size_t i = 0; i < m - 1; i++) {
+  void lft_bot_cnt(int *arr, const size_t n, const size_t m, const size_t orig_m, size_t p, size_t k)
+  {
+    if (n <= 0 || m <= 0) {
+      return;
+    }
+    for (size_t i = 0; i < m; i++) {
+      arr[p] += k;
+      k++;
+      p++;
+    }
+    if (n == 1) {
+      return;
+    }
     p--;
-    arr[p] += k;
-    k++;
+    for (size_t i = 0; i < n - 1; i++) {
+      p -= orig_m;
+      arr[p] += k;
+      k++;
+    }
+    if (m == 1) {
+      return;
+    }
+    for (size_t i = 0; i < m - 1; i++) {
+      p--;
+      arr[p] += k;
+      k++;
+    }
+    for (size_t i = 0; i < n - 2; i++) {
+      p += orig_m;
+      arr[p] += k;
+      k++;
+    }
+    if (n <= 2 && m <= 2) {
+      return;
+    }
+    lft_bot_cnt(arr, n - 2, m - 2, orig_m, ++p, k);
   }
-  for (size_t i = 0; i < n - 2; i++) {
-    p += orig_m;
-    arr[p] += k;
-    k++;
-  }
-  if (n <= 2 && m <= 2) {
-    return;
-  }
-  lft_bot_cnt(arr, n - 2, m - 2, orig_m, ++p, k);
-}
 
-void fll_inc_wav(int *arr, const size_t n, const size_t m, const size_t orig_m,
-    size_t p, size_t k) {
-  if (n == 0 || m == 0) {
-    return;
-  }
-  for (size_t i = 0; i < m; i++) {
-    arr[p] += k;
-    p++;
-  }
-  if (n == 1) {
-    return;
-  }
-  p--;
-  for (size_t i = 0; i < n - 1; i++) {
-    p += orig_m;
-    arr[p] += k;
-  }
-  if (m == 1) {
-    return;
-  }
-  for (size_t i = 0; i < m - 1; i++) {
+  void fll_inc_wav(int *arr, const size_t n, const size_t m, const size_t orig_m, size_t p, size_t k)
+  {
+    if (n == 0 || m == 0) {
+      return;
+    }
+    for (size_t i = 0; i < m; i++) {
+      arr[p] += k;
+      p++;
+    }
+    if (n == 1) {
+      return;
+    }
     p--;
-    arr[p] += k;
+    for (size_t i = 0; i < n - 1; i++) {
+      p += orig_m;
+      arr[p] += k;
+    }
+    if (m == 1) {
+      return;
+    }
+    for (size_t i = 0; i < m - 1; i++) {
+      p--;
+      arr[p] += k;
+    }
+    for (size_t i = 0; i < n - 2; i++) {
+      p -= orig_m;
+      arr[p] += k;
+    }
+    if (n <= 2 && m <= 2) {
+      return;
+    }
+    fll_inc_wav(arr, n - 2, m - 2, orig_m, ++p, ++k);
   }
-  for (size_t i = 0; i < n - 2; i++) {
-    p -= orig_m;
-    arr[p] += k;
-  }
-  if (n <= 2 && m <= 2) {
-    return;
-  }
-  fll_inc_wav(arr, n - 2, m - 2, orig_m, ++p, ++k);
-}
 } // namespace manokhin
 
 using namespace manokhin;
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
   if (argc < 4) {
     std::cerr << "Not enough arguments" << '\n';
     return 1;
