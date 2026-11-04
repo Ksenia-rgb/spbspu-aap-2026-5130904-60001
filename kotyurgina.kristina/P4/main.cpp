@@ -3,16 +3,17 @@
 
 namespace kotyurgina
 {
-  char * readLine();
+  char* readLine();
+  int hasSame(const char* str1, const char* str2);
 }
 
-char * kotyurgina::readLine()
+char* kotyurgina::readLine()
 {
   const size_t initialCapacity = 16;
   const size_t maxCapacity = static_cast< size_t >(-1);
   size_t capacity = initialCapacity;
 
-  char * str = static_cast< char * >(std::malloc(capacity));
+  char* str = static_cast< char* >(std::malloc(capacity));
   if (str == nullptr)
   {
     return nullptr;
@@ -32,7 +33,7 @@ char * kotyurgina::readLine()
       }
 
       const size_t newCapacity = capacity * 2;
-      char * newStr = static_cast< char * >(std::malloc(newCapacity));
+      char* newStr = static_cast< char* >(std::malloc(newCapacity));
 
       if (newStr == nullptr)
       {
@@ -58,9 +59,24 @@ char * kotyurgina::readLine()
   return str;
 }
 
+int kotyurgina::hasSame(const char* str1, const char* str2)
+{
+  for (size_t i = 0; str1[i] != '\0'; ++i)
+  {
+    for (size_t j = 0; str2[j] != '\0'; ++j)
+    {
+      if (str1[i] == str2[j])
+      {
+        return 1;
+      }
+    }
+  }
+  return 0;
+}
+
 int main()
 {
-  char * str = kotyurgina::readLine();
+  char* str = kotyurgina::readLine();
 
   if (str == nullptr)
   {
@@ -68,7 +84,7 @@ int main()
     return 1;
   }
 
-  std::cout << str << '\n';
+  std::cout << kotyurgina::hasSame(str, "abs") << '\n';
   std::free(str);
   return 0;
 }
