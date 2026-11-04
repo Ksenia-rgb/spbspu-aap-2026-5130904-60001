@@ -26,7 +26,7 @@ int main()
     snd_el = fst_el;
   }
   if (std::cin.fail()) {
-    std::cerr << "Ошибка ввода\n";
+    std::cerr << "Input error\n";
     return 1;
   }
   if (fst_el == 0 && seq == 0) {
