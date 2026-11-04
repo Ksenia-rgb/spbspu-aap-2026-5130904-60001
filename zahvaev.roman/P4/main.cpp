@@ -3,12 +3,11 @@
 #include <cctype>
 
 
-//1 функция  LAT-RMV
-//char* str_2 = new char[capacity]
-char* remove_latin (char* str_2, const char* str, size_t length) {
+
+void remove_latin (char* str_2, const char* str, size_t length) {
     size_t length_2 = 0;
     for (size_t i = 0; i < length; ++i) {
-        if (std::isalpha(str[i]) && ((str[i] >= 'A' && str[i] <= 'Z') || (str[i] >= 'a' && str[i] <= 'z'))) {
+        if (std::isalpha(static_cast<unsigned char>(str[i])) && ((str[i] >= 'A' && str[i] <= 'Z') || (str[i] >= 'a' && str[i] <= 'z'))) {
             continue;
         } 
         else {
@@ -17,7 +16,38 @@ char* remove_latin (char* str_2, const char* str, size_t length) {
         }
     }
     str_2[length_2] = '\0';
-    return str_2;
+    for (size_t i = 0; i < length_2; ++i) {
+        std::cout << str_2[i];
+    }
+    std::cout << '\n';
+}
+
+void sum_latin (char* str_3, char* str, const char* str_4, size_t length) {
+    size_t length_3 = 0;
+    for (size_t i = 0; i < length; ++i) {
+        if (std::isupper(static_cast<unsigned char>(str[i]))) {
+            str[i] = std::tolower(static_cast<unsigned char>(str[i]));
+        }
+    }
+    char symbol = 'a';
+    for (size_t count = 0; symbol <= 'z'; ++symbol) {
+        for (size_t i = 0; i < length; ++i) {
+            if (symbol == str[i]) {
+                ++count;
+            } 
+        }
+        if (count != 0) {
+            str_3[length_3] = symbol;
+            ++length_3;
+        }
+        count = 0;   
+    }
+    str_3[length_3] = '\0';
+    
+    for (size_t i = 0; i < length_3; ++i) {
+        std::cout << str_3[i];
+    }
+    std::cout << '\n';
 }
 
 int main()
@@ -43,6 +73,15 @@ int main()
     }
     str[length] = '\0';
     char* str_2 = new char[capacity];
-    //вызов функции 1
-    //вызов функции 2
+    char* str_3 = new char[27];
+    const char* str_4 = "def_ghk";
+    remove_latin(str_2, str, length);
+    sum_latin(str_3, str, str_4, length);
+    delete[] str;
+    delete[] str_2;
+    delete[] str_3;
+    str = nullptr;
+    str_2 = nullptr;
+    str_3 = nullptr;
+    return 0;
 }
