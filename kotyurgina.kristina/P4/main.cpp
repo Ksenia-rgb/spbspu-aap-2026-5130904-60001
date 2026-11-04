@@ -1,10 +1,12 @@
 #include <cstdlib>
+#include <cctype>
 #include <iostream>
 
 namespace kotyurgina
 {
   char* readLine();
   int hasSame(const char* str1, const char* str2);
+  size_t countUniqueLatin(const char * str);
 }
 
 char* kotyurgina::readLine()
@@ -79,6 +81,46 @@ int kotyurgina::hasSame(const char* str1, const char* str2)
   return 0;
 }
 
+size_t kotyurgina::countUniqueLatin(const char * str)
+{
+  const size_t latin_count = 52;
+  char res[latin_count]{};
+  size_t count = 0;
+
+  for (size_t i = 0; str[i] != '\0'; ++i)
+  {
+    const unsigned char ch = static_cast< unsigned char >(str[i]);
+
+    if (std::isalpha(ch) == 0)
+    {
+      continue;
+    }
+
+    if (!((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')))
+    {
+      continue;
+    }
+
+    bool found = false;
+    for (size_t j = 0; j < count; ++j)
+    {
+      if (res[j] == str[i])
+      {
+        found = true;
+        break;
+      }
+    }
+
+    if (!found)
+    {
+      res[count] = str[i];
+      ++count;
+    }
+  }
+
+  return count;
+}
+
 int main()
 {
   char* const str = kotyurgina::readLine();
@@ -90,6 +132,7 @@ int main()
   }
 
   std::cout << kotyurgina::hasSame(str, "abs") << '\n';
+  std::cout << kotyurgina::countUniqueLatin(str) << '\n';
   std::free(str);
   return 0;
 }
