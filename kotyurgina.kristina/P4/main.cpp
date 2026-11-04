@@ -10,7 +10,7 @@ namespace kotyurgina
 char* kotyurgina::readLine()
 {
   const size_t initialCapacity = 16;
-  const size_t maxCapacity = static_cast< size_t >(-1);
+  const size_t maxСapacity = static_cast< size_t >(-1);
   size_t capacity = initialCapacity;
 
   char* str = static_cast< char* >(std::malloc(capacity));
@@ -26,16 +26,16 @@ char* kotyurgina::readLine()
   {
     if (size + 1 >= capacity)
     {
-      if (capacity > maxCapacity / 2)
+      if (capacity > maxСapacity / 2)
       {
         std::free(str);
         return nullptr;
       }
 
-      const size_t newCapacity = capacity * 2;
-      char* newStr = static_cast< char* >(std::malloc(newCapacity));
+      const size_t new_capacity = capacity * 2;
+      char* const new_str = static_cast< char* >(std::malloc(new_capacity));
 
-      if (newStr == nullptr)
+      if (new_str == nullptr)
       {
         std::free(str);
         return nullptr;
@@ -43,16 +43,21 @@ char* kotyurgina::readLine()
 
       for (size_t i = 0; i < size; ++i)
       {
-        newStr[i] = str[i];
+        new_str[i] = str[i];
       }
 
       std::free(str);
-      str = newStr;
-      capacity = newCapacity;
+      str = new_str;
+      capacity = new_capacity;
     }
 
     str[size] = ch;
     ++size;
+  }
+  if (!std::cin)
+  {
+    std::free(str);
+    return nullptr;
   }
 
   str[size] = '\0';
@@ -76,11 +81,11 @@ int kotyurgina::hasSame(const char* str1, const char* str2)
 
 int main()
 {
-  char* str = kotyurgina::readLine();
+  char* const str = kotyurgina::readLine();
 
   if (str == nullptr)
   {
-    std::cerr << "Memory allocation error\n";
+    std::cerr << "Input or memory allocation error\n";
     return 1;
   }
 
