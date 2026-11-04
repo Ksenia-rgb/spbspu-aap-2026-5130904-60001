@@ -3,57 +3,62 @@
 
 namespace parshina
 {
-  void calculateCharacteristics(int num, int & max, std::size_t & count_max, std::size_t & after_max);
+  void calculateCountMax(int num, size_t length, int & max, size_t & count);
+  void calculateAfterMax(int num, size_t length, int & max, size_t & count);
 }
 
-void parshina::calculateCharacteristics(int num, int & max, std::size_t & count_max, std::size_t & after_max)
+void parshina::calculateCountMax(int num, size_t length, int & max, size_t & count)
 {
-  if (num > max)
+  if (length == 0 || num > max)
   {
     max = num;
-    count_max = 1;
-    after_max = 0;
+    count = 1;
+  }
+  else if (num == max)
+  {
+    ++count;
+  }
+}
+
+void parshina::calculateAfterMax(int num, size_t length, int & max, size_t & count)
+{
+  if (length == 0 || num > max)
+  {
+    max = num;
+    count = 0;
   }
   else
   {
-    after_max++;
-    if (num == max)
-    {
-      count_max++;
-    }
+    ++count;
   }
 }
 
 int main()
 {
   int num = 0;
-  std::cin >> num;
-
-  if (!std::cin)
-  {
-    std::cerr << "Invalid input\n";
-    return 1;
-  }
-
-  if (num == 0)
-  {
-    std::cerr << "Empty sequence\n";
-    return 2;
-  }
-
-  int max = num;
-  std::size_t count_max = 1;
-  std::size_t after_max = 0;
+  int max_count = 0;
+  int max_after = 0;
+  size_t length = 0;
+  size_t count_max = 0;
+  size_t after_max = 0;
 
   while (std::cin >> num && num != 0)
   {
-    parshina::calculateCharacteristics(num, max, count_max, after_max);
+    parshina::calculateCountMax(num, length, max_count, count_max);
+    parshina::calculateAfterMax(num, length, max_after, after_max);
+    ++length;
   }
 
   if (!std::cin)
   {
     std::cerr << "Invalid input\n";
     return 1;
+  }
+
+  if (length == 0)
+  {
+    std::cerr << "Empty sequence\n";
+    return 2;
   }
 
   std::cout << count_max << "\n";
