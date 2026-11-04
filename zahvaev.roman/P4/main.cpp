@@ -5,7 +5,7 @@
 
 namespace zahvaev {
 
-  void remove_latin(char* str_2, const char* str, size_t length)
+  void removeLatin(char* str_2, const char* str, size_t length)
   {
     size_t length_2 = 0;
     for (size_t i = 0; i < length; ++i) {
@@ -24,7 +24,7 @@ namespace zahvaev {
     std::cout << '\n';
   }
 
-  void sum_latin(char* str_3, char* str, const char* str_4, size_t length)
+  void sumLatin(char* str_3, char* str, const char* str_4, size_t length)
   {
     size_t length_3 = 0;
     for (size_t i = 0; i < length; ++i) {
@@ -70,7 +70,7 @@ int main()
     std::cerr << "Out of memory\n";
     return 1;
   }
-  char symbol;
+  char symbol = '\0';
 
   while (std::cin.get(symbol) && symbol != '\n') {
     if (length == capacity - 1) {
@@ -94,6 +94,11 @@ int main()
     ++length;
   }
   str[length] = '\0';
+  if (length == 0) {
+    delete[] str;
+    std::cerr << "Empty input\n";
+    return 1;
+  }
   char* str_2 = nullptr;
   try {
     str_2 = new char[capacity];
@@ -102,18 +107,19 @@ int main()
     std::cerr << "Out of memory\n";
     return 1;
   }
+  const size_t str_3_size = 27;
   char* str_3 = nullptr;
   try {
-    str_3 = new char[27];
+    str_3 = new char[str_3_size];
   } catch (const std::bad_alloc&) {
     delete[] str;
     delete[] str_2;
     std::cerr << "Out of memory\n";
     return 1;
   }
-  const char* str_4 = "def_ghk";
-  zahvaev::remove_latin(str_2, str, length);
-  zahvaev::sum_latin(str_3, str, str_4, length);
+  const char* const str_4 = "def_ghk";
+  zahvaev::removeLatin(str_2, str, length);
+  zahvaev::sumLatin(str_3, str, str_4, length);
   delete[] str;
   delete[] str_2;
   delete[] str_3;
