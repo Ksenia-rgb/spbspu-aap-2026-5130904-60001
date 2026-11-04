@@ -1,8 +1,7 @@
 #include <iostream>
 #include <cstring>
 #include <cctype>
-
-
+#include <new>
 
 void remove_latin (char* str_2, const char* str, size_t length) {
     size_t length_2 = 0;
@@ -22,28 +21,36 @@ void remove_latin (char* str_2, const char* str, size_t length) {
     std::cout << '\n';
 }
 
-void sum_latin (char* str_3, char* str, const char* str_4, size_t length) {
+void sum_latin(char* str_3, char* str, const char* str_4, size_t length) {
     size_t length_3 = 0;
     for (size_t i = 0; i < length; ++i) {
         if (std::isupper(static_cast<unsigned char>(str[i]))) {
             str[i] = std::tolower(static_cast<unsigned char>(str[i]));
         }
     }
+    for (size_t i = 0; i < std::strlen(str_4); ++i) {
+        char lower_symbol = static_cast<char>(std::tolower(static_cast<unsigned char>(str_4[i])));
+    }
     char symbol = 'a';
+
     for (size_t count = 0; symbol <= 'z'; ++symbol) {
         for (size_t i = 0; i < length; ++i) {
             if (symbol == str[i]) {
                 ++count;
-            } 
+            }
+        }
+        for (size_t i = 0; i < std::strlen(str_4); ++i) {
+            if (symbol == std::tolower(static_cast<unsigned char>(str_4[i]))) {
+                ++count;
+            }
         }
         if (count != 0) {
             str_3[length_3] = symbol;
             ++length_3;
         }
-        count = 0;   
+        count = 0;
     }
     str_3[length_3] = '\0';
-    
     for (size_t i = 0; i < length_3; ++i) {
         std::cout << str_3[i];
     }
@@ -54,14 +61,29 @@ int main()
 {
     size_t capacity = 4;
     size_t length = 0;
-    char* str = new char[capacity];
+    char* str = nullptr;
+    try {
+        str = new char[capacity];
+    }
+    catch (const std::bad_alloc&) {
+        std::cerr << "Out of memory\n";
+        return 1;
+    }
     char symbol;
 
     while (std::cin.get(symbol) && symbol != '\n') {
         if (length == capacity - 1) {
             size_t& capacity_ref = capacity;
             capacity_ref *= 2;
-            char* new_str = new char[capacity_ref];
+            char* new_str = nullptr;
+            try {
+                new_str = new char[capacity_ref];
+            }
+            catch (const std::bad_alloc&) {
+                delete[] str;
+                std::cerr << "Out of memory\n";
+                return 1;
+            }
             for (size_t i = 0; i < length; ++i) {
                 new_str[i] = str[i];
             }
@@ -72,8 +94,25 @@ int main()
         ++length;
     }
     str[length] = '\0';
-    char* str_2 = new char[capacity];
-    char* str_3 = new char[27];
+    char* str_2 = nullptr;
+    try {
+        str_2 = new char[capacity];
+    }
+    catch (const std::bad_alloc&) {
+        delete[] str;
+        std::cerr << "Out of memory\n";
+        return 1;
+    }
+    char* str_3 = nullptr;
+    try {
+        str_3 = new char[27];
+    }
+    catch (const std::bad_alloc&) {
+        delete[] str;
+        delete[] str_2;
+        std::cerr << "Out of memory\n";
+        return 1;
+    }
     const char* str_4 = "def_ghk";
     remove_latin(str_2, str, length);
     sum_latin(str_3, str, str_4, length);
