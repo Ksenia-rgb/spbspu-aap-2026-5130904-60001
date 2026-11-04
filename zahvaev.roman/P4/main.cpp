@@ -3,6 +3,8 @@
 #include <cctype>
 #include <new>
 
+namespace zahvaev {
+
 void remove_latin (char* str_2, const char* str, size_t length) {
     size_t length_2 = 0;
     for (size_t i = 0; i < length; ++i) {
@@ -28,9 +30,6 @@ void sum_latin(char* str_3, char* str, const char* str_4, size_t length) {
             str[i] = std::tolower(static_cast<unsigned char>(str[i]));
         }
     }
-    for (size_t i = 0; i < std::strlen(str_4); ++i) {
-        char lower_symbol = static_cast<char>(std::tolower(static_cast<unsigned char>(str_4[i])));
-    }
     char symbol = 'a';
 
     for (size_t count = 0; symbol <= 'z'; ++symbol) {
@@ -55,6 +54,7 @@ void sum_latin(char* str_3, char* str, const char* str_4, size_t length) {
         std::cout << str_3[i];
     }
     std::cout << '\n';
+}
 }
 
 int main()
@@ -114,8 +114,8 @@ int main()
         return 1;
     }
     const char* str_4 = "def_ghk";
-    remove_latin(str_2, str, length);
-    sum_latin(str_3, str, str_4, length);
+    zahvaev::remove_latin(str_2, str, length);
+    zahvaev::sum_latin(str_3, str, str_4, length);
     delete[] str;
     delete[] str_2;
     delete[] str_3;
