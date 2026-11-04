@@ -6,7 +6,7 @@ namespace kotyurgina
 {
   char* readLine();
   int hasSame(const char* str1, const char* str2);
-  size_t countUniqueLatin(const char * str);
+  size_t countUniqueLatin(const char* str);
 }
 
 char* kotyurgina::readLine()
@@ -81,7 +81,7 @@ int kotyurgina::hasSame(const char* str1, const char* str2)
   return 0;
 }
 
-size_t kotyurgina::countUniqueLatin(const char * str)
+size_t kotyurgina::countUniqueLatin(const char* str)
 {
   const size_t latin_count = 52;
   char res[latin_count]{};
