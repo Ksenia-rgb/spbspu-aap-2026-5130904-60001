@@ -4,12 +4,12 @@
 #include <iostream>
 
 namespace sudakov {
-  bool readMatrix(std::ifstream& input, int* matrix, size_t size)
+  std::ifstream& readMatrix(std::ifstream& input, int* matrix, size_t size)
   {
     for (size_t i = 0; i < size; ++i) {
       input >> matrix[i];
     }
-    return !input.fail();
+    return input;
   }
 
   size_t cntLocMax(const int* matrix, size_t rows, size_t cols)
@@ -68,6 +68,13 @@ namespace sudakov {
     }
     return count;
   }
+
+  std::ofstream& writeResults(std::ofstream& output, size_t max_count, size_t min_count)
+  {
+    output << max_count << '\n';
+    output << min_count << '\n';
+    return output;
+  }
 }
 
 int main(int argc, char* argv[])
@@ -123,29 +130,27 @@ int main(int argc, char* argv[])
   }
 
   int fixed[max_size] = {};
+  int* dynamic_matrix = nullptr;
   int* matrix = fixed;
   if (mode == 2) {
-    matrix = static_cast< int* >(malloc(size * sizeof(int)));
-    if (matrix == nullptr and size != 0) {
+    dynamic_matrix = reinterpret_cast< int* >(malloc(size * sizeof(int)));
+    if (dynamic_matrix == nullptr and size != 0) {
       std::cerr << "Not enough memory\n";
       return 2;
     }
+    matrix = dynamic_matrix;
   }
 
   if (!sudakov::readMatrix(input, matrix, size)) {
-    if (mode == 2) {
-      free(matrix);
-    }
+    free(dynamic_matrix);
     std::cerr << "Invalid matrix\n";
     return 2;
   }
 
-  output << sudakov::cntLocMax(matrix, rows, cols) << '\n';
-  output << sudakov::cntLocMin(matrix, rows, cols) << '\n';
-
-  if (mode == 2) {
-    free(matrix);
-  }
+  const size_t max_count = sudakov::cntLocMax(matrix, rows, cols);
+  const size_t min_count = sudakov::cntLocMin(matrix, rows, cols);
+  sudakov::writeResults(output, max_count, min_count);
+  free(dynamic_matrix);
 
   if (!output) {
     std::cerr << "Cannot write result\n";
