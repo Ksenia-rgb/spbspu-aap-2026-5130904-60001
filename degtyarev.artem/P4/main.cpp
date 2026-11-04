@@ -6,7 +6,7 @@
 
 namespace degtyarev
 {
-  char *resize(char *str, size_t &capacity)
+  char *resize(const char *str, size_t &capacity)
   {
     const size_t new_capacity = capacity * 2;
     char *const new_str = new char[new_capacity];
@@ -19,7 +19,7 @@ namespace degtyarev
     return new_str;
   }
 
-  char *Read_str(size_t &capacity, size_t &size)
+  char *readStr(size_t &capacity, size_t &size)
   {
     char *str = new char[capacity];
     char current = '\0';
@@ -43,7 +43,7 @@ namespace degtyarev
     return str;
   }
 
-  char *UNI_TWO(const char *str, const char *str2, size_t size, size_t size2, char *sumstr)
+  char *uniTwo(const char *str, const char *str2, size_t size, size_t size2, char *sumstr)
   {
     size_t cnt = 0;
     const size_t min_size = std::min(size, size2);
@@ -64,7 +64,7 @@ namespace degtyarev
     return sumstr;
   }
 
-  char *SHR_SYM(const char *str, size_t size, char *res)
+  char *shrSym(const char *str, size_t size, char *res)
   {
     size_t cnt = 0;
     for (char c = 'a'; c <= 'z'; ++c)
@@ -99,7 +99,7 @@ int main()
   char *sumstr = nullptr;
   try
   {
-    str = degtyarev::Read_str(capacity, size);
+    str = degtyarev::readStr(capacity, size);
     sumstr = new char[size + size2 + 1];
   }
   catch (const std::bad_alloc &e)
@@ -108,11 +108,18 @@ int main()
     delete[] str;
     return 1;
   }
+  if (size == 0)
+  {
+    std::cerr << "Empty input\n";
+    delete[] str;
+    delete[] sumstr;
+    return 1;
+  }
 
   const size_t alphabet_size = 26;
   char res[alphabet_size + 1] = {};
-  std::cout << degtyarev::UNI_TWO(str, str2, size, size2, sumstr) << '\n';
-  std::cout << degtyarev::SHR_SYM(str, size, res) << '\n';
+  std::cout << degtyarev::uniTwo(str, str2, size, size2, sumstr) << '\n';
+  std::cout << degtyarev::shrSym(str, size, res) << '\n';
   delete[] str;
   delete[] sumstr;
   return 0;
