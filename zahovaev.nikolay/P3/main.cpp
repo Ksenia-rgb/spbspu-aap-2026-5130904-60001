@@ -10,7 +10,7 @@ const size_t direction_right = 2;
 const size_t direction_down = 3;
 const size_t direction_left = 4;
 
-bool switch_direction(size_t& direction, size_t& row, size_t& column, size_t& left_border, size_t& bottom_border,
+bool switchDirection(size_t& direction, size_t& row, size_t& column, size_t& left_border, size_t& bottom_border,
     size_t& right_border, size_t& top_border)
 {
   switch (direction) {
@@ -53,7 +53,7 @@ bool switch_direction(size_t& direction, size_t& row, size_t& column, size_t& le
   return false;
 }
 
-void lft_bot_clk(int* mass, const size_t n, const size_t m)
+void lftBotClk(int* mass, const size_t n, const size_t m)
 {
   size_t row = n - 1;
   size_t column = 0;
@@ -67,13 +67,13 @@ void lft_bot_clk(int* mass, const size_t n, const size_t m)
   const size_t nm = n * m;
   while (i != nm) {
     mass[row * m + column] -= ++i;
-    if (!switch_direction(direction, row, column, left_border, bottom_border, right_border, top_border)) {
+    if (!switchDirection(direction, row, column, left_border, bottom_border, right_border, top_border)) {
       mass[row * m + column] += i--;
     }
   }
 }
 
-bool is_column_nsm(int const* mass, const size_t n, const size_t m, const size_t i)
+bool isColumnNsm(int const* mass, const size_t n, const size_t m, const size_t i)
 {
   int top = mass[0 * m + i];
   int bottom = 0;
@@ -87,23 +87,23 @@ bool is_column_nsm(int const* mass, const size_t n, const size_t m, const size_t
   return true;
 }
 
-size_t cnt_col_nsm(int const* mass, const size_t n, const size_t m)
+size_t cntColNsm(int const* mass, const size_t n, const size_t m)
 {
   size_t counter = 0;
   for (size_t i = 0; i < m; i++) {
-    counter += is_column_nsm(mass, n, m, i);
+    counter += isColumnNsm(mass, n, m, i);
   }
   return counter;
 }
 
-void write_mass(int* mass, const size_t n, const size_t m, std::ifstream& is)
+void writeMass(int* mass, const size_t n, const size_t m, std::ifstream& is)
 {
   for (size_t i = 0; i < m * n; i++) {
     is >> mass[i];
   }
 }
 
-void send_answer(const size_t c, int const* mass, const size_t n, const size_t m, std::ofstream& as)
+void sendAnswer(const size_t c, int const* mass, const size_t n, const size_t m, std::ofstream& as)
 {
   as << c << "\n";
   as << n << " " << m;
@@ -112,10 +112,6 @@ void send_answer(const size_t c, int const* mass, const size_t n, const size_t m
   }
 }
 
-const size_t maxSize = 10000;
-int mass[maxSize] = {};
-
-int* mass2 = nullptr;
 int main(int lenargs, char* args[])
 {
   if (lenargs < 4) {
@@ -146,6 +142,10 @@ int main(int lenargs, char* args[])
     std::cerr << "Your file is a TRASH\n";
     return 1;
   }
+  const size_t maxSize = 10000;
+  int mass[maxSize] = {};
+
+  int* mass2 = nullptr;
 
   num--;
   size_t n = 0;
@@ -167,22 +167,22 @@ int main(int lenargs, char* args[])
     both_mass = mass;
   }
 
-  write_mass(both_mass, n, m, is);
+  writeMass(both_mass, n, m, is);
   if (!is) {
     std::cerr << "Your massiv is a TRASH\n";
     delete[] mass2;
     return 2;
   }
 
-  lft_bot_clk(both_mass, n, m);
-  const size_t c = cnt_col_nsm(both_mass, n, m);
+  lftBotClk(both_mass, n, m);
+  const size_t c = cntColNsm(both_mass, n, m);
   std::ofstream as(args[3]);
   if (!as.is_open()) {
     std::cerr << "S.. sorry! I can't open your file(\n";
     delete[] mass2;
     return 2;
   }
-  send_answer(c, both_mass, n, m, as);
+  sendAnswer(c, both_mass, n, m, as);
   if (!as) {
     std::cerr << "My code have UB probably. It means that i already dead\n";
     delete[] mass2;
