@@ -5,112 +5,115 @@
 #include <cstddef>
 #include <climits>
 
-const size_t direction_up = 1;
-const size_t direction_right = 2;
-const size_t direction_down = 3;
-const size_t direction_left = 4;
-
-bool switchDirection(size_t& direction, size_t& row, size_t& column, size_t& left_border, size_t& bottom_border,
-    size_t& right_border, size_t& top_border)
+namespace zahovaev
 {
-  switch (direction) {
-  case direction_up:
-    if (row > top_border) {
-      row--;
-      return true;
-    } else {
-      direction = direction_right;
-      top_border++;
-      [[fallthrough]];
+  const size_t direction_up = 1;
+  const size_t direction_right = 2;
+  const size_t direction_down = 3;
+  const size_t direction_left = 4;
+
+  bool switchDirection(size_t& direction, size_t& row, size_t& column, size_t& left_border, size_t& bottom_border,
+      size_t& right_border, size_t& top_border)
+  {
+    switch (direction) {
+    case direction_up:
+      if (row > top_border) {
+        row--;
+        return true;
+      } else {
+        direction = direction_right;
+        top_border++;
+        [[fallthrough]];
+      }
+    case direction_right:
+      if (column < right_border) {
+        column++;
+        return true;
+      } else {
+        direction = direction_down;
+        right_border--;
+        [[fallthrough]];
+      }
+    case direction_down:
+      if (row < bottom_border) {
+        row++;
+        return true;
+      } else {
+        direction = direction_left;
+        bottom_border--;
+        [[fallthrough]];
+      }
+    case direction_left:
+      if (column > left_border) {
+        column--;
+        return true;
+      } else {
+        direction = direction_up;
+        left_border++;
+      }
     }
-  case direction_right:
-    if (column < right_border) {
-      column++;
-      return true;
-    } else {
-      direction = direction_down;
-      right_border--;
-      [[fallthrough]];
-    }
-  case direction_down:
-    if (row < bottom_border) {
-      row++;
-      return true;
-    } else {
-      direction = direction_left;
-      bottom_border--;
-      [[fallthrough]];
-    }
-  case direction_left:
-    if (column > left_border) {
-      column--;
-      return true;
-    } else {
-      direction = direction_up;
-      left_border++;
+    return false;
+  }
+
+  void lftBotClk(int* mass, const size_t n, const size_t m)
+  {
+    size_t row = n - 1;
+    size_t column = 0;
+    size_t left_border = 1;
+    size_t bottom_border = n - 1;
+    size_t right_border = m - 1;
+    size_t top_border = 0;
+
+    size_t direction = direction_up;
+    size_t i = 0;
+    const size_t nm = n * m;
+    while (i != nm) {
+      mass[row * m + column] -= ++i;
+      if (!switchDirection(direction, row, column, left_border, bottom_border, right_border, top_border)) {
+        mass[row * m + column] += i--;
+      }
     }
   }
-  return false;
-}
 
-void lftBotClk(int* mass, const size_t n, const size_t m)
-{
-  size_t row = n - 1;
-  size_t column = 0;
-  size_t left_border = 1;
-  size_t bottom_border = n - 1;
-  size_t right_border = m - 1;
-  size_t top_border = 0;
+  bool isColumnNsm(int const* mass, const size_t n, const size_t m, const size_t i)
+  {
+    int top = mass[0 * m + i];
+    int bottom = 0;
+    for (size_t j = 1; j < n; j++) {
+      bottom = mass[j * m + i];
+      if (bottom == top) {
+        return false;
+      }
+      top = bottom;
+    }
+    return true;
+  }
 
-  size_t direction = direction_up;
-  size_t i = 0;
-  const size_t nm = n * m;
-  while (i != nm) {
-    mass[row * m + column] -= ++i;
-    if (!switchDirection(direction, row, column, left_border, bottom_border, right_border, top_border)) {
-      mass[row * m + column] += i--;
+  size_t cntColNsm(int const* mass, const size_t n, const size_t m)
+  {
+    size_t counter = 0;
+    for (size_t i = 0; i < m; i++) {
+      counter += isColumnNsm(mass, n, m, i);
+    }
+    return counter;
+  }
+
+  void writeMass(int* mass, const size_t n, const size_t m, std::ifstream& is)
+  {
+    for (size_t i = 0; i < m * n; i++) {
+      is >> mass[i];
     }
   }
-}
 
-bool isColumnNsm(int const* mass, const size_t n, const size_t m, const size_t i)
-{
-  int top = mass[0 * m + i];
-  int bottom = 0;
-  for (size_t j = 1; j < n; j++) {
-    bottom = mass[j * m + i];
-    if (bottom == top) {
-      return false;
+  void sendAnswer(const size_t c, int const* mass, const size_t n, const size_t m, std::ofstream& as)
+  {
+    as << c << "\n";
+    as << n << " " << m;
+    for (size_t i = 0; i < n * m; i++) {
+      as << " " << mass[i];
     }
-    top = bottom;
   }
-  return true;
-}
-
-size_t cntColNsm(int const* mass, const size_t n, const size_t m)
-{
-  size_t counter = 0;
-  for (size_t i = 0; i < m; i++) {
-    counter += isColumnNsm(mass, n, m, i);
-  }
-  return counter;
-}
-
-void writeMass(int* mass, const size_t n, const size_t m, std::ifstream& is)
-{
-  for (size_t i = 0; i < m * n; i++) {
-    is >> mass[i];
-  }
-}
-
-void sendAnswer(const size_t c, int const* mass, const size_t n, const size_t m, std::ofstream& as)
-{
-  as << c << "\n";
-  as << n << " " << m;
-  for (size_t i = 0; i < n * m; i++) {
-    as << " " << mass[i];
-  }
-}
+};
 
 int main(int lenargs, char* args[])
 {
@@ -167,22 +170,22 @@ int main(int lenargs, char* args[])
     both_mass = mass;
   }
 
-  writeMass(both_mass, n, m, is);
+  zahovaev::writeMass(both_mass, n, m, is);
   if (!is) {
     std::cerr << "Your massiv is a TRASH\n";
     delete[] mass2;
     return 2;
   }
 
-  lftBotClk(both_mass, n, m);
-  const size_t c = cntColNsm(both_mass, n, m);
+  zahovaev::lftBotClk(both_mass, n, m);
+  const size_t c = zahovaev::cntColNsm(both_mass, n, m);
   std::ofstream as(args[3]);
   if (!as.is_open()) {
     std::cerr << "S.. sorry! I can't open your file(\n";
     delete[] mass2;
     return 2;
   }
-  sendAnswer(c, both_mass, n, m, as);
+  zahovaev::sendAnswer(c, both_mass, n, m, as);
   if (!as) {
     std::cerr << "My code have UB probably. It means that i already dead\n";
     delete[] mass2;
