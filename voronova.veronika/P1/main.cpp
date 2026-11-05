@@ -10,7 +10,7 @@ int main()
   size_t cnt1 = 0;
   size_t cnt2 = 0;
 
-hile ((std::cin >> a) && (a != 0)) {
+while ((std::cin >> a) && (a != 0)) {
     if (a > max || cnt1 == 0) {
       max = a;
       cnt2 = 0;
