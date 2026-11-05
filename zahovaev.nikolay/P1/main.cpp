@@ -5,7 +5,7 @@
 
 namespace zahovaev
 {
-  size_t max_size_t =ULONG_MAX;
+  size_t max_size_t = ULONG_MAX;
   void div_rem(const int first, const int before_first, size_t & count_del)
   {
     if (first % before_first == 0)
@@ -49,11 +49,11 @@ int main()
     {
       zahovaev::div_rem(first, before_first, count_del);
       zahovaev::cnt_max(first, before_first, count_max);
-      
+
       before_first = first;
     }
   }
-  catch(const std::logic_error & e)
+  catch (const std::logic_error & e)
   {
     std::cerr << "Your sequence too big\n";
     return 1;
