@@ -5,8 +5,8 @@
 
 namespace zahovaev
 {
-  size_t max_size_t = ULONG_MAX;
-  void div_rem(const int first, const int before_first, size_t & count_del)
+  const size_t max_size_t = ULONG_MAX;
+  void divRem(const int first, const int before_first, size_t & count_del)
   {
     if (first % before_first == 0)
     {
@@ -18,7 +18,7 @@ namespace zahovaev
     }
   }
 
-  void cnt_max(const int first, int & max_e, size_t & count_max)
+  void cntMax(const int first, int & max_e, size_t & count_max)
   {
     if (first > max_e)
     {
