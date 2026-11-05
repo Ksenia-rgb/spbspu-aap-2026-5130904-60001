@@ -7,30 +7,30 @@ int main()
   int a = 0;
   int min = std::numeric_limits< int >::max();
   int max = std::numeric_limits< int >::min();
-  std::size_t cnt1 = 0;
-  std::size_t cnt2 = 0;
+  size_t cnt1 = 0;
+  size_t cnt2 = 0;
 
-  while ((std::cin >> a) && (a != 0)) {
-    if (a < min) {
-      min = a;
-      cnt1 = 1;
-    } else if (a == min) {
-      if (cnt1 == std::numeric_limits< std::size_t >::max()) {
-        std::cerr << "Error\n";
-        return 1;
-      }
-      cnt1++;
-    }
-
-    if (a > max) {
+hile ((std::cin >> a) && (a != 0)) {
+    if (a > max || cnt1 == 0) {
       max = a;
       cnt2 = 0;
     } else {
-      if (cnt2 == std::numeric_limits< std::size_t >::max()) {
+      if (cnt2 == std::numeric_limits< size_t >::max()) {
         std::cerr << "Error\n";
         return 1;
       }
       cnt2++;
+    }
+
+    if (a < min) {
+      min = a;
+      cnt1 = 1;
+    } else if (a == min) {
+      if (cnt1 == std::numeric_limits< size_t >::max()) {
+        std::cerr << "Error\n";
+        return 1;
+      }
+      cnt1++;
     }
   }
 
