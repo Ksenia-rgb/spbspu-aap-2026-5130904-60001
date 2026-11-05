@@ -48,7 +48,7 @@ int main()
     while (std::cin >> first && first != 0)
     {
       zahovaev::div_rem(first, before_first, count_del);
-      zahovaev::cnt_max(first, before_first, count_max);
+      zahovaev::cnt_max(first, max_e, count_max);
 
       before_first = first;
     }
