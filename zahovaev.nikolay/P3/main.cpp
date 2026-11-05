@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <string>
 #include <cstddef>
+#include <climits>
 
 const size_t direction_up = 1;
 const size_t direction_right = 2;
@@ -150,11 +151,19 @@ int main(int lenargs, char* args[])
   size_t n = 0;
   size_t m = 0;
   is >> n >> m;
+  if (n + 1 > ULONG_MAX / m) {
+    std::cerr << "Oh, your massiv too big\n";
+    return 2;
+  }
   int* both_mass = nullptr;
   if (num) {
     mass2 = new int[n * m];
     both_mass = mass2;
   } else {
+    if (n * m > maxSize) {
+      std::cerr << "Oh, your massiv too big for first argument 1\n";
+      return 2;
+    }
     both_mass = mass;
   }
 
