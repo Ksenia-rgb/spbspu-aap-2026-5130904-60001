@@ -5,8 +5,7 @@
 #include <cstddef>
 #include <climits>
 
-namespace zahovaev
-{
+namespace zahovaev {
   const size_t direction_up = 1;
   const size_t direction_right = 2;
   const size_t direction_down = 3;
