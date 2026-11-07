@@ -66,6 +66,28 @@ namespace grebenshchikov
       {
         result[j++] = src[i];
       }
+      
+    }
+    result[j] = '\0';
+    return result;
+  }
+
+  char * shrSym(const char * str, char * result)
+  {
+    size_t j = 0;
+    for (char letter = 'a'; letter <= 'z'; ++letter)
+    {
+      size_t i = 0;
+      while (str[i] != '\0' && std::tolower(static_cast< unsigned char >(str[i])) != letter)
+      {
+        ++i;
+      }
+
+      if (str[i] == '\0')
+      {
+        result[j++] = letter;
+      }
+
     }
     result[j] = '\0';
     return result;
