@@ -6,57 +6,59 @@
 
 namespace grebenshchikov
 {
-  char * extend(const char * str, size_t size, size_t newCapacity)
+  char * extend(const char * str, size_t size, size_t new_capacity)
   {
-    char * newStr = new char[newCapacity];
+    char * const new_str = new char[new_capacity];
     for (size_t i = 0; i < size; ++i)
     {
-      newStr[i] = str[i];
+      new_str[i] = str[i];
     }
-    return newStr;
+    return new_str;
   }
 
   char * readStr(std::istream & in, size_t & size)
   {
-    size_t capacity = 16;
+    const size_t initial_capacity = 16;
+    size_t capacity = initial_capacity;
     char * str = new char[capacity];
     size = 0;
-    const bool isSkipws = in.flags() & std::ios_base::skipws;
+    const bool is_skipws = in.flags() & std::ios_base::skipws;
     in >> std::noskipws;
     char ch = 0;
     while (in >> ch && ch != '\n')
     {
       if (size + 1 == capacity)
       {
-        char * newStr = nullptr;
+        const size_t new_capacity = capacity * 2;
+        char * new_str = nullptr;
         try
         {
-          newStr = extend(str, size, capacity * 2);
+          new_str = extend(str, size, new_capacity);
         }
         catch (const std::bad_alloc &)
         {
           delete[] str;
-          if (isSkipws)
+          if (is_skipws)
           {
             in >> std::skipws;
           }
           throw;
         }
         delete[] str;
-        str = newStr;
-        capacity *= 2;
+        str = new_str;
+        capacity = new_capacity;
       }
       str[size++] = ch;
     }
     str[size] = '\0';
-    if (isSkipws)
+    if (is_skipws)
     {
       in >> std::skipws;
     }
     return str;
   }
 
-    char * latRmv(const char * src, char * result)
+  char * latRmv(const char * src, char * result)
   {
     size_t j = 0;
     for (size_t i = 0; src[i] != '\0'; ++i)
@@ -66,7 +68,6 @@ namespace grebenshchikov
       {
         result[j++] = src[i];
       }
-
     }
     result[j] = '\0';
     return result;
@@ -82,12 +83,10 @@ namespace grebenshchikov
       {
         ++i;
       }
-
       if (str[i] == '\0')
       {
         result[j++] = letter;
       }
-
     }
     result[j] = '\0';
     return result;
@@ -107,28 +106,34 @@ int main()
     std::cerr << "Not enough memory\n";
     return 1;
   }
-
-  const size_t alphabetSize = 26;
-  char * latRes = nullptr;
-  char * shrRes = nullptr;
-  try
+  if (size == 0)
   {
-    latRes = new char[size + 1];
-    shrRes = new char[alphabetSize + 1];
-  }
-  catch (const std::bad_alloc &)
-  {
-    std::cerr << "Not enough memory\n";
-    delete[] latRes;
+    std::cerr << "Empty input\n";
     delete[] str;
     return 1;
   }
 
-  std::cout << grebenshchikov::latRmv(str, latRes) << '\n';
-  std::cout << grebenshchikov::shrSym(str, shrRes) << '\n';
+  const size_t alphabet_size = 26;
+  char * lat_res = nullptr;
+  char * shr_res = nullptr;
+  try
+  {
+    lat_res = new char[size + 1];
+    shr_res = new char[alphabet_size + 1];
+  }
+  catch (const std::bad_alloc &)
+  {
+    std::cerr << "Not enough memory\n";
+    delete[] lat_res;
+    delete[] str;
+    return 1;
+  }
 
-  delete[] shrRes;
-  delete[] latRes;
+  std::cout << grebenshchikov::latRmv(str, lat_res) << '\n';
+  std::cout << grebenshchikov::shrSym(str, shr_res) << '\n';
+
+  delete[] shr_res;
+  delete[] lat_res;
   delete[] str;
   return 0;
 }
