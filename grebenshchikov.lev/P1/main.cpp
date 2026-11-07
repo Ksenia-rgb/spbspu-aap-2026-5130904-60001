@@ -14,27 +14,29 @@ int main()
   long long min = initial_min;
   size_t count = 0;
 
-  long long a = 0;
-  while (std::cin >> a && a != 0)
+  long long value = 0;
+  while (std::cin >> value && value != 0)
   {
-    if (a > max)
+    if (value > max)
     {
       sub_max = max;
-      max = a;
+      max = value;
     }
-    else if (a >= sub_max && a < max)
+    else if (value >= sub_max && value < max)
     {
-      sub_max = a;
+      sub_max = value;
     }
-    if (a < min)
+
+    if (value < min)
     {
-      min = a;
+      min = value;
       ctn_min = 1;
     }
-    else if (a == min)
+    else if (value == min)
     {
       ++ctn_min;
     }
+
     ++count;
   }
 
@@ -43,6 +45,7 @@ int main()
     std::cerr << "Error: input is not a valid sequence of integers\n";
     return invalid_input_code;
   }
+
   int exit_code = 0;
   if (count < min_length_for_sub_max)
   {
@@ -53,6 +56,7 @@ int main()
   {
     std::cout << sub_max << '\n';
   }
+
   std::cout << ctn_min << '\n';
   return exit_code;
 }
