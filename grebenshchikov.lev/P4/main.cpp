@@ -66,7 +66,7 @@ namespace grebenshchikov
       {
         result[j++] = src[i];
       }
-      
+
     }
     result[j] = '\0';
     return result;
@@ -108,6 +108,27 @@ int main()
     return 1;
   }
 
+  const size_t alphabetSize = 26;
+  char * latRes = nullptr;
+  char * shrRes = nullptr;
+  try
+  {
+    latRes = new char[size + 1];
+    shrRes = new char[alphabetSize + 1];
+  }
+  catch (const std::bad_alloc &)
+  {
+    std::cerr << "Not enough memory\n";
+    delete[] latRes;
+    delete[] str;
+    return 1;
+  }
+
+  std::cout << grebenshchikov::latRmv(str, latRes) << '\n';
+  std::cout << grebenshchikov::shrSym(str, shrRes) << '\n';
+
+  delete[] shrRes;
+  delete[] latRes;
   delete[] str;
   return 0;
 }
