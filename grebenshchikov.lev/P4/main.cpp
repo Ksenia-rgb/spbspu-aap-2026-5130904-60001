@@ -6,9 +6,9 @@
 
 namespace grebenshchikov
 {
-  char * extend(const char * str, size_t size, size_t new_capacity)
+  char *extend(const char *str, size_t size, size_t new_capacity)
   {
-    char * const new_str = new char[new_capacity];
+    char *const new_str = new char[new_capacity];
     for (size_t i = 0; i < size; ++i)
     {
       new_str[i] = str[i];
@@ -16,11 +16,11 @@ namespace grebenshchikov
     return new_str;
   }
 
-  char * readStr(std::istream & in, size_t & size)
+  char *readStr(std::istream &in, size_t &size)
   {
     const size_t initial_capacity = 16;
     size_t capacity = initial_capacity;
-    char * str = new char[capacity];
+    char *str = new char[capacity];
     size = 0;
     const bool is_skipws = in.flags() & std::ios_base::skipws;
     in >> std::noskipws;
@@ -30,7 +30,7 @@ namespace grebenshchikov
       if (size + 1 == capacity)
       {
         const size_t new_capacity = capacity * 2;
-        char * new_str = nullptr;
+        char *new_str = nullptr;
         try
         {
           new_str = extend(str, size, new_capacity);
@@ -58,7 +58,7 @@ namespace grebenshchikov
     return str;
   }
 
-  char * latRmv(const char * src, char * result)
+  char *latRmv(const char *src, char *result)
   {
     size_t j = 0;
     for (size_t i = 0; src[i] != '\0'; ++i)
@@ -73,7 +73,7 @@ namespace grebenshchikov
     return result;
   }
 
-  char * shrSym(const char * str, char * result)
+  char *shrSym(const char *str, char *result)
   {
     size_t j = 0;
     for (char letter = 'a'; letter <= 'z'; ++letter)
@@ -96,7 +96,7 @@ namespace grebenshchikov
 int main()
 {
   size_t size = 0;
-  char * str = nullptr;
+  char *str = nullptr;
   try
   {
     str = grebenshchikov::readStr(std::cin, size);
@@ -114,8 +114,8 @@ int main()
   }
 
   const size_t alphabet_size = 26;
-  char * lat_res = nullptr;
-  char * shr_res = nullptr;
+  char *lat_res = nullptr;
+  char *shr_res = nullptr;
   try
   {
     lat_res = new char[size + 1];
