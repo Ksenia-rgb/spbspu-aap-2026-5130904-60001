@@ -2,6 +2,7 @@
 #include <istream>
 #include <cstddef>
 #include <new>
+#include <cctype>
 
 namespace grebenshchikov
 {
@@ -27,7 +28,7 @@ namespace grebenshchikov
     {
       if (size + 1 == capacity)
       {
-        char *newStr = nullptr;
+        char * newStr = nullptr;
         try
         {
           newStr = extend(str, size, capacity * 2);
@@ -54,12 +55,27 @@ namespace grebenshchikov
     }
     return str;
   }
+
+    char * latRmv(const char * src, char * result)
+  {
+    size_t j = 0;
+    for (size_t i = 0; src[i] != '\0'; ++i)
+    {
+      const unsigned char ch = src[i];
+      if (!std::isalpha(ch))
+      {
+        result[j++] = src[i];
+      }
+    }
+    result[j] = '\0';
+    return result;
+  }
 }
 
 int main()
 {
   size_t size = 0;
-  char *str = nullptr;
+  char * str = nullptr;
   try
   {
     str = grebenshchikov::readStr(std::cin, size);
