@@ -50,17 +50,17 @@ namespace grebenshchikov
 
 int main(int argc, char *argv[])
 {
-  const int argsCount = 4;
-  const size_t inputArg = 2;
-  const size_t outputArg = 3;
-  const int fileError = 2;
+  const int args_count = 4;
+  const size_t input_arg = 2;
+  const size_t output_arg = 3;
+  const int file_error = 2;
 
-  if (argc < argsCount)
+  if (argc < args_count)
   {
     std::cerr << "Not enough arguments";
     return 1;
   }
-  if (argc > argsCount)
+  if (argc > args_count)
   {
     std::cerr << "Too many arguments";
     return 1;
@@ -71,25 +71,25 @@ int main(int argc, char *argv[])
     return 1;
   }
 
-  std::ifstream in(argv[inputArg]);
+  std::ifstream in(argv[input_arg]);
   if (!in.is_open())
   {
     std::cerr << "Cannot open input file\n";
-    return fileError;
+    return file_error;
   }
-  int rowsIn = 0;
-  int colsIn = 0;
-  if (!(in >> rowsIn >> colsIn) || rowsIn < 0 || colsIn < 0)
+  int rows_in = 0;
+  int cols_in = 0;
+  if (!(in >> rows_in >> cols_in) || rows_in < 0 || cols_in < 0)
   {
     std::cerr << "Error reading file\n";
-    return fileError;
+    return file_error;
   }
-  const size_t rows = rowsIn;
-  const size_t cols = colsIn;
+  const size_t rows = rows_in;
+  const size_t cols = cols_in;
 
   const size_t kmax = 10000;
-  int staticMtx[kmax] = {};
-  int *dynamicMtx = nullptr;
+  int static_mtx[kmax] = {};
+  int *dynamic_mtx = nullptr;
   int *mtx = nullptr;
   switch (*argv[1])
   {
@@ -97,18 +97,18 @@ int main(int argc, char *argv[])
     if (cols != 0 && rows > kmax / cols)
     {
       std::cerr << "Matrix size exceeds maximum allowed size\n";
-      return fileError;
+      return file_error;
     }
-    mtx = staticMtx;
+    mtx = static_mtx;
     break;
   case '2':
-    dynamicMtx = static_cast< int * >(std::malloc(rows * cols * sizeof(int)));
-    if (dynamicMtx == nullptr && rows * cols > 0)
+    dynamic_mtx = static_cast< int * >(std::malloc(rows * cols * sizeof(int)));
+    if (dynamic_mtx == nullptr && rows * cols > 0)
     {
       std::cerr << "Not enough memory\n";
-      return fileError;
+      return file_error;
     }
-    mtx = dynamicMtx;
+    mtx = dynamic_mtx;
     break;
   }
 
@@ -117,20 +117,20 @@ int main(int argc, char *argv[])
     if (!(in >> mtx[i]))
     {
       std::cerr << "Error reading file\n";
-      std::free(dynamicMtx);
-      return fileError;
+      std::free(dynamic_mtx);
+      return file_error;
     }
   }
 
-  std::ofstream out(argv[outputArg]);
+  std::ofstream out(argv[output_arg]);
   if (!out.is_open())
   {
     std::cerr << "Cannot open output file\n";
-    std::free(dynamicMtx);
-    return fileError;
+    std::free(dynamic_mtx);
+    return file_error;
   }
   out << std::boolalpha << grebenshchikov::uppTriMtx(mtx, rows, cols) << '\n';
   out << grebenshchikov::cntColNsm(mtx, rows, cols) << '\n';
-  std::free(dynamicMtx);
+  std::free(dynamic_mtx);
   return 0;
 }
