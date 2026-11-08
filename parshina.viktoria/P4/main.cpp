@@ -1,3 +1,4 @@
+#include <cctype>
 #include <cstddef>
 #include <cstring>
 #include <iostream>
@@ -7,6 +8,7 @@
 namespace parshina
 {
   char * excludeSecondCharacters(const char * source, const char * second, char * result);
+  char * removeVowels(const char * sourse, char * result);
 }
 
 char * parshina::excludeSecondCharacters(const char * sourse, const char * second, char * result)
@@ -22,6 +24,28 @@ char * parshina::excludeSecondCharacters(const char * sourse, const char * secon
       ++j;
     }
       ++i;
+  }
+
+  result[j] = '\0';
+  return result;
+}
+
+char * parshina::removeVowels(const char * source, char * result)
+{
+  size_t i = 0;
+  size_t j = 0;
+
+  while (source[i] != '\0')
+  {
+    const unsigned char symbol = source[i];
+    const int lower = std::tolower(symbol);
+
+    if(std::strchr("aeiouy", lower) == nullptr)
+    {
+      result[j] = source[i];
+      ++j;
+    }
+    ++i;
   }
 
   result[j] = '\0';
@@ -63,6 +87,11 @@ int main()
         return 1;
       }
 
+      for (size_t i = 0; i < length; ++i)
+      {
+        extended[i] = input_str[i];
+      }
+
       delete[] input_str;
       input_str = extended;
     }
@@ -90,6 +119,7 @@ int main()
 
   const char * const second = "abc";
   std::cout << parshina::excludeSecondCharacters(input_str, second, result) << '\n';
+  std::cout << parshina::removeVowels(input_str, result) << '\n';
 
   if (!std::cout)
   {
