@@ -60,3 +60,34 @@ char * erin::readStr(std::istream & in, size_t * out_len)
   }
   return buf;
 }
+
+char * erin::uniteStr(char * dst, const char * s1, const char * s2)
+{
+  char * out = dst;
+  const char * p1 = s1;
+  const char * p2 = s2;
+
+  while ((*p1 != '\0') && (*p2 != '\0'))
+  {
+    *out = *p1;
+    ++out;
+    ++p1;
+    *out = *p2;
+    ++out;
+    ++p2;
+  }
+  while (*p1 != '\0')
+  {
+    *out = *p1;
+    ++out;
+    ++p1;
+  }
+  while (*p2 != '\0')
+  {
+    *out = *p2;
+    ++out;
+    ++p2;
+  }
+  *out = '\0';
+  return dst;
+}
