@@ -54,7 +54,8 @@ char * parshina::removeVowels(const char * source, char * result)
 
 int main()
 {
-  size_t capacity = 16;
+  const size_t initial_capacity = 16;
+  size_t capacity = initial_capacity;
   char * input_str = new (std::nothrow) char[capacity];
 
   if (input_str == nullptr)
@@ -78,7 +79,7 @@ int main()
       }
 
       capacity *= 2;
-      char * extended = new (std::nothrow) char[capacity];
+      char * const extended = new (std::nothrow) char[capacity];
 
       if (extended == nullptr)
       {
@@ -108,7 +109,7 @@ int main()
   }
 
   input_str[length] = '\0';
-  char * result = new (std::nothrow) char[length + 1];
+  char * const result = new (std::nothrow) char[length + 1];
 
   if (result == nullptr)
   {
