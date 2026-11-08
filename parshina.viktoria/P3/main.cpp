@@ -161,7 +161,7 @@ int main(int argc, char * argv[])
 
   if (use_heap && count != 0)
   {
-    heap_matrix = static_cast< int * >(std::malloc(count * sizeof(int)));
+    heap_matrix = reinterpret_cast< int * >(std::malloc(count * sizeof(int)));
     if (heap_matrix == nullptr)
     {
       std::cerr << "Not enough memory\n";
@@ -199,13 +199,14 @@ int main(int argc, char * argv[])
   output << parshina::countSaddlePoints(matrix, rows, cols) << '\n';
   output << parshina::findMaxDiagonalSum(matrix, rows, cols) << '\n';
 
-  output.close();
   if (!output)
   {
     std::free(heap_matrix);
     std::cerr << "Output error\n";
     return 2;
   }
+
+  output.close();
 
   std::free(heap_matrix);
   return 0;
