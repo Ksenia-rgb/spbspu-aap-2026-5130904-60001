@@ -3,6 +3,18 @@
 #include <cstdlib>
 #include <iostream>
 
+static int hasSym(const char * beg, const char * end, char ch)
+{
+  for (const char * p = beg; p != end; ++p)
+  {
+    if (*p == ch)
+    {
+      return 1;
+    }
+  }
+  return 0;
+}
+
 size_t erin::getLen(const char * str)
 {
   size_t len = 0;
@@ -87,6 +99,24 @@ char * erin::uniteStr(char * dst, const char * s1, const char * s2)
     *out = *p2;
     ++out;
     ++p2;
+  }
+  *out = '\0';
+  return dst;
+}
+
+char * erin::findRep(char * dst, const char * src)
+{
+  char * out = dst;
+  const size_t len = erin::getLen(src);
+  const char * end = src + len;
+
+  for (const char * cur = src; cur != end; ++cur)
+  {
+    if ((hasSym(src, cur, *cur) == 0) && (hasSym(cur + 1, end, *cur) != 0))
+    {
+      *out = *cur;
+      ++out;
+    }
   }
   *out = '\0';
   return dst;
