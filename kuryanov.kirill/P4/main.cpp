@@ -109,7 +109,6 @@ int main()
     char letstr[num_let + 1] = {};
 
     std::cout << kuryanov::latTwo(st_string, st_size, latin_second, latin_size, letstr) << "\n";
-    
     std::cout << kuryanov::uniTwo(st_string, st_size, uniting_second, uniting_size, sumstr) << "\n";
   } catch (const std::bad_alloc &) {
     std::cerr << "Memory allocation failed\n";
