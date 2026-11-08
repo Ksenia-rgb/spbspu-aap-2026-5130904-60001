@@ -21,15 +21,21 @@ namespace kuryanov {
     size_t capacity = 8;
     char * str = new char[capacity];
     char cur = '\n';
-    while (std::cin.get(cur) && cur != '\n') {
-      if (size + 1 >= capacity) {
-        str = resize(str, capacity, size);
-      }
+    try {
+      while (std::cin.get(cur) && cur != '\n') {
+        if (size + 1 >= capacity) {
+          str = resize(str, capacity, size);
+        }
 
-      str[size++] = cur;
+        str[size++] = cur;
+      }
+      str[size] = '\0';
+      return str;
     }
-    str[size] = '\0';
-    return str;
+    catch (const std::bad_alloc &) {
+      delete[] str;
+      throw;
+    }
   }
 
   char * latTwo(const char * str1, size_t size1,
@@ -89,14 +95,24 @@ int main()
   const size_t num_let = 26;
   const char * nd_string = "def ghk";
   size_t st_size = 0;
-  char * st_string = kuryanov::readline(st_size);
-  size_t nd_size = std::strlen(nd_string);
-  char * sumstr = new char [st_size + nd_size + 1];
-  char letstr[num_let + 1] = {};
+  char * st_string = nullptr;
+  char * sumstr = nullptr;
+  try {
+    st_string = kuryanov::readline(st_size);
+    size_t nd_size = std::strlen(nd_string);
+    sumstr = new char [st_size + nd_size + 1];
+    char letstr[num_let + 1] = {};
 
-  std::cout << kuryanov::latTwo(st_string, st_size, nd_string, nd_size, letstr) << "\n";
+    std::cout << kuryanov::latTwo(st_string, st_size, nd_string, nd_size, letstr) << "\n";
 
-  std::cout << kuryanov::uniTwo(st_string, st_size, nd_string, nd_size, sumstr) << "\n";
+    std::cout << kuryanov::uniTwo(st_string, st_size, nd_string, nd_size, sumstr) << "\n";
+  }
+  catch (const std::bad_alloc &) {
+    std::cerr << "Memory allocation failed\n";
+    delete[] st_string;
+    delete[] sumstr;
+    return 1;
+  }
 
   delete[] st_string;
   delete[] sumstr;
