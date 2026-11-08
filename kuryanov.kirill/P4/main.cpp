@@ -11,26 +11,27 @@ namespace kuryanov {
     capacity = new_capacity;
     return result;
   }
-  char * readline (size_t & capacity, size_t & size) {
+  char * readline (size_t & size) {
+    size_t capacity = 8;
     char * str = new char[capacity];
     char cur;
     while (std::cin.get(cur) && cur != '\n') {
-      if (size == capacity) {
+      if (size + 1 >= capacity) {
         str = resize(str, capacity, size);
       }
 
       str[size++] = cur;
     }
+    str[size] = '\0';
     return str;
   }
 
 }
 int main()
 {
-  size_t cap = 1;
   size_t size = 0;
-  char * string = kuryanov::readline(cap, size);
-  std::cout << size << " " << cap << "\n";
+  char * string = kuryanov::readline(size);
+  std::cout << size << "\n";
   for (size_t i= 0; i < size; ++i) {
     std::cout << string[i];
   }
