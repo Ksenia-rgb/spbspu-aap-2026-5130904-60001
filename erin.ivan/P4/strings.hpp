@@ -7,6 +7,7 @@
 namespace erin
 {
   size_t getLen(const char * str);
+  char * readStr(std::istream & in, size_t * out_len);
 }
 
 #endif
