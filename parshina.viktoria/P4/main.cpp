@@ -23,7 +23,7 @@ char * parshina::excludeSecondCharacters(const char * sourse, const char * secon
       result[j] = sourse[i];
       ++j;
     }
-      ++i;
+    ++i;
   }
 
   result[j] = '\0';
@@ -40,7 +40,7 @@ char * parshina::removeVowels(const char * source, char * result)
     const unsigned char symbol = source[i];
     const int lower = std::tolower(symbol);
 
-    if(std::strchr("aeiouy", lower) == nullptr)
+    if (std::strchr("aeiouy", lower) == nullptr)
     {
       result[j] = source[i];
       ++j;
@@ -101,7 +101,7 @@ int main()
     ++length;
   }
 
-  if (std::cin.bad())
+  if (!std::cin)
   {
     delete[] input_str;
     std::cerr << "Input error\n";
