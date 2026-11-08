@@ -1,7 +1,9 @@
 #include <iostream>
 #include <cstddef>
+
 namespace kuryanov {
-  char * resize(char * arr, size_t & capacity, size_t & size) {
+  char * resize(char * arr, size_t & capacity, size_t & size)
+  {
     size_t new_capacity = capacity * 2;
     char * result = new char[new_capacity];
     for (size_t i = 0; i < size; i++) {
@@ -11,7 +13,8 @@ namespace kuryanov {
     capacity = new_capacity;
     return result;
   }
-  char * readline (size_t & size) {
+  char * readline (size_t & size)
+  {
     size_t capacity = 8;
     char * str = new char[capacity];
     char cur;
@@ -26,16 +29,54 @@ namespace kuryanov {
     return str;
   }
 
+  char * latTwo(const char * str1, const char * str2, char * out) noexcept
+  {
+
+  }
+  char * uniTwo(const char * str1, size_t size1, const char * str2, size_t size2, char * out) noexcept
+  {
+    size_t i = 0;
+    size_t i1 = 0;
+    size_t i2 = 0;
+
+    while (i1 < size1 || i2 < size2) {
+      if (i1 < size1) {
+        out[i++] = str1[i1++];
+      }
+      if (i2 < size2) {
+        out[i++] = str2[i2++];
+      }
+    }
+    
+    out[i] = '\0';
+    return out;
+  }
+
 }
 int main()
 {
-  size_t size = 0;
-  char * string = kuryanov::readline(size);
-  std::cout << size << "\n";
-  for (size_t i= 0; i < size; ++i) {
-    std::cout << string[i];
+  size_t st_size = 0;
+  size_t nd_size = 0;
+
+  char * st_string = kuryanov::readline(st_size);
+  char * nd_string = kuryanov::readline(nd_size);
+  std::cout << "\n";
+  char *sumstr = new char [st_size + nd_size];
+  std::cout << kuryanov::uniTwo(st_string, st_size, nd_string, nd_size, sumstr) << "\n";
+  std::cout << "\n";
+  for (size_t i= 0; i < st_size; ++i) {
+    std::cout << st_string[i];
   }
   std::cout << "\n";
-  delete[] string;
+  for (size_t i= 0; i < nd_size; ++i) {
+    std::cout << nd_string[i];
+  }
+  std::cout << "\n";
+  delete[] st_string;
+  delete[] nd_string;
+  delete[] sumstr;
+
+  return 0;
+
 
 }
