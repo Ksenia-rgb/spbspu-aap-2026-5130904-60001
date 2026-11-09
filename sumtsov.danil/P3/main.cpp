@@ -1,102 +1,112 @@
+#include <cerrno>
+#include <cstdlib>
 #include <fstream>
 #include <iostream>
-#include <string>
+#include <new>
 
 namespace sumtsov
 {
 
-  bool parseNonNegativeInt(const std::string &text, long long &value)
+  bool parseNonNegativeInt(const char *text, long long &value)
   {
-    if (text.empty())
+    if ((text == nullptr) || (*text == '\0'))
     {
       return false;
     }
 
-    for (char c : text)
-    {
-      if (c < '0' || c > '9')
-      {
-        return false;
-      }
-    }
+    char *end = nullptr;
+    errno = 0;
+    long long parsed = std::strtoll(text, &end, 10);
 
-    try
-    {
-      size_t consumed = 0;
-      value = std::stoll(text, &consumed);
-      return consumed == text.size();
-    }
-    catch (const std::exception &)
-    {
-      return false;
-    }
-  }
-
-  bool readMatrixHeader(std::istream &in, size_t &rows, size_t &cols)
-  {
-    long long rowsValue = 0;
-    long long colsValue = 0;
-
-    if (!(in >> rowsValue) || rowsValue < 0)
+    if ((end == text) || (*end != '\0') || (errno == ERANGE) || (parsed < 0))
     {
       return false;
     }
 
-    if (!(in >> colsValue) || colsValue < 0)
-    {
-      return false;
-    }
-
-    rows = static_cast< size_t >(rowsValue);
-    cols = static_cast< size_t >(colsValue);
+    value = parsed;
     return true;
   }
 
-  bool readMatrixData(std::istream &in, size_t rows, size_t cols, int *data)
+  std::istream &readMatrixHeader(std::istream &in, size_t &rows, size_t &cols)
+  {
+    long long rows_value = 0;
+    long long cols_value = 0;
+
+    in >> rows_value;
+    if (!in || (rows_value < 0))
+    {
+      in.setstate(std::ios::failbit);
+      return in;
+    }
+
+    in >> cols_value;
+    if (!in || (cols_value < 0))
+    {
+      in.setstate(std::ios::failbit);
+      return in;
+    }
+
+    rows = static_cast< size_t >(rows_value);
+    cols = static_cast< size_t >(cols_value);
+    return in;
+  }
+
+  std::istream &readMatrixData(std::istream &in, size_t rows, size_t cols, int *data)
   {
     for (size_t i = 0; i < rows * cols; ++i)
     {
       if (!(in >> data[i]))
       {
-        return false;
+        break;
       }
     }
-
-    return true;
+    return in;
   }
 
   size_t countSaddlePoints(const int *data, size_t rows, size_t cols)
   {
-    if (rows == 0 || cols == 0)
+    if ((rows == 0) || (cols == 0))
     {
       return 0;
     }
 
-    int *rowMin = new int[rows];
-    int *colMax = new int[cols];
+    int *row_min = nullptr;
+    int *col_max = nullptr;
+
+    try
+    {
+      row_min = new int[rows];
+      col_max = new int[cols];
+    }
+    catch (const std::bad_alloc &)
+    {
+      delete[] row_min;
+      delete[] col_max;
+      throw;
+    }
 
     for (size_t i = 0; i < rows; ++i)
     {
-      rowMin[i] = data[i * cols];
+      row_min[i] = data[i * cols];
       for (size_t j = 1; j < cols; ++j)
       {
         int value = data[i * cols + j];
-        if (value < rowMin[i])
+        if (value < row_min[i])
         {
-          rowMin[i] = value;
+          row_min[i] = value;
         }
       }
     }
 
     for (size_t j = 0; j < cols; ++j)
     {
-      colMax[j] = data[j];
+      col_max[j] = data[j];
       for (size_t i = 1; i < rows; ++i)
       {
         int value = data[i * cols + j];
-        if (value > colMax[j])
+        if (value > col_max[j])
         {
-          colMax[j] = value;
+          col_max[j] = value;
         }
       }
     }
@@ -107,24 +117,26 @@ namespace sumtsov
       for (size_t j = 0; j < cols; ++j)
       {
         int value = data[i * cols + j];
-        if (value == rowMin[i] && value == colMax[j])
+        if ((value == row_min[i]) && (value == col_max[j]))
         {
           ++count;
         }
       }
     }
 
-    delete[] rowMin;
-    delete[] colMax;
+    delete[] row_min;
+    delete[] col_max;
 
     return count;
   }
 
-  int *buildTopLeftSquare(const int *data, size_t rows, size_t cols, size_t &n)
+  size_t minOf(size_t a, size_t b)
   {
-    n = (rows < cols) ? rows : cols;
+    return (a < b) ? a : b;
+  }
 
-    int *square = new int[n * n];
+  void buildTopLeftSquare(const int *data, size_t cols, size_t n, int *square)
+  {
     for (size_t i = 0; i < n; ++i)
     {
       for (size_t j = 0; j < n; ++j)
@@ -132,8 +144,6 @@ namespace sumtsov
         square[i * n + j] = data[i * cols + j];
       }
     }
-
-    return square;
   }
 
   void transformSpiralTopLeftClockwise(int *square, size_t n)
@@ -143,48 +153,63 @@ namespace sumtsov
       return;
     }
 
-    int top = 0;
-    int bottom = static_cast< int >(n) - 1;
-    int left = 0;
-    int right = static_cast< int >(n) - 1;
-    int step = 1;
-    int side = static_cast< int >(n);
+    size_t top = 0;
+    size_t bottom = n - 1;
+    size_t left = 0;
+    size_t right = n - 1;
+    size_t step = 1;
+    size_t side = n;
 
-    while (top <= bottom && left <= right)
+    while ((top <= bottom) && (left <= right))
     {
-      for (int col = left; col <= right; ++col)
+      for (size_t col = left; col <= right; ++col)
       {
-        square[top * side + col] -= step;
+        square[top * side + col] -= static_cast< int >(step);
         ++step;
       }
       ++top;
 
-      for (int row = top; row <= bottom; ++row)
+      if (top > bottom)
       {
-        square[row * side + right] -= step;
+        break;
+      }
+
+      for (size_t row = top; row <= bottom; ++row)
+      {
+        square[row * side + right] -= static_cast< int >(step);
         ++step;
+      }
+
+      if (right == left)
+      {
+        break;
       }
       --right;
 
-      if (top <= bottom)
+      if (left > right)
       {
-        for (int col = right; col >= left; --col)
-        {
-          square[bottom * side + col] -= step;
-          ++step;
-        }
-        --bottom;
+        break;
       }
 
-      if (left <= right)
+      for (size_t col = right + 1; col-- > left;)
       {
-        for (int row = bottom; row >= top; --row)
-        {
-          square[row * side + left] -= step;
-          ++step;
-        }
-        ++left;
+        square[bottom * side + col] -= static_cast< int >(step);
+        ++step;
       }
+
+      if (bottom == top)
+      {
+        break;
+      }
+      --bottom;
+
+      for (size_t row = bottom + 1; row-- > top;)
+      {
+        square[row * side + left] -= static_cast< int >(step);
+        ++step;
+      }
+
+      ++left;
     }
   }
 
@@ -195,7 +220,6 @@ namespace sumtsov
     {
       out << ' ' << data[i];
     }
-    out << '\n';
   }
 
 }
@@ -208,8 +232,8 @@ int main(int argc, char *argv[])
     return 1;
   }
 
-  long long numValue = 0;
-  if (!sumtsov::parseNonNegativeInt(argv[1], numValue) || (numValue != 1 && numValue != 2))
+  long long num_value = 0;
+  if (!sumtsov::parseNonNegativeInt(argv[1], num_value) || ((num_value != 1) && (num_value != 2)))
   {
     std::cerr << "Error: first argument must be 1 or 2\n";
     return 1;
@@ -230,52 +254,74 @@ int main(int argc, char *argv[])
     return 2;
   }
 
-  const size_t maxFixedElements = 10000;
-  int fixedData[maxFixedElements];
-  int *dynamicData = nullptr;
+  const size_t max_fixed_elements = 10000;
+  int fixed_data[max_fixed_elements];
+  int *dynamic_data = nullptr;
   int *data = nullptr;
 
-  if (numValue == 1)
+  if (num_value == 1)
   {
-    if (rows * cols > maxFixedElements)
+    if (rows * cols > max_fixed_elements)
     {
       std::cerr << "Error: matrix is too large for fixed storage\n";
       return 2;
     }
-    data = fixedData;
+    data = fixed_data;
   }
   else
   {
-    dynamicData = new int[rows * cols];
-    data = dynamicData;
+    try
+    {
+      dynamic_data = new int[rows * cols];
+    }
+    catch (const std::bad_alloc &)
+    {
+      std::cerr << "Error: failed to allocate memory\n";
+      return 2;
+    }
+    data = dynamic_data;
   }
 
   if (!sumtsov::readMatrixData(input, rows, cols, data))
   {
     std::cerr << "Error: input file does not contain a valid matrix\n";
-    delete[] dynamicData;
+    delete[] dynamic_data;
     return 2;
   }
 
-  size_t saddleCount = sumtsov::countSaddlePoints(data, rows, cols);
+  size_t saddle_count = 0;
+  size_t square_size = sumtsov::minOf(rows, cols);
+  int *square = nullptr;
 
-  size_t squareSize = 0;
-  int *square = sumtsov::buildTopLeftSquare(data, rows, cols, squareSize);
-  sumtsov::transformSpiralTopLeftClockwise(square, squareSize);
+  try
+  {
+    saddle_count = sumtsov::countSaddlePoints(data, rows, cols);
+    square = new int[square_size * square_size];
+  }
+  catch (const std::bad_alloc &)
+  {
+    std::cerr << "Error: failed to allocate memory\n";
+    delete[] dynamic_data;
+    return 2;
+  }
+
+  sumtsov::buildTopLeftSquare(data, cols, square_size, square);
+  sumtsov::transformSpiralTopLeftClockwise(square, square_size);
 
   std::ofstream output(argv[3]);
   if (!output)
   {
     std::cerr << "Error: cannot open output file\n";
-    delete[] dynamicData;
+    delete[] dynamic_data;
     delete[] square;
     return 2;
   }
 
-  output << saddleCount << '\n';
-  sumtsov::writeMatrix(output, square, squareSize, squareSize);
+  output << saddle_count << '\n';
+  sumtsov::writeMatrix(output, square, square_size, square_size);
+  output << '\n';
 
-  delete[] dynamicData;
+  delete[] dynamic_data;
   delete[] square;
 
   return 0;
