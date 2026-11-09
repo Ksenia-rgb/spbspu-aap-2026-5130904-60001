@@ -5,9 +5,10 @@
 namespace voronova {
   size_t difLat(const char *str) {
     size_t count = 0;
-    int used[256] = {};
+    size_t alphabet_size = 256;
+    int used[alphabet_size] = {};
     for (size_t i = 0; str[i] != '\0'; ++i) {
-      unsigned char c = str[i];
+      const unsigned char c = str[i];
       if (used[c] == 0 && std::isalpha(c)) {
         used[c] = 1;
         ++count;
@@ -16,17 +17,17 @@ namespace voronova {
   return count;
   }
 
-  char * uppLow(const char *src, char *newSrc) {
+  char * uppLow(const char * src, char * new_src) {
     size_t i = 0;
     for (; src[i] != '\0'; ++i) {
       if (std::isupper(src[i])) {
-        newSrc[i] = std::tolower(src[i]);
+        new_src[i] = std::tolower(src[i]);
       } else {
-        newSrc[i] = src[i];
+        new_src[i] = src[i];
       }
     }
-    newSrc[i] = '\0';
-    return newSrc;
+    new_src[i] = '\0';
+    return new_src;
   }
 }
 
@@ -45,7 +46,7 @@ int main()
   while (std::cin.get(c) && c != '\n') {
     if (size + 1 == capacity) {
       capacity = capacity * 2;
-      char * temp = static_cast< char * >(std::realloc(str, capacity));
+      char * const temp = static_cast< char * >(std::realloc(str, capacity));
       if (temp == nullptr) {
         std::free(str);
         std::cerr << "Error: not enough memory\n";
@@ -58,7 +59,13 @@ int main()
   }
   str[size] = '\0';
 
-  char * res = static_cast< char * >(std::malloc(size + 1));
+  if (size == 0) {
+    std::free(str);
+    std::cerr << "Error: empty input\n";
+    return 1;
+  }
+
+  char * const res = static_cast< char * >(std::malloc(size + 1));
   if (res == nullptr) {
     std::free(str);
     std::cerr << "Error: not enough memory\n";
