@@ -27,7 +27,7 @@ namespace efremenko
 
         if (std::cin.fail() && !std::cin.eof())
         {
-            std::cerr << "Error: Input is not a valid sequence\n"
+            std::cerr << "Error: Input is not a valid sequence\n";
             return 1;
         }
 
