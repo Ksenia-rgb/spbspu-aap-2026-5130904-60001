@@ -54,7 +54,8 @@ namespace nosov {
     const char vowels[] = "aeiou";
     std::size_t resultSize = 0;
     for (std::size_t i = 0; source[i] != '\0'; ++i) {
-      if (std::strchr(vowels, source[i]) == nullptr) {
+      const int lower = std::tolower(static_cast< unsigned char >(source[i]));
+      if (std::strchr(vowels, lower) == nullptr) {
         result[resultSize] = source[i];
         ++resultSize;
       }
