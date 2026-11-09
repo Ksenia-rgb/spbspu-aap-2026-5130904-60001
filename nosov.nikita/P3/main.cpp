@@ -26,8 +26,8 @@ namespace nosov {
     if (rows == 0 || cols == 0) {
       return 0;
     }
-    std::size_t bestColumn = 0;
-    std::size_t bestLength = 1;
+    std::size_t best_column = 0;
+    std::size_t best_length = 1;
     for (std::size_t j = 0; j < cols; ++j) {
       std::size_t length = 1;
       for (std::size_t i = 1; i < rows; ++i) {
@@ -36,13 +36,13 @@ namespace nosov {
         } else {
           length = 1;
         }
-        if (length > bestLength) {
-          bestLength = length;
-          bestColumn = j;
+        if (length > best_length) {
+          best_length = length;
+          best_column = j;
         }
       }
     }
-    return bestColumn + 1;
+    return best_column + 1;
   }
 }
 
@@ -57,7 +57,7 @@ int main(int argc, char** argv)
     return 1;
   }
 
-  const char* num = argv[1];
+  const char* const num = argv[1];
   if ((num[0] != '1' && num[0] != '2') || num[1] != '\0') {
     std::cerr << "First parameter is wrong\n";
     return 1;
@@ -75,34 +75,35 @@ int main(int argc, char** argv)
     return 2;
   }
 
-  int fixedMatrix[10000] = {};
-  int* dynamicMatrix = nullptr;
-  int* matrix = fixedMatrix;
+  const std::size_t fixed_capacity = 10000;
+  int fixed_matrix[fixed_capacity] = {};
+  int* dynamic_matrix = nullptr;
+  int* matrix = fixed_matrix;
 
   if (num[0] == '1') {
-    if (rows * cols > 10000) {
+    if (rows * cols > fixed_capacity) {
       std::cerr << "Matrix is too big\n";
       return 2;
     }
   } else {
     try {
-      dynamicMatrix = new int[rows * cols];
+      dynamic_matrix = new int[rows * cols];
     } catch (const std::bad_alloc&) {
       std::cerr << "Not enough memory\n";
       return 2;
     }
-    matrix = dynamicMatrix;
+    matrix = dynamic_matrix;
   }
 
   if (!nosov::readMatrix(in, matrix, rows * cols)) {
     std::cerr << "Can not read matrix\n";
-    delete[] dynamicMatrix;
+    delete[] dynamic_matrix;
     return 2;
   }
 
   std::ofstream out(argv[3]);
   nosov::writeMatrix(out, matrix, rows, cols) << "\n";
   out << nosov::findSeriesColumn(matrix, rows, cols) << "\n";
-  delete[] dynamicMatrix;
+  delete[] dynamic_matrix;
   return 0;
 }
