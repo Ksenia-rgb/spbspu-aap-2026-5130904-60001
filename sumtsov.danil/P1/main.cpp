@@ -10,7 +10,7 @@ namespace sumtsov
 
   size_t nextRun(size_t current_run, int value, int prev_value, int mode)
   {
-    int continues = (mode == 0) ? (value == prev_value) : (value >= prev_value);
+    const int continues = (mode == 0) ? (value == prev_value) : (value >= prev_value);
     return continues ? (current_run + 1) : 1;
   }
 
@@ -55,7 +55,7 @@ int main()
   size_t max_eql_run = 0;
   size_t max_inc_run = 0;
 
-  int status = sumtsov::computeSequenceStats(std::cin, max_eql_run, max_inc_run);
+  const int status = sumtsov::computeSequenceStats(std::cin, max_eql_run, max_inc_run);
 
   if (status != 0)
   {
