@@ -1,73 +1,70 @@
-#include <algorithm>
-#include <cstddef>
 #include <iostream>
 
 namespace sumtsov
 {
 
-  struct SequenceResult
+  size_t maxOf(size_t a, size_t b)
   {
-    bool valid;
-    size_t max_eql_run;
-    size_t max_inc_run;
-  };
+    return (a > b) ? a : b;
+  }
 
-  SequenceResult analyzeSequence(std::istream & in)
+  size_t nextRun(size_t current_run, int value, int prev_value, int mode)
   {
-    SequenceResult result{false, 0, 0};
+    int continues = (mode == 0) ? (value == prev_value) : (value >= prev_value);
+    return continues ? (current_run + 1) : 1;
+  }
 
-    bool has_prev = false;
+  int computeSequenceStats(std::istream & in, size_t & max_eql_run, size_t & max_inc_run)
+  {
+    int value = 0;
     int prev_value = 0;
     size_t current_eql_run = 0;
     size_t current_inc_run = 0;
+    size_t count = 0;
 
-    int value = 0;
-    bool terminated = false;
+    max_eql_run = 0;
+    max_inc_run = 0;
 
-    while (in >> value)
+    while ((in >> value) && (value != 0))
     {
-      if (value == 0)
-      {
-        terminated = true;
-        break;
-      }
-
-      if (!has_prev)
+      if (count == 0)
       {
         current_eql_run = 1;
         current_inc_run = 1;
       }
       else
       {
-        current_eql_run = (value == prev_value) ? (current_eql_run + 1) : 1;
-        current_inc_run = (value >= prev_value) ? (current_inc_run + 1) : 1;
+        current_eql_run = nextRun(current_eql_run, value, prev_value, 0);
+        current_inc_run = nextRun(current_inc_run, value, prev_value, 1);
       }
 
-      result.max_eql_run = std::max(result.max_eql_run, current_eql_run);
-      result.max_inc_run = std::max(result.max_inc_run, current_inc_run);
+      max_eql_run = maxOf(max_eql_run, current_eql_run);
+      max_inc_run = maxOf(max_inc_run, current_inc_run);
 
       prev_value = value;
-      has_prev = true;
+      ++count;
     }
 
-    result.valid = terminated;
-    return result;
+    return in ? 0 : 1;
   }
 
 }
 
 int main()
 {
-  const sumtsov::SequenceResult result = sumtsov::analyzeSequence(std::cin);
+  size_t max_eql_run = 0;
+  size_t max_inc_run = 0;
 
-  if (!result.valid)
+  int status = sumtsov::computeSequenceStats(std::cin, max_eql_run, max_inc_run);
+
+  if (status != 0)
   {
     std::cerr << "Error: input is not a valid sequence of integers terminated by zero\n";
     return 1;
   }
 
-  std::cout << result.max_eql_run << '\n';
-  std::cout << result.max_inc_run << '\n';
+  std::cout << max_eql_run << '\n';
+  std::cout << max_inc_run << '\n';
 
   return 0;
 }
