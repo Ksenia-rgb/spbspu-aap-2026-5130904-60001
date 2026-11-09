@@ -1,18 +1,32 @@
 #include <cstddef>
+#include <cstring>
 #include <iostream>
 #include <new>
 
 namespace nosov {
   char* readLine(std::istream& in)
   {
-    const std::size_t capacity = 16;
-    char* const line = new (std::nothrow) char[capacity];
+    const std::size_t growthFactor = 2;
+    std::size_t capacity = 16;
+    char* line = new (std::nothrow) char[capacity];
     if (line == nullptr) {
       return nullptr;
     }
     std::size_t size = 0;
     char symbol = '\0';
-    while ((size + 1 < capacity) && in.get(symbol) && (symbol != '\n')) {
+    while (in.get(symbol) && (symbol != '\n')) {
+      if (size + 1 == capacity) {
+        const std::size_t newCapacity = capacity * growthFactor;
+        char* const newLine = new (std::nothrow) char[newCapacity];
+        if (newLine == nullptr) {
+          delete[] line;
+          return nullptr;
+        }
+        std::memcpy(newLine, line, size);
+        delete[] line;
+        line = newLine;
+        capacity = newCapacity;
+      }
       line[size] = symbol;
       ++size;
     }
