@@ -1,4 +1,5 @@
 #include <iostream>
+#include <climits>
 
 namespace zahovaev {
   struct words {
@@ -144,6 +145,34 @@ namespace zahovaev {
       buff[j++] = max_str[i];
     }
   }
+
+  size_t countDigits(const char * str, const size_t size) noexcept
+  {
+    size_t cnt = 0;
+    for (size_t i = 0; i < size; i++) {
+      if (std::isdigit(str[i])) {
+        cnt++;
+      }
+    }
+    return cnt;
+  }
+
+  size_t digitsFromWords(const char * str, const size_t size, char * buff) noexcept
+  {
+    size_t cnt = 0;
+    for (size_t i = 0; i < size; i++) {
+      if (std::isdigit(str[i])) {
+        buff[cnt++] = str[i];
+      }
+    }
+    return cnt;
+  }
+
+  void dgtSnd(const char * str1, const size_t size1, const char * str2, const size_t size2, char * buff) noexcept
+  {
+    size_t size_buff = digitsFromWords(str2, size2, buff);
+    uniTwo(str1, size1, buff, size_buff, buff);
+  }
 }
 
 int main()
@@ -158,18 +187,24 @@ int main()
     if (!std::cin) {
       std::cerr << "What do you do with my stdin((";
     }
+    if (first_words.getCon() > INT_MAX - second_words.getCon()) {
+      std::cerr << "Overflow\n";
+      return 1;
+    }
     zahovaev::words third_words(first_words.getCon() + second_words.getCon(), '0');
     zahovaev::uniTwo(first_words.getStr(), first_words.getCon(), second_words.getStr(), second_words.getCon(), third_words.getStr());
-    std::cout << third_words.getCon() << "\n";
     for (size_t i = 0 ; i < third_words.getCon(); i++) {
       std::cout << third_words.getChar(i);
     }
     std::cout << "\n";
-  } catch(...) {
-    std::cerr << "Bad allocation";
-    return 1;
-  } catch(...) {
-    std::cerr << "Your string too big";
+    zahovaev::words fourst_words(first_words.getCon() + zahovaev::countDigits(second_words.getStr(), second_words.getCon()), '0');
+    zahovaev::dgtSnd(first_words.getStr(), first_words.getCon(), second_words.getStr(), second_words.getCon(), fourst_words.getStr());
+    for (size_t i = 0; i < fourst_words.getCon(); i++) {
+      std::cout << fourst_words.getChar(i);
+    }
+    std::cout << "\n";
+  } catch(const std::bad_alloc & e) {
+    std::cerr << "Bad allocation\n";
     return 1;
   }
 }
