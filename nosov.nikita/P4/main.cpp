@@ -2,13 +2,15 @@
 #include <cstddef>
 #include <cstring>
 #include <iostream>
+#include <istream>
 #include <new>
 
 namespace nosov {
   char* readLine(std::istream& in)
   {
     const std::size_t growthFactor = 2;
-    std::size_t capacity = 16;
+    const std::size_t startCapacity = 16;
+    std::size_t capacity = startCapacity;
     char* line = new (std::nothrow) char[capacity];
     if (line == nullptr) {
       return nullptr;
@@ -67,7 +69,7 @@ namespace nosov {
 
 int main()
 {
-  char* const line = nosov::readLine(std::cin);
+  const char* const line = nosov::readLine(std::cin);
   if (line == nullptr) {
     std::cerr << "Not enough memory\n";
     return 1;
