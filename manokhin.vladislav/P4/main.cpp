@@ -3,6 +3,8 @@
 namespace manokhin {
   constexpr size_t INITIAL_SIZE = 1;
   constexpr int COEFFICIENT = 10;
+  constexpr size_t SIZE2 = 6;
+  constexpr char STR2[6] = {'a', 'b', 'c', '_', 'e', 'f'};
 
   char * extendStr(const char * str, size_t &size, const int k = COEFFICIENT) {
     char * new_str = static_cast<char *>(malloc((size + k) * sizeof(char)));
@@ -19,13 +21,42 @@ namespace manokhin {
     return new_str;
   }
 
-  int seq_sym(const char * str, const size_t size) {
+  int seq_sym(const char * str, const size_t size) noexcept {
     for (size_t i = 1; i < size; ++i) {
       if (str[i] == str[i-1]) {
         return 1;
       }
     }
     return 0;
+  }
+
+  char * unc_sym(const char * str, const size_t & size, const char * str2, const size_t & size2, char * res, size_t & p) noexcept {
+    bool isFound = false;
+    for (size_t i = 0; i < size; ++i) {
+      isFound = false;
+      for (size_t j = 0; j < size2; ++j) {
+        if (str[i] == str2[j]) {
+          isFound = true;
+          break;
+        }
+      }
+      if (!isFound) {
+        res[p++] = str[i];
+      }
+    }
+    for (size_t i = 0; i < size2; ++i) {
+      isFound = false;
+      for (size_t j = 0; j < size; ++j) {
+        if (str2[i] == str[j]) {
+          isFound = true;
+          break;
+        }
+      }
+      if (!isFound) {
+        res[p++] = str2[i];
+      }
+    }
+    return res;
   }
 }
 
@@ -38,14 +69,14 @@ int main() {
 
   if (str == nullptr) {
     std::cerr << "Bad alloc";
-    return 2;
+    return 1;
   }
 
   char ch = ' ';
   std::cin >> std::noskipws;
 
   while (std::cin >> ch && ch != '\n') {
-    if (size < cap+1) {
+    if (p >= cap) {
       try {
         char * new_str = extendStr(str, cap);
         free(str);
@@ -57,19 +88,31 @@ int main() {
     }
 
     str[p++] = ch;
-    size++;
   }
 
   if (!std::cin) {
     std::cerr << "Bad input";
+    free(str);
     return 1;
   }
+  size = p;
 
-  std::cout << seq_sym(str, size);
+  std::cout << seq_sym(str, size) << '\n';
 
-  // for (size_t i = 0; i < size; i++) {
-  //   std::cout << str[i];
-  // }
+  if (char * buf = static_cast<char *>(malloc((size+SIZE2) * sizeof(char)))) {
+    p = 0;
+    buf = unc_sym(str, size, STR2, SIZE2, buf, p);
+
+    for (size_t i = 0; i < p; i++) {
+      std::cout << buf[i];
+    }
+
+    free(buf);
+  } else {
+    std::cerr << "Bad alloc";
+    free(str);
+    return 1;
+  }
 
   free(str);
   std::cout << '\n';
