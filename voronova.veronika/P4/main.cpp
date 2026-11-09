@@ -5,7 +5,7 @@
 namespace voronova {
   size_t difLat(const char *str) {
     size_t count = 0;
-    size_t alphabet_size = 256;
+    const size_t alphabet_size = 256;
     int used[alphabet_size] = {};
     for (size_t i = 0; str[i] != '\0'; ++i) {
       const unsigned char c = str[i];
