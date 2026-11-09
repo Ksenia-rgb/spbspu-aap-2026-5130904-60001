@@ -33,6 +33,18 @@ namespace nosov {
     line[size] = '\0';
     return line;
   }
+
+  std::size_t countDifferentLetters(const char* str)
+  {
+    const char alphabet[] = "abcdefghijklmnopqrstuvwxyz";
+    std::size_t count = 0;
+    for (std::size_t i = 0; alphabet[i] != '\0'; ++i) {
+      if (std::strchr(str, alphabet[i]) != nullptr) {
+        ++count;
+      }
+    }
+    return count;
+  }
 }
 
 int main()
@@ -42,7 +54,7 @@ int main()
     std::cerr << "Not enough memory\n";
     return 1;
   }
-  std::cout << line << "\n";
+  std::cout << nosov::countDifferentLetters(line) << "\n";
   delete[] line;
   return 0;
 }
