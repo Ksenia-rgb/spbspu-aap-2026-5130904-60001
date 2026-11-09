@@ -1,3 +1,4 @@
+#include <cctype>
 #include <cstddef>
 #include <cstring>
 #include <iostream>
@@ -39,7 +40,9 @@ namespace nosov {
     const char alphabet[] = "abcdefghijklmnopqrstuvwxyz";
     std::size_t count = 0;
     for (std::size_t i = 0; alphabet[i] != '\0'; ++i) {
-      if (std::strchr(str, alphabet[i]) != nullptr) {
+      const int lower = alphabet[i];
+      const int upper = std::toupper(lower);
+      if ((std::strchr(str, lower) != nullptr) || (std::strchr(str, upper) != nullptr)) {
         ++count;
       }
     }
