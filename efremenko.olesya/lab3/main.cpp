@@ -9,7 +9,7 @@ namespace efremenko {
         long long r, c;
         if (!(in >> r >> c)) return 1;
         if (r < 0 || c < 0) return 2; 
-        
+
         rows = static_cast<size_t>(r);
         cols = static_cast<size_t>(c);
 
@@ -20,7 +20,7 @@ namespace efremenko {
         int dummy;
         if (in >> dummy) return 4;
 
-        return 0; 
+        return 0;
     }
 
     // NUM-COL-LSR
@@ -61,10 +61,10 @@ namespace efremenko {
                 for (int di = -1; di <= 1; ++di) {
                     for (int dj = -1; dj <= 1; ++dj) {
                         if (di == 0 && dj == 0) continue;
-                    
+
                         size_t ni = i + di;
                         size_t nj = j + dj;
-                        
+
                         if (matrix[i * cols + j] >= matrix[ni * cols + nj]) {
                             is_min = false;
                             break;
@@ -101,13 +101,13 @@ int main(int argc, char* argv[]) {
     size_t rows = 0, cols = 0;
     int* matrix = nullptr;
     int stack_data[10000];
-    
+
     long long temp_r, temp_c;
     if (!(in >> temp_r >> temp_c) || temp_r < 0 || temp_c < 0) {
         std::cerr << "Error: Invalid matrix dimensions\n";
         return 2;
     }
-    
+
     in.clear();
     in.seekg(0, std::ios::beg);
 
