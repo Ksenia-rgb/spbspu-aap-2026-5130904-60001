@@ -1,6 +1,7 @@
 #include <cctype>
 #include <iostream>
 #include <memory>
+#include <new>
 
 namespace borsch {
   char *removeLatin(const char *source, char *destination);
@@ -61,5 +62,15 @@ std::unique_ptr< char[] > borsch::readLine(std::istream &input)
 
 int main()
 {
+  try {
+    const std::unique_ptr< char[] > line = borsch::readLine(std::cin);
+    if (std::cin.bad()) {
+      std::cerr << "Input error\n";
+      return 2;
+    }
+  } catch (const std::bad_alloc &) {
+    std::cerr << "Not enough memory\n";
+    return 1;
+  }
   return 0;
 }
