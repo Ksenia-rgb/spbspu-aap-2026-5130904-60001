@@ -12,7 +12,7 @@ namespace efremenko
             {
                 return 2;
             }
-            std::cer << "Error: Input is not a valid sequence\n";
+            std::cerr << "Error: Input is not a valid sequence\n";
             return 1;
         }
 
