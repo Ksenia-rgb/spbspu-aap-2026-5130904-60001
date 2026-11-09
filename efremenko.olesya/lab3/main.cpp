@@ -4,12 +4,11 @@
 #include <cstddef>
 
 namespace efremenko {
-
     int read_matrix(std::ifstream& in, int* matrix, size_t& rows, size_t& cols) {
         long long r, c;
         if (!(in >> r >> c)) return 1;
-        if (r < 0 || c < 0) return 2; 
-
+        if (r < 0 || c < 0) return 2;
+        
         rows = static_cast<size_t>(r);
         cols = static_cast<size_t>(c);
 
@@ -22,8 +21,7 @@ namespace efremenko {
 
         return 0;
     }
-
-    // NUM-COL-LSR
+// NUM-COL-LSR
     size_t calculate_num_col_lsr(const int* matrix, size_t rows, size_t cols) {
         size_t max_series = 0;
         size_t best_col = 0;
@@ -49,8 +47,7 @@ namespace efremenko {
         }
         return best_col;
     }
-
-    // CNT-LOC-MIN
+// CNT-LOC-MIN
     size_t calculate_cnt_loc_min(const int* matrix, size_t rows, size_t cols) {
         size_t count = 0;
         if (rows < 3 || cols < 3) return 0;
@@ -61,10 +58,10 @@ namespace efremenko {
                 for (int di = -1; di <= 1; ++di) {
                     for (int dj = -1; dj <= 1; ++dj) {
                         if (di == 0 && dj == 0) continue;
-
+                        
                         size_t ni = i + di;
                         size_t nj = j + dj;
-
+                        
                         if (matrix[i * cols + j] >= matrix[ni * cols + nj]) {
                             is_min = false;
                             break;
@@ -107,7 +104,7 @@ int main(int argc, char* argv[]) {
         std::cerr << "Error: Invalid matrix dimensions\n";
         return 2;
     }
-
+    
     in.clear();
     in.seekg(0, std::ios::beg);
 
