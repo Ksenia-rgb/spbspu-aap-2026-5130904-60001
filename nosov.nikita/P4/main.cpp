@@ -48,6 +48,20 @@ namespace nosov {
     }
     return count;
   }
+
+  char* removeVowels(const char* source, char* result)
+  {
+    const char vowels[] = "aeiou";
+    std::size_t resultSize = 0;
+    for (std::size_t i = 0; source[i] != '\0'; ++i) {
+      if (std::strchr(vowels, source[i]) == nullptr) {
+        result[resultSize] = source[i];
+        ++resultSize;
+      }
+    }
+    result[resultSize] = '\0';
+    return result;
+  }
 }
 
 int main()
@@ -57,7 +71,15 @@ int main()
     std::cerr << "Not enough memory\n";
     return 1;
   }
+  char* const withoutVowels = new (std::nothrow) char[std::strlen(line) + 1];
+  if (withoutVowels == nullptr) {
+    delete[] line;
+    std::cerr << "Not enough memory\n";
+    return 1;
+  }
   std::cout << nosov::countDifferentLetters(line) << "\n";
+  std::cout << nosov::removeVowels(line, withoutVowels) << "\n";
+  delete[] withoutVowels;
   delete[] line;
   return 0;
 }
