@@ -36,6 +36,45 @@ namespace zhdaneev
 
     result[j] = '\0';
   }
+  char* read_line()
+  {
+    int capacity = 100;
+    int length = 0;
+
+    char* line = static_cast<char*>(std::malloc(capacity));
+
+    if (line == nullptr)
+    {
+        return nullptr;
+    }
+
+    char symbol;
+
+    while (std::cin.get(symbol) && symbol != '\n')
+    {
+        if (length + 1 >= capacity)
+        {
+            capacity *= 2;
+
+            char* new_line =
+                static_cast<char*>(std::realloc(line, capacity));
+
+            if (new_line == nullptr)
+            {
+                std::free(line);
+                return nullptr;
+            }
+
+            line = new_line;
+        }
+
+        line[length] = symbol;
+        length++;
+    }
+
+    line[length] = '\0';
+    return line;
+  }
 }
 
 int main()
