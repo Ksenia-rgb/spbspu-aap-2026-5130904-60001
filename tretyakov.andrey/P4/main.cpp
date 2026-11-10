@@ -51,6 +51,35 @@ namespace tretyakov
     sum_string[i + j] = '\0';
     return sum_string;
   }
+  char * hasSam(const char * string1, const char * string2, size_t size1, char * res)
+  {
+    int found = 0;
+    for (size_t i = 0; i < size1; ++i)
+    {
+      for (size_t j = 0; string2[j] != '\0'; ++j)
+      {
+        if (string1[i] == string2[j])
+        {
+          found = 1;
+          break;
+        }
+      }
+      if (found)
+      {
+        break;
+      }
+    }   
+    if (found)
+    {
+      res[0] = '1';
+    }
+    else
+    {
+      res[0] = '0';
+    }
+    res[1] = '\0';
+    return res;
+  }
 }
 
 int main()
@@ -82,6 +111,7 @@ int main()
   }
   char res[2] = {};
   std::cout << tretyakov::uniTwo(string1, string2, size1, size2, sum_string) << '\n';
+  std::cout << tretyakov::hasSam(string1, string3, size1, res) << '\n';
   delete [] string1;
   delete [] sum_string;
   return 0;
