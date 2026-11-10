@@ -110,8 +110,8 @@ int main()
     return 1;
   }
   char res[2] = {};
-  std::cout << tretyakov::uniTwo(string1, string2, size1, size2, sum_string) << '\n';
-  std::cout << tretyakov::hasSam(string1, string3, size1, res) << '\n';
+  std::cout << tretyakov::uniTwo(string1, string2, size1, size2, sum_string) << "\n";
+  std::cout << tretyakov::hasSam(string1, string3, size1, res) << "\n";
   delete [] string1;
   delete [] sum_string;
   return 0;
