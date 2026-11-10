@@ -79,5 +79,31 @@ namespace zhdaneev
 
 int main()
 {
+    char* input = zhdaneev::read_line();
+
+    if (input == nullptr)
+    {
+        std::cerr << "Memory allocation error\n";
+        return 1;
+    }
+
+    std::cout << zhdaneev::has_sam(input, "abs") << '\n';
+
+    char* output = static_cast<char*>(std::malloc(100));
+
+    if (output == nullptr)
+    {
+        std::free(input);
+        std::cerr << "Memory allocation error\n";
+        return 1;
+    }
+
+    zhdaneev::lat_rmv(output, input);
+
+    std::cout << output << '\n';
+
+    std::free(input);
+    std::free(output);
+
     return 0;
 }
