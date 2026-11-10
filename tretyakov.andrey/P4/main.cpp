@@ -68,7 +68,7 @@ namespace tretyakov
       {
         break;
       }
-    }   
+    }
     if (found)
     {
       res[0] = '1';
