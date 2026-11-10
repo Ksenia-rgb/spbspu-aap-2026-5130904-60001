@@ -115,4 +115,4 @@ int main()
   delete [] string1;
   delete [] sum_string;
   return 0;
-}
+}g
