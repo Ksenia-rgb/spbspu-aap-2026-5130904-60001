@@ -27,6 +27,30 @@ namespace tretyakov
     string1[size1] = '\0';
     return string1;
   }
+  char * uniTwo(const char * string1, const char * string2, size_t size1, size_t size2, char * sum_string)
+  {
+    size_t i = 0;
+    size_t j = 0;
+    while (i < size1 && j < size2)
+    {
+      sum_string[i + j] = string1[i];
+      ++i;
+      sum_string[i + j] = string2[j];
+      ++j;
+    }
+    while (i < size1)
+    {
+      sum_string[i + j] = string1[i];
+      ++i;
+    }
+    while (j < size2)
+    {
+      sum_string[i + j] = string2[j];
+      ++j;
+    }
+    sum_string[i + j] = '\0';
+    return sum_string;
+  }
 }
 
 int main()
@@ -56,5 +80,9 @@ int main()
     delete [] sum_string;
     return 1;
   }
+  char res[2] = {};
+  std::cout << tretyakov::uniTwo(string1, string2, size1, size2, sum_string) << '\n';
+  delete [] string1;
+  delete [] sum_string;
   return 0;
 }
