@@ -18,6 +18,24 @@ namespace zhdaneev
 
     return 0;
   }
+  void lat_rmv(char* result, const char* source)
+  {
+    int j = 0;
+
+    for (int i = 0; source[i] != '\0'; i++)
+    {
+        char symbol = source[i];
+
+        if (!((symbol >= 'A' && symbol <= 'Z') ||
+              (symbol >= 'a' && symbol <= 'z')))
+        {
+            result[j] = symbol;
+            j++;
+        }
+    }
+
+    result[j] = '\0';
+  }
 }
 
 int main()
