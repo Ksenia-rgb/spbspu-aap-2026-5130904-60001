@@ -97,36 +97,37 @@ namespace zahovaev {
     return counter;
   }
 
-  void writeMass(int* mass, const size_t n, const size_t m, std::ifstream& is)
+  std::ifstream& writeMass(std::ifstream& is, int* mass, const size_t n, const size_t m)
   {
     for (size_t i = 0; i < m * n; i++) {
       is >> mass[i];
     }
+    return is;
   }
 
-  void sendAnswer(const size_t c, int const* mass, const size_t n, const size_t m, std::ofstream& as)
+  std::ofstream& sendAnswer(std::ofstream& as, int const* mass, const size_t n, const size_t m)
   {
-    as << c << "\n";
     as << n << " " << m;
     for (size_t i = 0; i < n * m; i++) {
       as << " " << mass[i];
     }
+    return as;
   }
 };
 
-int main(int lenargs, char* args[])
+int main(int argc, char* argv[])
 {
-  if (lenargs < 4) {
+  if (argc < 4) {
     std::cerr << "Not enough arguments\n";
     return 1;
-  } else if (lenargs > 4) {
+  } else if (argc > 4) {
     std::cerr << "Too many arguments\n";
     return 1;
   }
 
   short num = 0;
   try {
-    num = std::stoi(args[1]);
+    num = std::stoi(argv[1]);
     if (!(0 < num && num < 3)) {
       std::cerr << "First parametr is out of range\n";
       return 1;
@@ -139,15 +140,21 @@ int main(int lenargs, char* args[])
     return 1;
   }
 
-  std::ifstream is(args[2]);
+  std::ifstream is(argv[2]);
   if (!is.is_open()) {
-    std::cerr << "Your file is a TRASH\n";
+    std::cerr << "Your input file is a TRASH\n";
     return 1;
   }
+  std::ofstream as(argv[3]);
+  if (!as.is_open()) {
+    std::cerr << "S.. sorry! I can't open your output file(\n";
+    return 2;
+  }
+
   const size_t maxSize = 10000;
   int mass[maxSize] = {};
-
   int* mass2 = nullptr;
+  int* both_mass = nullptr;
 
   num--;
   size_t n = 0;
@@ -157,7 +164,7 @@ int main(int lenargs, char* args[])
     std::cerr << "Oh, your massiv too big\n";
     return 2;
   }
-  int* both_mass = nullptr;
+
   if (num) {
     mass2 = new int[n * m];
     both_mass = mass2;
@@ -169,28 +176,22 @@ int main(int lenargs, char* args[])
     both_mass = mass;
   }
 
-  zahovaev::writeMass(both_mass, n, m, is);
+  zahovaev::writeMass(is, both_mass, n, m);
   if (!is) {
     std::cerr << "Your massiv is a TRASH\n";
     delete[] mass2;
     return 2;
   }
 
-  zahovaev::lftBotClk(both_mass, n, m);
   const size_t c = zahovaev::cntColNsm(both_mass, n, m);
-  std::ofstream as(args[3]);
-  if (!as.is_open()) {
-    std::cerr << "S.. sorry! I can't open your file(\n";
-    delete[] mass2;
-    return 2;
-  }
-  zahovaev::sendAnswer(c, both_mass, n, m, as);
-  if (!as) {
+  zahovaev::lftBotClk(both_mass, n, m);
+
+  as << c << "\n";
+  if (!(zahovaev::sendAnswer(as, both_mass, n, m))) {
     std::cerr << "My code have UB probably. It means that i already dead\n";
     delete[] mass2;
     return 2;
-  } else {
-    as << "\n";
   }
+  as << "\n";
   delete[] mass2;
 }
