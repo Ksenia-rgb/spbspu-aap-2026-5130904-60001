@@ -170,5 +170,4 @@ int main(int argc, char* argv[])
     std::cerr << "cannot allocate memory\n";
     return 2;
   }
-
 }
