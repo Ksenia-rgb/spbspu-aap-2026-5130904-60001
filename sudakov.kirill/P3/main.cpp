@@ -69,12 +69,6 @@ namespace sudakov {
     return count;
   }
 
-  std::ofstream& writeResults(std::ofstream& output, size_t max_count, size_t min_count)
-  {
-    output << max_count << '\n';
-    output << min_count << '\n';
-    return output;
-  }
 }
 
 int main(int argc, char* argv[])
@@ -149,7 +143,8 @@ int main(int argc, char* argv[])
 
   const size_t max_count = sudakov::cntLocMax(matrix, rows, cols);
   const size_t min_count = sudakov::cntLocMin(matrix, rows, cols);
-  sudakov::writeResults(output, max_count, min_count);
+  output << max_count << '\n';
+  output << min_count << '\n';
   free(dynamic_matrix);
 
   if (!output) {
