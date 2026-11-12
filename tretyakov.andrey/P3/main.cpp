@@ -9,7 +9,7 @@ namespace tretyakov
 {
   bool solveLwrTriMtx(const int * matrix, size_t rows, size_t cols)
   {
-    size_t k = std::min(rows, cols);
+    const size_t k = std::min(rows, cols);
     if (k == 0)
     {
       return false;
@@ -83,7 +83,7 @@ int main(int argc, char * argv[])
     return 1;
   }
   char * end_ptr = nullptr;
-  long num = std::strtol(argv[1], &end_ptr, 10);
+  const long num = std::strtol(argv[1], &end_ptr, 10);
   if (end_ptr == argv[1])
   {
     std::cerr << "First parameter is not a number\n";
@@ -165,8 +165,8 @@ int main(int argc, char * argv[])
       return 2;
     }
   }
-  bool lower_triangle_mtx = tretyakov::solveLwrTriMtx(matrix, rows, cols);
-  size_t counter_of_local_maximum = tretyakov::solveCntLocMax(matrix, rows, cols);
+  const bool lower_triangle_mtx = tretyakov::solveLwrTriMtx(matrix, rows, cols);
+  const size_t counter_of_local_maximum = tretyakov::solveCntLocMax(matrix, rows, cols);
   out_file << std::boolalpha;
   out_file << lower_triangle_mtx << " " << counter_of_local_maximum << "\n";
   free(dynamic_matrix);
