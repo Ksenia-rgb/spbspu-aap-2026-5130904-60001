@@ -66,13 +66,10 @@ int main()
   }
 
   std::cout << count_max;
-  if (count_del == 0)
-  {
+  if (before_first == first && count_del == 0) {
     std::cerr << "\nYour sequence is not calculated\n";
     return 2;
-  }
-  else
-  {
+  } else {
     std::cout << "\n" << count_del << "\n";
   }
 }
