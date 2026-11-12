@@ -71,6 +71,11 @@ namespace zaharov
 
   void applySpiralDecrease(int *data, size_t rows, size_t cols)
   {
+    if (rows == 0 || cols == 0)
+    {
+      return;
+    }
+
     size_t top = 0;
     size_t bottom = rows - 1;
     size_t left = 0;
@@ -167,16 +172,9 @@ namespace zaharov
     {
       data = stack_data;
       original = stack_original;
-
       if (!readMatrix(in, data, rows, cols))
       {
         return false;
-      }
-
-      const size_t total = rows * cols;
-      for (size_t i = 0; i < total; ++i)
-      {
-        original[i] = data[i];
       }
     }
     else
@@ -203,15 +201,26 @@ namespace zaharov
           delete[] original;
           return false;
         }
-        original[i] = data[i];
       }
     }
 
-    applySpiralDecrease(data, rows, cols);
-    writematrix(out, data, rows, cols);
+    const size_t total = rows * cols;
+    if (total > 0)
+    {
+      for (size_t = 0; i < total; ++i)
+      {
+        original[i] = data[i];
+      }
 
-    const size_t best_col = findBestColumn(original, rows, cols);
-    out << best_col << '\n';
+      applySpiralDecrease(data, rows, cols);
+      writeMatrix(out, data, rows, cols);
+      out << findBestColumn(original, rows, cols) << '\n';
+    }
+    else
+    {
+      out << rows << ' ' << cols << '\n';
+      out << 0 << '\n';
+    }
 
     if (num == 2)
     {
