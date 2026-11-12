@@ -9,8 +9,7 @@ namespace tretyakov
 {
   bool solveLwrTriMtx(const int * matrix, size_t rows, size_t cols)
   {
-    size_t k = 0;
-    k = std::min(rows, cols);
+    size_t k = std::min(rows, cols);
     if (k == 0)
     {
       return false;
@@ -83,9 +82,8 @@ int main(int argc, char * argv[])
     std::cerr << "Too many arguments\n";
     return 1;
   }
-  long num = 0;
   char * end_ptr = nullptr;
-  num = std::strtol(argv[1], &end_ptr, 10);
+  long num = std::strtol(argv[1], &end_ptr, 10);
   if (end_ptr == argv[1])
   {
     std::cerr << "First parameter is not a number\n";
@@ -136,8 +134,9 @@ int main(int argc, char * argv[])
     return 0;
   }
   int * matrix = nullptr;
+  int * dynamic_matrix = nullptr;
   const size_t count_elements = 10000;
-  int static_matrix[count_elements] = {};
+  int fix_matrix[count_elements] = {};
   if (num == 1)
   {
     if (rows > count_elements / cols)
@@ -145,38 +144,31 @@ int main(int argc, char * argv[])
       std::cerr << "Matrix is too large\n";
       return 2;
     }
-    matrix = static_matrix;
+    matrix = fix_matrix;
   }
   else if (num == 2)
   {
-    matrix = reinterpret_cast< int * >(malloc(rows * cols * sizeof(int)));
-    if (matrix == nullptr)
+    dynamic_matrix = reinterpret_cast< int * >(malloc(rows * cols * sizeof(int)));
+    if (dynamic_matrix == nullptr)
     {
       std::cerr << "Memory allocation failed\n";
       return 2;
     }
+    matrix = dynamic_matrix;
   }
   for (size_t i = 0; i < rows * cols; ++i)
   {
     if (!(in_file >> matrix[i]))
     {
       std::cerr << "Invalid elements\n";
-      if (num == 2)
-      {
-        free(matrix);
-      }
+      free(dynamic_matrix);
       return 2;
     }
   }
-  bool lower_triangle_mtx = false;
-  size_t counter_of_local_maximum = 0;
-  lower_triangle_mtx = tretyakov::solveLwrTriMtx(matrix, rows, cols);
-  counter_of_local_maximum = tretyakov::solveCntLocMax(matrix, rows, cols);
+  bool lower_triangle_mtx = tretyakov::solveLwrTriMtx(matrix, rows, cols);
+  size_t counter_of_local_maximum = tretyakov::solveCntLocMax(matrix, rows, cols);
   out_file << std::boolalpha;
   out_file << lower_triangle_mtx << " " << counter_of_local_maximum << "\n";
-  if (num == 2)
-  {
-    free(matrix);
-  }
+  free(dynamic_matrix);
   return 0;
 }
