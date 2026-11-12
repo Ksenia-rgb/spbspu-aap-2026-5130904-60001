@@ -57,12 +57,12 @@ int main(int argc, char *argv[])
 
   if (argc < args_count)
   {
-    std::cerr << "Not enough arguments";
+    std::cerr << "Not enough arguments\n";
     return 1;
   }
   if (argc > args_count)
   {
-    std::cerr << "Too many arguments";
+    std::cerr << "Too many arguments\n";
     return 1;
   }
   if (argv[1][1] != '\0' || (argv[1][0] != '1' && argv[1][0] != '2'))
@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
   const size_t cols = cols_in;
 
   const size_t kmax = 10000;
-  int static_mtx[kmax] = {};
+  int fixsize_mtx[kmax] = {};
   int *dynamic_mtx = nullptr;
   int *mtx = nullptr;
   switch (*argv[1])
@@ -99,10 +99,10 @@ int main(int argc, char *argv[])
       std::cerr << "Matrix size exceeds maximum allowed size\n";
       return file_error;
     }
-    mtx = static_mtx;
+    mtx = fixsize_mtx;
     break;
   case '2':
-    dynamic_mtx = static_cast< int * >(std::malloc(rows * cols * sizeof(int)));
+    dynamic_mtx = reinterpret_cast< int * >(std::malloc(rows * cols * sizeof(int)));
     if (dynamic_mtx == nullptr && rows * cols > 0)
     {
       std::cerr << "Not enough memory\n";
