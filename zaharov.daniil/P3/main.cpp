@@ -76,43 +76,43 @@ namespace zaharov
       return;
     }
 
-    size_t top = 0;
-    size_t bottom = rows - 1;
-    size_t left = 0;
-    size_t right = cols - 1;
+    int top = 0;
+    int bottom = static_cast< int >(rows) - 1;
+    int left = 0;
+    int right = static_cast< int >(cols) - 1;
     int step = 1;
 
     while (top <= bottom && left <= right)
     {
-      for (size_t i = 0; i <= bottom - top; ++i)
+      for (int i = bottom; i >= top; --i)
       {
-        data[(bottom - i) * cols + left] -= step++;
+        data[i * static_cast< int >(cols) + left] -= step++;
       }
       ++left;
 
       if (top <= bottom)
       {
-        for (size_t j = 0; j <= right - left; ++j)
+        for (int j = left; j <= right; ++j)
         {
-          data[top * cols + (left + j)] -= step++;
+          data[top * static_cast< int >(cols) + j] -= step++;
         }
         ++top;
       }
 
       if (left <= right)
       {
-        for (size_t i = 0; i <= bottom - top; ++i)
+        for (int i = top; i <= bottom; ++i)
         {
-          data[(top + i) * cols + right] -= step++;
+          data[i * static_cast< int >(cols) + right] -= step++;
         }
         --right;
       }
 
       if (top <= bottom)
       {
-        for (size_t j = 0; j <= right - left; ++j)
+        for (int j = right; j >= left; --j)
         {
-          data[bottom * cols + (right - j)] -= step++;
+          data[bottom * static_cast< int >(cols) + j] -= step++;
         }
         --bottom;
       }
@@ -207,7 +207,7 @@ namespace zaharov
     const size_t total = rows * cols;
     if (total > 0)
     {
-      for (size_t = 0; i < total; ++i)
+      for (size_t i = 0; i < total; ++i)
       {
         original[i] = data[i];
       }
