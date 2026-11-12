@@ -111,63 +111,60 @@ int main(int argc, char* argv[])
   }
 
   const size_t max_elements = 10000;
-  if (num == '1' && rows != 0 && cols > max_elements / rows)
-  {
-    std::cerr << "matrix is too large\n";
-    return 2;
-  }
-
-  int static_matrix[max_elements] = {};
-  int* matrix = static_matrix;
-
   if (rows != 0 && cols > std::numeric_limits< size_t >::max() / rows)
   {
     std::cerr << "matrix is too large\n";
     return 2;
   }
+
   const size_t count = rows * cols;
 
-  try
+  if (num == '1' && count > max_elements)
   {
-    if (num == '2')
-    {
-      matrix = new int[count];
-    }
-
-    for (size_t i = 0; i < count; i++)
-    {
-      if (!(input >> matrix[i]))
-      {
-        std::cerr << "invalid matrix elements\n";
-        if (num == '2')
-        {
-          delete[] matrix;
-        }
-        return 2;
-      }
-    }
-
-    const long long minimum_sum = kotyurgina::minSumMdg(matrix, rows, cols);
-    output << minimum_sum << '\n';
-
-    kotyurgina::increaseWaves(matrix, rows, cols);
-
-    output << rows << ' ' << cols;
-    for (size_t i = 0; i < count; i++)
-    {
-      output << ' ' << matrix[i];
-    }
-    output << '\n';
-
-    if (num == '2')
-    {
-      delete[] matrix;
-    }
-    return 0;
-  }
-  catch (const std::bad_alloc&)
-  {
-    std::cerr << "cannot allocate memory\n";
+    std::cerr << "matrix is too large\n";
     return 2;
   }
+
+  int fixed_matrix[max_elements] = {};
+  int* dynamic_matrix = nullptr;
+  int* matrix = fixed_matrix;
+
+  if (num == '2')
+  {
+    try
+    {
+      dynamic_matrix = new int[count];
+    }
+    catch (const std::bad_alloc&)
+    {
+      std::cerr << "cannot allocate memory\n";
+      return 2;
+    }
+    matrix = dynamic_matrix;
+  }
+
+  for (size_t i = 0; i < count; i++)
+  {
+    if (!(input >> matrix[i]))
+    {
+      std::cerr << "invalid matrix elements\n";
+      delete[] dynamic_matrix;
+      return 2;
+    }
+  }
+
+  const long long minimum_sum = kotyurgina::minSumMdg(matrix, rows, cols);
+  output << minimum_sum << '\n';
+
+  kotyurgina::increaseWaves(matrix, rows, cols);
+
+  output << rows << ' ' << cols;
+  for (size_t i = 0; i < count; i++)
+  {
+    output << ' ' << matrix[i];
+  }
+  output << '\n';
+
+  delete[] dynamic_matrix;
+  return 0;
 }
