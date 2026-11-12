@@ -223,7 +223,8 @@ int main(int argc, char **argv)
 
     if (par == '2') {
       try {
-        matrix = new int[n * m];
+        dyn_matrix = new int[n * m];
+        matrix = dyn_matrix;
       } catch (const std::bad_alloc &) {
         std::cerr << "Bad alloc" << '\n';
         delete[] dyn_arr;
