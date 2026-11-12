@@ -44,15 +44,35 @@ namespace nosov {
     }
     return best_column + 1;
   }
+
+  void fillIncreasingWave(int* matrix, std::size_t rows, std::size_t cols)
+  {
+    for (std::size_t i = 0; i < rows; ++i) {
+      for (std::size_t j = 0; j < cols; ++j) {
+        std::size_t level = i;
+        if (j < level) {
+          level = j;
+        }
+        if (rows - 1 - i < level) {
+          level = rows - 1 - i;
+        }
+        if (cols - 1 - j < level) {
+          level = cols - 1 - j;
+        }
+        matrix[i * cols + j] += level + 1;
+      }
+    }
+  }
 }
 
 int main(int argc, char** argv)
 {
-  if (argc < 4) {
+  const int arguments_count = 4;
+  if (argc < arguments_count) {
     std::cerr << "Not enough arguments\n";
     return 1;
   }
-  if (argc > 4) {
+  if (argc > arguments_count) {
     std::cerr << "Too many arguments\n";
     return 1;
   }
@@ -68,12 +88,14 @@ int main(int argc, char** argv)
     std::cerr << "Can not open input file\n";
     return 2;
   }
-  std::size_t rows = 0;
-  std::size_t cols = 0;
-  if (!(in >> rows >> cols)) {
+  int rows_input = 0;
+  int cols_input = 0;
+  if (!(in >> rows_input >> cols_input) || rows_input < 0 || cols_input < 0) {
     std::cerr << "Can not read matrix size\n";
     return 2;
   }
+  const std::size_t rows = rows_input;
+  const std::size_t cols = cols_input;
 
   const std::size_t fixed_capacity = 10000;
   int fixed_matrix[fixed_capacity] = {};
@@ -101,9 +123,17 @@ int main(int argc, char** argv)
     return 2;
   }
 
+  const std::size_t column = nosov::findSeriesColumn(matrix, rows, cols);
+  nosov::fillIncreasingWave(matrix, rows, cols);
+
   std::ofstream out(argv[3]);
+  if (!out) {
+    std::cerr << "Can not open output file\n";
+    delete[] dynamic_matrix;
+    return 2;
+  }
   nosov::writeMatrix(out, matrix, rows, cols) << "\n";
-  out << nosov::findSeriesColumn(matrix, rows, cols) << "\n";
+  out << column << "\n";
   delete[] dynamic_matrix;
   return 0;
 }
