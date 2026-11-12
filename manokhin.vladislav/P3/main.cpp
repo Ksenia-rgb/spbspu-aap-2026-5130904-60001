@@ -137,7 +137,7 @@ int main(int argc, char **argv)
   }
 
   size_t p = 0, cnt = 0, n = 0, m = 0;
-  int * dyn_arr = nullptr;
+  int *dyn_arr = nullptr;
   int *arr = dyn_arr;
   int fix_arr[manokhin::MAX_SIZE] = {0};
 
@@ -182,7 +182,7 @@ int main(int argc, char **argv)
   }
 
   p = 0;
-  int * dyn_matrix = nullptr;
+  int *dyn_matrix = nullptr;
   int *matrix = dyn_matrix;
   int static_matrix[manokhin::MAX_SIZE] = {0};
   if (par == '1') {
