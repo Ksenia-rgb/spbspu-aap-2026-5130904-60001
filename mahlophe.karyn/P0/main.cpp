@@ -2,7 +2,7 @@
 
 int main()
 {
-  std::cout << "mahlophe.karyn/P0";
+  std::cout << "mahlophe.karyn";
 
   return 0;
 }
