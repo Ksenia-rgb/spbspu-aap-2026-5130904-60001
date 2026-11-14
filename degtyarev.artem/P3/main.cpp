@@ -7,7 +7,7 @@
 
 namespace degtyarev
 {
-  constexpr size_t maxStaticSize = 10000;
+  constexpr size_t maxFixedSize = 10000;
 
   size_t countDifCols(const int *arr, size_t rows, size_t cols)
   {
@@ -87,25 +87,25 @@ int main(int argc, char *argv[])
   }
   const size_t size = rows * cols;
 
-  int static_arr[degtyarev::maxStaticSize] = {};
+  int fixed_arr[degtyarev::maxFixedSize] = {};
   int *dynamic_arr = nullptr;
   int *arr = nullptr;
   switch (*argv[1])
   {
   case '1':
   {
-    if (size > degtyarev::maxStaticSize)
+    if (size > degtyarev::maxFixedSize)
     {
       std::cerr << "Matrix is too big\n";
       return 2;
     }
-    arr = static_arr;
+    arr = fixed_arr;
     break;
   }
 
   case '2':
   {
-    dynamic_arr = static_cast< int * >(malloc(size * sizeof(int)));
+    dynamic_arr = reinterpret_cast< int * >(malloc(size * sizeof(int)));
     if (dynamic_arr == nullptr && size != 0)
     {
       std::cerr << "Memory allocation error\n";
