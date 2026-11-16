@@ -130,9 +130,13 @@ int main(int argc, char **argv)
   }
 
   size_t n = 0, m = 0;
-  if (!(input >> n >> m) || n <= 0 || m <= 0 || (par == '1' && n * m > manokhin::MAX_SIZE)) {
+  if (!(input >> n >> m) || n < 0 || m < 0 || (par == '1' && n * m > manokhin::MAX_SIZE)) {
     std::cerr << "Bad input" << '\n';
     return 2;
+  }
+
+  if (n == 0 || m == 0) {
+    output << n << m;
   }
 
   int *dyn_arr = nullptr;
