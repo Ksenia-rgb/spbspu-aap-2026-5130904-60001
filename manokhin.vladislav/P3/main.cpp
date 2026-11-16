@@ -12,13 +12,6 @@ namespace manokhin {
     }
   }
 
-  int *extendArr(const size_t n, const size_t m, const size_t size, const int *arr)
-  {
-    int *const new_arr = new int[size + n * m + 2];
-    copy(size, arr, new_arr);
-    return new_arr;
-  }
-
   std::ofstream &outputMatrix(std::ofstream &output, const int *arr, const size_t n, const size_t m)
   {
     size_t p = 0;
@@ -136,114 +129,60 @@ int main(int argc, char **argv)
     return 1;
   }
 
-  size_t p = 0, cnt = 0, n = 0, m = 0;
-  int *dyn_arr = nullptr;
-  int *arr = dyn_arr;
-  int fix_arr[manokhin::MAX_SIZE] = {0};
-
-  if (par == '1') {
-    arr = fix_arr;
-  }
-
-  bool is_data = false;
-
-  while (input >> n >> m) {
-    is_data = true;
-    if (par == '2') {
-      try {
-        int *const new_arr = manokhin::extendArr(n, m, p, arr);
-        delete[] dyn_arr;
-        dyn_arr = new_arr;
-        arr = dyn_arr;
-      } catch (std::bad_alloc &) {
-        std::cerr << "Bad alloc" << '\n';
-        delete[] dyn_arr;
-        return 2;
-      }
-    }
-
-    arr[p++] = n;
-    arr[p++] = m;
-
-    for (size_t i = 0; i < n * m; i++) {
-      if (!(input >> arr[p++])) {
-        std::cerr << "Bad input" << '\n';
-        delete[] dyn_arr;
-        return 2;
-      }
-    }
-    cnt++;
-  }
-
-  if (!input.eof() || !is_data) {
+  size_t n, m;
+  if (!(input >> n >> m) || n <= 0 || m <= 0 || (par == '1' && n * m > 10000)) {
     std::cerr << "Bad input" << '\n';
-    delete[] dyn_arr;
     return 2;
   }
 
-  p = 0;
-  int *dyn_matrix = nullptr;
-  int *matrix = dyn_matrix;
-  int static_matrix[manokhin::MAX_SIZE] = {0};
+  int *dyn_arr = nullptr;
+  int *dyn_copy = nullptr;
+  int *arr = dyn_arr;
+  int *arr_copy = dyn_copy;
+  int fix_arr[manokhin::MAX_SIZE] = {0};
+  int fix_copy[manokhin::MAX_SIZE] = {0};
+
   if (par == '1') {
-    matrix = static_matrix;
+    arr = fix_arr;
+    arr_copy = fix_copy;
   }
 
-  for (size_t i = 0; i < cnt; i++) {
-    n = arr[p++];
-    m = arr[p++];
-
-    if (par == '2') {
-      try {
-        dyn_matrix = new int[n * m];
-        matrix = dyn_matrix;
-      } catch (const std::bad_alloc &) {
-        std::cerr << "Bad alloc" << '\n';
-        delete[] dyn_arr;
-        return 2;
-      }
+  if (par == '2') {
+    try {
+      dyn_arr = new int[n * m];
+      dyn_copy = new int[n * m];
+    } catch (std::bad_alloc &) {
+      std::cerr << "Bad alloc" << '\n';
+      delete[] dyn_arr;
+      return 2;
     }
-
-    manokhin::copy(n * m, arr + p, matrix);
-    p += n * m;
-
-    manokhin::lftBotCnt(matrix, n, m, m, (n - 1) * m, 1);
-
-    manokhin::outputMatrix(output, matrix, n, m);
-    output << '\n';
-
-    delete[] dyn_matrix;
+    arr = dyn_arr;
+    arr_copy = dyn_copy;
   }
 
-  p = 0;
-
-  for (size_t i = 0; i < cnt; i++) {
-    n = arr[p++];
-    m = arr[p++];
-
-    if (par == '2') {
-      try {
-        dyn_matrix = new int[n * m];
-        matrix = dyn_matrix;
-      } catch (const std::bad_alloc &) {
-        std::cerr << "Bad alloc" << '\n';
-        delete[] dyn_arr;
-        return 2;
-      }
+  for (size_t i = 0; i < n * m; i++) {
+    if (!(input >> arr[i])) {
+      std::cerr << "Bad input" << '\n';
+      delete[] dyn_arr;
+      delete[] dyn_copy;
+      return 2;
     }
-
-    manokhin::copy(n * m, arr + p, matrix);
-    p += n * m;
-
-    manokhin::fllIncWav(matrix, n, m, m, 0, 1);
-
-    manokhin::outputMatrix(output, matrix, n, m);
-    output << '\n';
-
-    delete[] dyn_matrix;
   }
+
+  manokhin::copy(n * m, arr, arr_copy);
+
+  manokhin::lftBotCnt(arr_copy, n, m, m, (n - 1) * m, 1);
+
+  manokhin::outputMatrix(output, arr_copy, n, m);
+  output << '\n';
+
+  manokhin::fllIncWav(arr, n, m, m, 0, 1);
+
+  manokhin::outputMatrix(output, arr, n, m);
+  output << '\n';
 
   delete[] dyn_arr;
+  delete[] dyn_copy;
 
   return 0;
 }
