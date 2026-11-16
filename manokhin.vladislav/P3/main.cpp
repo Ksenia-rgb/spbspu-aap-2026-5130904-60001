@@ -129,8 +129,8 @@ int main(int argc, char **argv)
     return 1;
   }
 
-  size_t n, m;
-  if (!(input >> n >> m) || n <= 0 || m <= 0 || (par == '1' && n * m > 10000)) {
+  size_t n = 0, m = 0;
+  if (!(input >> n >> m) || n <= 0 || m <= 0 || (par == '1' && n * m > manokhin::MAX_SIZE)) {
     std::cerr << "Bad input" << '\n';
     return 2;
   }
