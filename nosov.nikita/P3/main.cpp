@@ -1,7 +1,7 @@
 #include <cstddef>
 #include <fstream>
-#include <iostream>
 #include <new>
+#include <iostream>
 
 namespace nosov {
   std::istream& readMatrix(std::istream& in, int* matrix, std::size_t size)
