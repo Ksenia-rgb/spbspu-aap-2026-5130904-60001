@@ -1,4 +1,5 @@
 #include "matrix.hpp"
+#include <algorithm>
 #include <iostream>
 
 std::istream& readMatrix(std::istream& in, int* m, size_t r, size_t c)
@@ -10,18 +11,19 @@ std::istream& readMatrix(std::istream& in, int* m, size_t r, size_t c)
   return in;
 }
 
-void printMatrix(std::ostream& out, const int* m, size_t r, size_t c)
+std::ostream& printMatrix(std::ostream& out, const int* m, size_t r, size_t c)
 {
   out << r << " " << c;
   for (size_t i = 0; i < r * c; ++i)
   {
     out << " " << m[i];
   }
+  return out;
 }
 
 size_t countNzrDig(const int* m, size_t r, size_t c)
 {
-  size_t n = (r < c) ? r : c;
+  size_t n = std::min(r, c);
   if (n <= 1)
   {
     return 0;

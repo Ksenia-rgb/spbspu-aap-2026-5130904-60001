@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
+#include <memory>
+#include <new>
 #include "matrix.hpp"
 
 int main(int argc, char** argv)
@@ -12,7 +14,7 @@ int main(int argc, char** argv)
   }
 
   char* end = nullptr;
-  long num = std::strtol(argv[1], &end, 10);
+  long num = std::strtol(argv[1], std::addressof(end), 10);
   if (*argv[1] == '\0' || *end != '\0' || (num != 1 && num != 2))
   {
     std::cerr << "Invalid first parameter\n";
@@ -78,8 +80,7 @@ int main(int argc, char** argv)
 
   output << countNzrDig(matrix, rows, cols) << "\n";
   lftBotCnt(matrix, rows, cols);
-  printMatrix(output, matrix, rows, cols);
-  output << "\n";
+  printMatrix(output, matrix, rows, cols) << "\n";
 
   delete[] dyn_buf;
   return 0;
