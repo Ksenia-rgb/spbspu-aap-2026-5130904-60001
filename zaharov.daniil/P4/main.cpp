@@ -4,13 +4,15 @@
 
 namespace zaharov
 {
-  void removeLatinLetters(const char *src, char *dest)
+  const int ascii_size = 256;
+
+  void removeLatinLetters(const char *src, char *const dest)
   {
     size_t j = 0;
     for (size_t i = 0; src[i] != '\0'; ++i)
     {
       char c = src[i];
-      bool isLatin = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+      const bool isLatin = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
 
       if (!isLatin)
       {
@@ -23,7 +25,7 @@ namespace zaharov
 
   int hasRepeatingChars(const char *str)
   {
-    int counts[256] = {0};
+    int counts[ascii_size] = {0};
     for (size_t i = 0; str[i] != '\0'; ++i)
     {
       unsigned char c = static_cast< unsigned char >(str[i]);
@@ -54,7 +56,7 @@ int main()
   zaharov::removeLatinLetters(buffer, res);
   std::cout << res << '\n';
 
-  int hasRep = zaharov::hasRepeatingChars(buffer);
+  const int hasRep = zaharov::hasRepeatingChars(buffer);
   std::cout << hasRep << '\n';
 
   delete[] buffer;
