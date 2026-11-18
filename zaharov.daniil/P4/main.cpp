@@ -42,17 +42,48 @@ namespace zaharov
 
 int main()
 {
-  const size_t maxSize = 10000;
-  char *buffer = new char[maxSize];
+  size_t capacity = 100;
+  size_t size = 0;
+  char *buffer = new char[capacity];
+  buffer[0] = '\0';
 
-  if (!std::cin.getline(buffer, maxSize))
+  char c = 0;
+
+  while (!std::cin.get(c) && c != '\n')
   {
-    std::cerr << "Error: cannot read string\n";
+    if (size + 1 >= capacity)
+    {
+      capacity *= 2;
+      try
+      {
+        char *new_buffer = new char[capacity];
+        for (size_t i = 0; i < size; ++i)
+        {
+          new_buffer[i] = buffer[i];
+        }
+        delete[] buffer;
+        buffer = new_buffer;
+      }
+      catch (const std::bad_alloc &)
+      {
+        delete[] buffer;
+        std::cerr << "Error: cannot allocate memory\n";
+        return 1;
+      }
+    }
+    buffer[size] = c;
+    ++size;
+  }
+  buffer[size] = '\0';
+
+  if (size == 0)
+  {
     delete[] buffer;
+    std::cerr << "Error: empty input\n";
     return 1;
   }
 
-  char *res = new char[maxSize];
+  char *res = new char[size + 1];
 
   zaharov::removeLatinLetters(buffer, res);
   std::cout << res << '\n';
