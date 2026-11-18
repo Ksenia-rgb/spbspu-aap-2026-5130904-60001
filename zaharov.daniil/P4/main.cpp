@@ -39,5 +39,26 @@ namespace zaharov
 
 int main()
 {
+  const size_t maxSize = 10000;
+  char *buffer = new char[maxSize];
+
+  if (!std::cin.getline(buffer, maxSize))
+  {
+    std::cerr << "Error: cannot read string\n";
+    delete[] buffer;
+    return 1;
+  }
+
+  char *res = new char[maxSize];
+
+  zaharov::removeLatinLetters(buffer, res);
+  std::cout << res << '\n';
+
+  int hasRep = zaharov::hasRepeatingChars(buffer);
+  std::cout << hasRep << '\n';
+
+  delete[] buffer;
+  delete[] res;
+
   return 0;
 }
