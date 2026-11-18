@@ -206,8 +206,6 @@ int main(int argc, char * argv[])
     return 2;
   }
 
-  output.close();
-
   std::free(heap_matrix);
   return 0;
 }
