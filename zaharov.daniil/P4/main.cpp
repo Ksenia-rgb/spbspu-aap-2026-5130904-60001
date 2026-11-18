@@ -6,7 +6,7 @@ namespace zaharov
 {
   const int ascii_size = 256;
 
-  void removeLatinLetters(const char *src, char *const dest)
+  char *removeLatinLetters(const char *src, char *dest)
   {
     size_t j = 0;
     for (size_t i = 0; src[i] != '\0'; ++i)
@@ -21,6 +21,7 @@ namespace zaharov
       }
     }
     dest[j] = '\0';
+    return dest;
   }
 
   int hasRepeatingChars(const char *str)
