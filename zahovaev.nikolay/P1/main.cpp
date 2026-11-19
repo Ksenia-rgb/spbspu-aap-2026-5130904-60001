@@ -1,56 +1,99 @@
 #include <iostream>
 #include <cstddef>
-#include <climits>
+#include <limits>
 #include <stdexcept>
 
 namespace zahovaev
 {
-  const size_t max_size_t = ULONG_MAX;
-  void divRem(const int first, const int before_first, size_t & count_del)
+  const size_t max_size_t = std::numeric_limits< size_t >::max();
+  class divRem
   {
-    if (first % before_first == 0)
+  public:
+    void operator()(const int next);
+    size_t operator()() const;
+    bool isCorrectSeq() const noexcept;
+  private:
+    size_t count_del = 0;
+    int before = 0;
+    int before_before = 0;
+    void div(const int next)
     {
-      if (count_del == max_size_t)
+      if (before != 0 && next % before == 0)
       {
-        throw std::logic_error("Overflow");
+        if (count_del == max_size_t)
+        {
+          throw std::logic_error("Overflow");
+        }
+        count_del++;
       }
-      count_del++;
+      before_before = before;
+      before = next;
     }
-  }
+  };
 
-  void cntMax(const int first, int & max_e, size_t & count_max)
+  class cntMax
   {
-    if (first > max_e)
+  public:
+    void operator()(const int next);
+    size_t operator()() const;
+  private:
+    size_t count_max = 0;
+    int max_e = std::numeric_limits< int >::min();
+    void cnt(const int next)
     {
-      max_e = first;
-      count_max = 1;
-    }
-    else if (first == max_e)
-    {
-      if (count_max == max_size_t)
+      if (next > max_e)
       {
-        throw std::logic_error("Overflow");
+        max_e = next;
+        count_max = 1;
       }
-      count_max++;
+      else if (next == max_e)
+      {
+        if (count_max == max_size_t)
+        {
+          throw std::logic_error("Overflow");
+        }
+        count_max++;
+      }
     }
-  }
+  };
 };
+
+void zahovaev::divRem::operator()(const int next)
+{
+  div(next);
+}
+
+size_t zahovaev::divRem::operator()() const
+{
+  return count_del;
+}
+
+bool zahovaev::divRem::isCorrectSeq() const noexcept
+{
+  return before_before != 0;
+}
+
+void zahovaev::cntMax::operator()(const int next)
+{
+  cnt(next);
+}
+
+size_t zahovaev::cntMax::operator()() const
+{
+  return count_max;
+}
+
 int main()
 {
   int first = 0;
-  int max_e = INT_MIN;
-  size_t count_max = 0;
-  size_t count_del = 0;
-  std::cin >> first;
-  int before_first = first;
+  zahovaev::divRem div_rem;
+  zahovaev::cntMax cnt_max;
   try
   {
     while (std::cin >> first && first != 0)
     {
-      zahovaev::divRem(first, before_first, count_del);
-      zahovaev::cntMax(first, max_e, count_max);
-
-      before_first = first;
+      div_rem(first);
+      cnt_max(first);
     }
   }
   catch (const std::logic_error & e)
@@ -65,11 +108,14 @@ int main()
     return 1;
   }
 
-  std::cout << count_max;
-  if (before_first == first && count_del == 0) {
-    std::cerr << "\nYour sequence is not calculated\n";
+  std::cout << cnt_max() << "\n";
+  if (!div_rem.isCorrectSeq())
+  {
+    std::cerr << "Your sequence is not calculated\n";
     return 2;
-  } else {
-    std::cout << "\n" << count_del << "\n";
+  }
+  else
+  {
+    std::cout << div_rem() << "\n";
   }
 }
