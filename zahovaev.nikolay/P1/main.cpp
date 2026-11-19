@@ -6,88 +6,92 @@
 namespace zahovaev
 {
   const size_t max_size_t = std::numeric_limits< size_t >::max();
-  class divRem
+  class DivRem
   {
   public:
-    void operator()(const int next);
+    void operator()(int next);
     size_t operator()() const;
     bool isCorrectSeq() const noexcept;
   private:
-    size_t count_del = 0;
-    int before = 0;
-    int before_before = 0;
-    void div(const int next)
-    {
-      if (before != 0 && next % before == 0)
-      {
-        if (count_del == max_size_t)
-        {
-          throw std::logic_error("Overflow");
-        }
-        count_del++;
-      }
-      before_before = before;
-      before = next;
-    }
+    size_t count_del_ = 0;
+    int before_ = 0;
+    int before_before_ = 0;
+    void div(int next)
   };
 
-  class cntMax
+  class CntMax
   {
   public:
-    void operator()(const int next);
+    void operator()(int next);
     size_t operator()() const;
   private:
-    size_t count_max = 0;
-    int max_e = std::numeric_limits< int >::min();
-    void cnt(const int next)
-    {
-      if (next > max_e)
-      {
-        max_e = next;
-        count_max = 1;
-      }
-      else if (next == max_e)
-      {
-        if (count_max == max_size_t)
-        {
-          throw std::logic_error("Overflow");
-        }
-        count_max++;
-      }
-    }
+    size_t count_max_ = 0;
+    int max_e_ = std::numeric_limits< int >::min();
+    void cnt(int next)
   };
 };
 
-void zahovaev::divRem::operator()(const int next)
+void zahovaev::DivRem::operator()(const int next)
 {
   div(next);
 }
 
-size_t zahovaev::divRem::operator()() const
+size_t zahovaev::DivRem::operator()() const
 {
-  return count_del;
+  return count_del_;
 }
 
-bool zahovaev::divRem::isCorrectSeq() const noexcept
+bool zahovaev::DivRem::isCorrectSeq() const noexcept
 {
-  return before_before != 0;
+  return before_before_ != 0;
 }
 
-void zahovaev::cntMax::operator()(const int next)
+void zahovaev::DivRem::div(const int next)
+{
+  if (before_ != 0 && next % before_ == 0)
+  {
+    if (count_del_ == max_size_t)
+    {
+      throw std::logic_error("Overflow");
+    }
+    count_del_++;
+  }
+  before_before_ = before_;
+  before_ = next;
+}
+
+void zahovaev::CntMax::operator()(const int next)
 {
   cnt(next);
 }
 
-size_t zahovaev::cntMax::operator()() const
+size_t zahovaev::CntMax::operator()() const
 {
-  return count_max;
+  return count_max_;
+}
+
+void zahovaev::CntMax::cnt(const int next)
+{
+  if (next > max_e_)
+  {
+    max_e_ = next;
+    count_max_ = 1;
+  }
+  else if (next == max_e_)
+  {
+    if (count_max_ == max_size_t)
+    {
+      throw std::logic_error("Overflow");
+    }
+    count_max_++;
+  }
 }
 
 int main()
 {
   int first = 0;
-  zahovaev::divRem div_rem;
-  zahovaev::cntMax cnt_max;
+  zahovaev::DivRem div_rem;
+  zahovaev::CntMax cnt_max;
   try
   {
     while (std::cin >> first && first != 0)
