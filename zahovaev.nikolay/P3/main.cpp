@@ -162,6 +162,10 @@ int main(int argc, char* argv[])
   size_t n = 0;
   size_t m = 0;
   is >> n >> m;
+  if (n == 0 || m == 0) {
+    std::cerr << "Your massiv is.. is not a massiv!\n";
+    return 2;
+  }
   if (n + 1 > std::numeric_limits< size_t >::max() / m) {
     std::cerr << "Oh, your massiv too big\n";
     return 2;
