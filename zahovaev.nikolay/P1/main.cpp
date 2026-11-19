@@ -16,7 +16,7 @@ namespace zahovaev
     size_t count_del_ = 0;
     int before_ = 0;
     int before_before_ = 0;
-    void div(int next)
+    void div(int next);
   };
 
   class CntMax
@@ -27,7 +27,7 @@ namespace zahovaev
   private:
     size_t count_max_ = 0;
     int max_e_ = std::numeric_limits< int >::min();
-    void cnt(int next)
+    void cnt(int next);
   };
 };
 
