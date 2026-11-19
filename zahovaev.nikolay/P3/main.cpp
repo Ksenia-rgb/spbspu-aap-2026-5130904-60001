@@ -1,9 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <stdexcept>
-#include <string>
 #include <cstddef>
-#include <climits>
+#include <limits>
+#include <cstdlib>
 
 namespace zahovaev {
   const size_t direction_up = 1;
@@ -127,10 +127,13 @@ int main(int argc, char* argv[])
 
   short num = 0;
   try {
-    num = std::stoi(argv[1]);
+    char* end = nullptr;
+    num = std::strtol(argv[1], &end, 10);
+    if (end == argv[1] || *end != '\0') {
+      throw std::invalid_argument("Invalid argument");
+    }
     if (!(0 < num && num < 3)) {
-      std::cerr << "First parametr is out of range\n";
-      return 1;
+      throw std::out_of_range("Out of range");
     }
   } catch (const std::invalid_argument& e) {
     std::cerr << "First parameter is not a number\n";
@@ -156,24 +159,26 @@ int main(int argc, char* argv[])
   int* mass2 = nullptr;
   int* both_mass = nullptr;
 
-  num--;
   size_t n = 0;
   size_t m = 0;
   is >> n >> m;
-  if (n + 1 > ULONG_MAX / m) {
+  if (n + 1 > std::numeric_limits< size_t >::max() / m) {
     std::cerr << "Oh, your massiv too big\n";
     return 2;
   }
 
-  if (num) {
+  if (num == 2) {
     mass2 = new int[n * m];
     both_mass = mass2;
-  } else {
+  } else if (num == 1) {
     if (n * m > maxSize) {
       std::cerr << "Oh, your massiv too big for first argument 1\n";
       return 2;
     }
     both_mass = mass;
+  } else {
+    std::cerr << "How...\n";
+    return 1;
   }
 
   zahovaev::writeMass(is, both_mass, n, m);
