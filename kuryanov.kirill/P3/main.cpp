@@ -138,7 +138,7 @@ int main(int argc, char* argv[])
   int* dynamic_array = nullptr;
   int* data = stack_array;
   if (num == 2) {
-    dynamic_array = static_cast< int* >(std::malloc(count * sizeof(int)));
+    dynamic_array = reinterpret_cast< int* >(std::malloc(count * sizeof(int)));
     if (dynamic_array == nullptr && count > 0) {
       std::cerr << "Memory allocation failed\n";
       return 2;
