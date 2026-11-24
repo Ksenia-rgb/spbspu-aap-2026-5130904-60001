@@ -7,6 +7,8 @@
 
 int main(int argc, char** argv)
 {
+  constexpr size_t max_fixed_size = 10000;
+
   if (argc != 4)
   {
     std::cerr << "Invalid arguments count\n";
@@ -14,7 +16,7 @@ int main(int argc, char** argv)
   }
 
   char* end = nullptr;
-  long num = std::strtol(argv[1], std::addressof(end), 10);
+  const long num = std::strtol(argv[1], std::addressof(end), 10);
   if (*argv[1] == '\0' || *end != '\0' || (num != 1 && num != 2))
   {
     std::cerr << "Invalid first parameter\n";
@@ -36,16 +38,16 @@ int main(int argc, char** argv)
     return 2;
   }
 
-  size_t rows = static_cast< size_t >(r_in);
-  size_t cols = static_cast< size_t >(c_in);
+  const size_t rows = static_cast< size_t >(r_in);
+  const size_t cols = static_cast< size_t >(c_in);
 
-  if (num == 1 && rows * cols > 10000)
+  if (num == 1 && rows * cols > max_fixed_size)
   {
     std::cerr << "Matrix size exceeds fixed limit\n";
     return 2;
   }
 
-  int fixed_buf[10000];
+  int fixed_buf[max_fixed_size];
   int* dyn_buf = nullptr;
   int* matrix = fixed_buf;
 

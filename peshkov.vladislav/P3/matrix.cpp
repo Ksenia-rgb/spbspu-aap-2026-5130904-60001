@@ -23,7 +23,7 @@ std::ostream& printMatrix(std::ostream& out, const int* m, size_t r, size_t c)
 
 size_t countNzrDig(const int* m, size_t r, size_t c)
 {
-  size_t n = std::min(r, c);
+  const size_t n = std::min(r, c);
   if (n <= 1)
   {
     return 0;
