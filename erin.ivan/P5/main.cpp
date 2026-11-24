@@ -1,5 +1,9 @@
 #include <algorithm>
 #include <cmath>
+#include <cstddef>
+#include <exception>
+#include <iomanip>
+#include <iostream>
 #include <stdexcept>
 #include "base-types.hpp"
 #include "shape.hpp"
@@ -20,6 +24,85 @@ namespace
   {
     p.x = mid.x + (p.x - mid.x) * k;
     p.y = mid.y + (p.y - mid.y) * k;
+  }
+
+  void scaleAll(erin::Shape * const * arr, size_t cnt, const erin::point_t & pt, double k)
+  {
+    if (k <= 0.0)
+    {
+      throw std::invalid_argument("Invalid scale factor");
+    }
+    for (size_t i = 0; i < cnt; ++i)
+    {
+      const erin::point_t p1 = arr[i]->getFrameRect().pos;
+      arr[i]->move(pt);
+      const erin::point_t p2 = arr[i]->getFrameRect().pos;
+      const double dx = p2.x - p1.x;
+      const double dy = p2.y - p1.y;
+      arr[i]->scale(k);
+      arr[i]->move(-dx * k, -dy * k);
+    }
+  }
+
+  erin::rectangle_t getFrame(const erin::Shape * const * arr, size_t cnt)
+  {
+    if (cnt == 0)
+    {
+      return { 0.0, 0.0, { 0.0, 0.0 } };
+    }
+    const erin::rectangle_t r0 = arr[0]->getFrameRect();
+    double min_x = r0.pos.x - r0.width / 2.0;
+    double max_x = r0.pos.x + r0.width / 2.0;
+    double min_y = r0.pos.y - r0.height / 2.0;
+    double max_y = r0.pos.y + r0.height / 2.0;
+
+    for (size_t i = 1; i < cnt; ++i)
+    {
+      const erin::rectangle_t r = arr[i]->getFrameRect();
+      min_x = std::min(min_x, r.pos.x - r.width / 2.0);
+      max_x = std::max(max_x, r.pos.x + r.width / 2.0);
+      min_y = std::min(min_y, r.pos.y - r.height / 2.0);
+      max_y = std::max(max_y, r.pos.y + r.height / 2.0);
+    }
+
+    return { max_x - min_x, max_y - min_y, { (min_x + max_x) / 2.0, (min_y + max_y) / 2.0 } };
+  }
+
+  void printRect(std::ostream & out, const erin::rectangle_t & r)
+  {
+    out << "w=" << r.width << " h=" << r.height;
+    out << " pos=(" << r.pos.x << ", " << r.pos.y << ")";
+  }
+
+  void printAll(std::ostream & out, const erin::Shape * const * arr, size_t cnt)
+  {
+    double sum = 0.0;
+    for (size_t i = 0; i < cnt; ++i)
+    {
+      const double area = arr[i]->getArea();
+      const erin::rectangle_t r = arr[i]->getFrameRect();
+      sum += area;
+      out << "Shape " << (i + 1) << ": area=" << area << ", frame: ";
+      printRect(out, r);
+      out << "\n";
+    }
+    out << "Total area: " << sum << "\n";
+    out << "Total frame: ";
+    printRect(out, getFrame(arr, cnt));
+    out << "\n";
+  }
+
+  void freeAll(erin::Shape ** arr, size_t cnt)
+  {
+    if (!arr)
+    {
+      return;
+    }
+    for (size_t i = 0; i < cnt; ++i)
+    {
+      delete arr[i];
+    }
+    delete[] arr;
   }
 }
 
@@ -189,5 +272,41 @@ namespace erin
 
 int main()
 {
+  constexpr size_t cnt = 3;
+  erin::Shape ** arr = nullptr;
+
+  try
+  {
+    arr = new erin::Shape *[cnt]();
+    arr[0] = new erin::Rectangle({ 1.0, 2.0 }, 4.0, 6.0);
+    arr[1] = new erin::Square({ -3.0, 1.0 }, 5.0);
+    arr[2] = new erin::Triangle({ 0.0, 0.0 }, { 4.0, 0.0 }, { 0.0, 3.0 });
+
+    std::cout << std::fixed << std::setprecision(2);
+    std::cout << "Before:\n";
+    printAll(std::cout, arr, cnt);
+
+    erin::point_t pt = { 0.0, 0.0 };
+    double k = 0.0;
+    if (!(std::cin >> pt.x >> pt.y >> k))
+    {
+      freeAll(arr, cnt);
+      std::cerr << "Invalid input\n";
+      return 1;
+    }
+
+    scaleAll(arr, cnt, pt, k);
+
+    std::cout << "After:\n";
+    printAll(std::cout, arr, cnt);
+  }
+  catch (const std::exception & e)
+  {
+    freeAll(arr, cnt);
+    std::cerr << e.what() << "\n";
+    return 1;
+  }
+
+  freeAll(arr, cnt);
   return 0;
 }
