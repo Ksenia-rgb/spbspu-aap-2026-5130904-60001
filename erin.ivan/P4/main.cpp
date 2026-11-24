@@ -6,7 +6,7 @@
 int main()
 {
   size_t len = 0;
-  char * str = erin::readStr(std::cin, std::addressof(len));
+  char * const str = erin::readStr(std::cin, std::addressof(len));
   if (str == nullptr)
   {
     std::cerr << "Memory allocation failed\n";
@@ -19,10 +19,10 @@ int main()
     return 1;
   }
 
-  const char * sec_str = "def ";
+  const char * const sec_str = "def ";
   const size_t sec_len = erin::getLen(sec_str);
 
-  char * uni_buf = static_cast< char * >(std::malloc((len + sec_len + 1) * sizeof(char)));
+  char * const uni_buf = static_cast< char * >(std::malloc((len + sec_len + 1) * sizeof(char)));
   if (uni_buf == nullptr)
   {
     std::free(str);
@@ -30,7 +30,7 @@ int main()
     return 1;
   }
 
-  char * rep_buf = static_cast< char * >(std::malloc((len + 1) * sizeof(char)));
+  char * const rep_buf = static_cast< char * >(std::malloc((len + 1) * sizeof(char)));
   if (rep_buf == nullptr)
   {
     std::free(uni_buf);

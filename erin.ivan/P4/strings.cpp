@@ -45,7 +45,7 @@ char * erin::readStr(std::istream & in, size_t * out_len)
     if (len + 1 >= cap)
     {
       const size_t new_cap = cap * grow_step;
-      char * new_buf = static_cast< char * >(std::malloc(new_cap * sizeof(char)));
+      char * const new_buf = static_cast< char * >(std::malloc(new_cap * sizeof(char)));
       if (new_buf == nullptr)
       {
         std::free(buf);
@@ -108,7 +108,7 @@ char * erin::findRep(char * dst, const char * src)
 {
   char * out = dst;
   const size_t len = erin::getLen(src);
-  const char * end = src + len;
+  const char * const end = src + len;
 
   for (const char * cur = src; cur != end; ++cur)
   {
