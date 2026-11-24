@@ -10,23 +10,23 @@
 
 namespace
 {
-  double getTriArea(const erin::point_t & a, const erin::point_t & b, const erin::point_t & c)
+  double getTriArea(const erin::point_t &a, const erin::point_t &b, const erin::point_t &c)
   {
     return 0.5 * std::fabs((b.x - a.x) * (c.y - a.y) - (c.x - a.x) * (b.y - a.y));
   }
 
-  erin::point_t getCenter(const erin::point_t & a, const erin::point_t & b, const erin::point_t & c)
+  erin::point_t getCenter(const erin::point_t &a, const erin::point_t &b, const erin::point_t &c)
   {
-    return { (a.x + b.x + c.x) / 3.0, (a.y + b.y + c.y) / 3.0 };
+    return {(a.x + b.x + c.x) / 3.0, (a.y + b.y + c.y) / 3.0};
   }
 
-  void scalePt(erin::point_t & p, const erin::point_t & mid, double k)
+  void scalePt(erin::point_t &p, const erin::point_t &mid, double k)
   {
     p.x = mid.x + (p.x - mid.x) * k;
     p.y = mid.y + (p.y - mid.y) * k;
   }
 
-  void scaleAll(erin::Shape * const * arr, size_t cnt, const erin::point_t & pt, double k)
+  void scaleAll(erin::Shape *const *arr, size_t cnt, const erin::point_t &pt, double k)
   {
     if (k <= 0.0)
     {
@@ -44,11 +44,11 @@ namespace
     }
   }
 
-  erin::rectangle_t getFrame(const erin::Shape * const * arr, size_t cnt)
+  erin::rectangle_t getFrame(const erin::Shape *const *arr, size_t cnt)
   {
     if (cnt == 0)
     {
-      return { 0.0, 0.0, { 0.0, 0.0 } };
+      return {0.0, 0.0, {0.0, 0.0}};
     }
     const erin::rectangle_t r0 = arr[0]->getFrameRect();
     double min_x = r0.pos.x - r0.width / 2.0;
@@ -65,16 +65,16 @@ namespace
       max_y = std::max(max_y, r.pos.y + r.height / 2.0);
     }
 
-    return { max_x - min_x, max_y - min_y, { (min_x + max_x) / 2.0, (min_y + max_y) / 2.0 } };
+    return {max_x - min_x, max_y - min_y, {(min_x + max_x) / 2.0, (min_y + max_y) / 2.0}};
   }
 
-  void printRect(std::ostream & out, const erin::rectangle_t & r)
+  void printRect(std::ostream &out, const erin::rectangle_t &r)
   {
     out << "w=" << r.width << " h=" << r.height;
     out << " pos=(" << r.pos.x << ", " << r.pos.y << ")";
   }
 
-  void printAll(std::ostream & out, const erin::Shape * const * arr, size_t cnt)
+  void printAll(std::ostream &out, const erin::Shape *const *arr, size_t cnt)
   {
     double sum = 0.0;
     for (size_t i = 0; i < cnt; ++i)
@@ -92,7 +92,7 @@ namespace
     out << "\n";
   }
 
-  void freeAll(erin::Shape ** arr, size_t cnt)
+  void freeAll(erin::Shape **arr, size_t cnt)
   {
     if (!arr)
     {
@@ -111,7 +111,7 @@ namespace erin
   class Rectangle: public Shape
   {
   public:
-    Rectangle(const point_t & pos, double w, double h):
+    Rectangle(const point_t &pos, double w, double h):
       pos_(pos),
       w_(w),
       h_(h)
@@ -129,10 +129,10 @@ namespace erin
 
     rectangle_t getFrameRect() const override
     {
-      return { w_, h_, pos_ };
+      return {w_, h_, pos_};
     }
 
-    void move(const point_t & pos) override
+    void move(const point_t &pos) override
     {
       pos_ = pos;
     }
@@ -162,7 +162,7 @@ namespace erin
   class Square: public Shape
   {
   public:
-    Square(const point_t & pos, double side):
+    Square(const point_t &pos, double side):
       pos_(pos),
       side_(side)
     {
@@ -179,10 +179,10 @@ namespace erin
 
     rectangle_t getFrameRect() const override
     {
-      return { side_, side_, pos_ };
+      return {side_, side_, pos_};
     }
 
-    void move(const point_t & pos) override
+    void move(const point_t &pos) override
     {
       pos_ = pos;
     }
@@ -210,7 +210,7 @@ namespace erin
   class Triangle: public Shape
   {
   public:
-    Triangle(const point_t & a, const point_t & b, const point_t & c):
+    Triangle(const point_t &a, const point_t &b, const point_t &c):
       a_(a),
       b_(b),
       c_(c)
@@ -232,10 +232,10 @@ namespace erin
       const double max_x = std::max(a_.x, std::max(b_.x, c_.x));
       const double min_y = std::min(a_.y, std::min(b_.y, c_.y));
       const double max_y = std::max(a_.y, std::max(b_.y, c_.y));
-      return { max_x - min_x, max_y - min_y, { (min_x + max_x) / 2.0, (min_y + max_y) / 2.0 } };
+      return {max_x - min_x, max_y - min_y, {(min_x + max_x) / 2.0, (min_y + max_y) / 2.0}};
     }
 
-    void move(const point_t & pos) override
+    void move(const point_t &pos) override
     {
       const point_t mid = getCenter(a_, b_, c_);
       move(pos.x - mid.x, pos.y - mid.y);
@@ -273,20 +273,20 @@ namespace erin
 int main()
 {
   constexpr size_t cnt = 3;
-  erin::Shape ** arr = nullptr;
+  erin::Shape **arr = nullptr;
 
   try
   {
     arr = new erin::Shape *[cnt]();
-    arr[0] = new erin::Rectangle({ 1.0, 2.0 }, 4.0, 6.0);
-    arr[1] = new erin::Square({ -3.0, 1.0 }, 5.0);
-    arr[2] = new erin::Triangle({ 0.0, 0.0 }, { 4.0, 0.0 }, { 0.0, 3.0 });
+    arr[0] = new erin::Rectangle({1.0, 2.0}, 4.0, 6.0);
+    arr[1] = new erin::Square({-3.0, 1.0}, 5.0);
+    arr[2] = new erin::Triangle({0.0, 0.0}, {4.0, 0.0}, {0.0, 3.0});
 
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "Before:\n";
     printAll(std::cout, arr, cnt);
 
-    erin::point_t pt = { 0.0, 0.0 };
+    erin::point_t pt = {0.0, 0.0};
     double k = 0.0;
     if (!(std::cin >> pt.x >> pt.y >> k))
     {
@@ -300,7 +300,7 @@ int main()
     std::cout << "After:\n";
     printAll(std::cout, arr, cnt);
   }
-  catch (const std::exception & e)
+  catch (const std::exception &e)
   {
     freeAll(arr, cnt);
     std::cerr << e.what() << "\n";
