@@ -6,7 +6,7 @@ namespace
 {
   bool isLocMin(const int * mtx, size_t cols, size_t r, size_t c)
   {
-    int val = mtx[r * cols + c];
+    const int val = mtx[r * cols + c];
     for (size_t i = r - 1; i <= r + 1; ++i)
     {
       for (size_t j = c - 1; j <= c + 1; ++j)
@@ -36,7 +36,7 @@ std::istream & erin::readMtx(std::istream & in, int * mtx, size_t size)
 void erin::printMtx(std::ostream & out, const int * mtx, size_t rows, size_t cols)
 {
   out << rows << " " << cols;
-  size_t size = rows * cols;
+  const size_t size = rows * cols;
   for (size_t i = 0; i < size; ++i)
   {
     out << " " << mtx[i];
@@ -73,7 +73,7 @@ void erin::lftTopClk(int * mtx, size_t rows, size_t cols)
   size_t bot = rows - 1;
   size_t left = 0;
   size_t right = cols - 1;
-  size_t size = rows * cols;
+  const size_t size = rows * cols;
   size_t cnt = 0;
   int step = 1;
 

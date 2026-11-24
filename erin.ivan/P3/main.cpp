@@ -4,7 +4,7 @@
 #include <memory>
 #include "matrix.hpp"
 
-int main(int argc, char ** argv)
+int main(int argc, char **argv)
 {
   if (argc != 4)
   {
@@ -12,7 +12,7 @@ int main(int argc, char ** argv)
     return 1;
   }
 
-  char * end = nullptr;
+  char *end = nullptr;
   const long num = std::strtol(argv[1], std::addressof(end), 10);
   if (argv[1][0] == '\0' || *end != '\0' || (num != 1 && num != 2))
   {
@@ -49,8 +49,8 @@ int main(int argc, char ** argv)
   }
 
   int fixed_arr[max_size] = {};
-  int * dyn_arr = nullptr;
-  int * mtx = fixed_arr;
+  int *dyn_arr = nullptr;
+  int *mtx = fixed_arr;
 
   if (num == 2 && size > 0)
   {
