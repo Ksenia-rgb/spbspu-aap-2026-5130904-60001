@@ -10,14 +10,17 @@
 
 namespace
 {
+  constexpr double half = 0.5;
+  constexpr double tri_verts = 3.0;
+
   double getTriArea(const erin::point_t &a, const erin::point_t &b, const erin::point_t &c)
   {
-    return 0.5 * std::fabs((b.x - a.x) * (c.y - a.y) - (c.x - a.x) * (b.y - a.y));
+    return half * std::fabs((b.x - a.x) * (c.y - a.y) - (c.x - a.x) * (b.y - a.y));
   }
 
   erin::point_t getCenter(const erin::point_t &a, const erin::point_t &b, const erin::point_t &c)
   {
-    return {(a.x + b.x + c.x) / 3.0, (a.y + b.y + c.y) / 3.0};
+    return {(a.x + b.x + c.x) / tri_verts, (a.y + b.y + c.y) / tri_verts};
   }
 
   void scalePt(erin::point_t &p, const erin::point_t &mid, double k)
@@ -51,21 +54,21 @@ namespace
       return {0.0, 0.0, {0.0, 0.0}};
     }
     const erin::rectangle_t r0 = arr[0]->getFrameRect();
-    double min_x = r0.pos.x - r0.width / 2.0;
-    double max_x = r0.pos.x + r0.width / 2.0;
-    double min_y = r0.pos.y - r0.height / 2.0;
-    double max_y = r0.pos.y + r0.height / 2.0;
+    double min_x = r0.pos.x - r0.width * half;
+    double max_x = r0.pos.x + r0.width * half;
+    double min_y = r0.pos.y - r0.height * half;
+    double max_y = r0.pos.y + r0.height * half;
 
     for (size_t i = 1; i < cnt; ++i)
     {
       const erin::rectangle_t r = arr[i]->getFrameRect();
-      min_x = std::min(min_x, r.pos.x - r.width / 2.0);
-      max_x = std::max(max_x, r.pos.x + r.width / 2.0);
-      min_y = std::min(min_y, r.pos.y - r.height / 2.0);
-      max_y = std::max(max_y, r.pos.y + r.height / 2.0);
+      min_x = std::min(min_x, r.pos.x - r.width * half);
+      max_x = std::max(max_x, r.pos.x + r.width * half);
+      min_y = std::min(min_y, r.pos.y - r.height * half);
+      max_y = std::max(max_y, r.pos.y + r.height * half);
     }
 
-    return {max_x - min_x, max_y - min_y, {(min_x + max_x) / 2.0, (min_y + max_y) / 2.0}};
+    return {max_x - min_x, max_y - min_y, {(min_x + max_x) * half, (min_y + max_y) * half}};
   }
 
   void printRect(std::ostream &out, const erin::rectangle_t &r)
@@ -232,7 +235,7 @@ namespace erin
       const double max_x = std::max(a_.x, std::max(b_.x, c_.x));
       const double min_y = std::min(a_.y, std::min(b_.y, c_.y));
       const double max_y = std::max(a_.y, std::max(b_.y, c_.y));
-      return {max_x - min_x, max_y - min_y, {(min_x + max_x) / 2.0, (min_y + max_y) / 2.0}};
+      return {max_x - min_x, max_y - min_y, {(min_x + max_x) * half, (min_y + max_y) * half}};
     }
 
     void move(const point_t &pos) override
@@ -273,14 +276,23 @@ namespace erin
 int main()
 {
   constexpr size_t cnt = 3;
+  constexpr double r_x = 1.0;
+  constexpr double r_y = 2.0;
+  constexpr double r_w = 4.0;
+  constexpr double r_h = 6.0;
+  constexpr double s_x = -3.0;
+  constexpr double s_y = 1.0;
+  constexpr double s_side = 5.0;
+  constexpr double t_x = 4.0;
+  constexpr double t_y = 3.0;
   erin::Shape **arr = nullptr;
 
   try
   {
     arr = new erin::Shape *[cnt]();
-    arr[0] = new erin::Rectangle({1.0, 2.0}, 4.0, 6.0);
-    arr[1] = new erin::Square({-3.0, 1.0}, 5.0);
-    arr[2] = new erin::Triangle({0.0, 0.0}, {4.0, 0.0}, {0.0, 3.0});
+    arr[0] = new erin::Rectangle({r_x, r_y}, r_w, r_h);
+    arr[1] = new erin::Square({s_x, s_y}, s_side);
+    arr[2] = new erin::Triangle({0.0, 0.0}, {t_x, 0.0}, {0.0, t_y});
 
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "Before:\n";
