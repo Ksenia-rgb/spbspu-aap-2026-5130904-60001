@@ -6,6 +6,9 @@
 
 namespace grebenshchikov
 {
+  constexpr size_t initial_capacity = 16;
+  constexpr size_t alphabet_size = 26;
+
   char *extend(const char *str, size_t size, size_t new_capacity)
   {
     char *const new_str = new char[new_capacity];
@@ -18,7 +21,6 @@ namespace grebenshchikov
 
   char *readStr(std::istream &in, size_t &size)
   {
-    const size_t initial_capacity = 16;
     size_t capacity = initial_capacity;
     char *str = new char[capacity];
     size = 0;
@@ -113,13 +115,12 @@ int main()
     return 1;
   }
 
-  const size_t alphabet_size = 26;
   char *lat_res = nullptr;
   char *shr_res = nullptr;
   try
   {
     lat_res = new char[size + 1];
-    shr_res = new char[alphabet_size + 1];
+    shr_res = new char[grebenshchikov::alphabet_size + 1];
   }
   catch (const std::bad_alloc &)
   {
