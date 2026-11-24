@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <cctype>
 #include <iostream>
+#include <limits>
 
 namespace kotyurgina
 {
@@ -12,7 +13,7 @@ namespace kotyurgina
 char* kotyurgina::readLine()
 {
   const size_t initialCapacity = 16;
-  const size_t maxСapacity = static_cast< size_t >(-1);
+  const size_t maxCapacity = std::numeric_limits< size_t >::max();
   size_t capacity = initialCapacity;
 
   char* str = static_cast< char* >(std::malloc(capacity));
@@ -28,7 +29,7 @@ char* kotyurgina::readLine()
   {
     if (size + 1 >= capacity)
     {
-      if (capacity > maxСapacity / 2)
+      if (capacity > maxCapacity / 2)
       {
         std::free(str);
         return nullptr;
@@ -92,11 +93,6 @@ size_t kotyurgina::countUniqueLatin(const char* str)
     const unsigned char ch = static_cast< unsigned char >(str[i]);
 
     if (std::isalpha(ch) == 0)
-    {
-      continue;
-    }
-
-    if (!((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')))
     {
       continue;
     }
