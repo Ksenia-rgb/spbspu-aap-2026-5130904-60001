@@ -14,33 +14,38 @@ namespace degtyarev
     {
       new_str[i] = str[i];
     }
-    delete[] str;
     capacity = new_capacity;
     return new_str;
   }
 
-  char *readStr(size_t &capacity, size_t &size)
+  size_t readStr(char *&str)
   {
-    char *str = new char[capacity];
+    size_t capacity = 1;
+    size_t size = 0;
+    char *buf = new char[capacity];
     char current = '\0';
     while (std::cin.get(current) && current != '\n')
     {
       if (size + 1 >= capacity)
       {
+        char *new_buf = nullptr;
         try
         {
-          str = resize(str, capacity);
+          new_buf = resize(buf, capacity);
         }
         catch (const std::bad_alloc &)
         {
-          delete[] str;
+          delete[] buf;
           throw;
         }
+        delete[] buf;
+        buf = new_buf;
       }
-      str[size++] = current;
+      buf[size++] = current;
     }
-    str[size] = '\0';
-    return str;
+    buf[size] = '\0';
+    str = buf;
+    return size;
   }
 
   char *uniTwo(const char *str, const char *str2, size_t size, size_t size2, char *sumstr)
@@ -93,13 +98,12 @@ int main()
   const char *const str2 = "def ";
   const size_t size2 = std::strlen(str2);
 
-  size_t capacity = 1;
   size_t size = 0;
   char *str = nullptr;
   char *sumstr = nullptr;
   try
   {
-    str = degtyarev::readStr(capacity, size);
+    size = degtyarev::readStr(str);
     sumstr = new char[size + size2 + 1];
   }
   catch (const std::bad_alloc &e)
