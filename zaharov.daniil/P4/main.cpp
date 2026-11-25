@@ -11,7 +11,7 @@ namespace zaharov
     size_t j = 0;
     for (size_t i = 0; src[i] != '\0'; ++i)
     {
-      char c = src[i];
+      const char c = src[i];
       const bool isLatin = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
 
       if (!isLatin)
@@ -29,7 +29,7 @@ namespace zaharov
     int counts[ascii_size] = {0};
     for (size_t i = 0; str[i] != '\0'; ++i)
     {
-      unsigned char c = static_cast< unsigned char >(str[i]);
+      const unsigned char c = static_cast< unsigned char >(str[i]);
       counts[c]++;
       if (counts[c] > 1)
       {
@@ -45,38 +45,34 @@ int main()
   size_t capacity = 100;
   size_t size = 0;
   char *buffer = new char[capacity];
-  buffer[0] = '\0';
 
   char c = 0;
 
-  while (!std::cin.get(c) && c != '\n')
+  while (std::cin.get(c))
   {
+    if (c == '\n')
+    {
+      break;
+    }
+
     if (size + 1 >= capacity)
     {
       capacity *= 2;
-      try
+      char *const new_buffer = new char[capacity];
+      for (size_t i = 0; i < size; ++i)
       {
-        char *new_buffer = new char[capacity];
-        for (size_t i = 0; i < size; ++i)
-        {
-          new_buffer[i] = buffer[i];
-        }
-        delete[] buffer;
-        buffer = new_buffer;
+        new_buffer[i] = buffer[i];
       }
-      catch (const std::bad_alloc &)
-      {
-        delete[] buffer;
-        std::cerr << "Error: cannot allocate memory\n";
-        return 1;
-      }
+      delete[] buffer;
+      buffer = new_buffer;
+
     }
     buffer[size] = c;
     ++size;
   }
   buffer[size] = '\0';
 
-  if (size == 0)
+  if (size == 0 && std::cin.eof())
   {
     delete[] buffer;
     std::cerr << "Error: empty input\n";
