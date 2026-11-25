@@ -1,6 +1,8 @@
 #include <iostream>
 #include <cstring>
 
+constexpr size_t initial_capacity = 16;
+
 namespace tretyakov
 {
   char *resize(char *string1, size_t &capacity)
@@ -8,7 +10,6 @@ namespace tretyakov
     const size_t new_capacity = capacity * 2;
     char *const new_string = new char[new_capacity];
     std::memcpy(new_string, string1, capacity);
-    delete[] string1;
     capacity = new_capacity;
     return new_string;
   }
@@ -20,7 +21,9 @@ namespace tretyakov
     {
       if (size1 + 1 >= capacity)
       {
-        string1 = resize(string1, capacity);
+        char *new_string = resize(string1, capacity);
+        delete[] string1;
+        string1 = new_string;
       }
       string1[size1++] = current;
     }
@@ -31,22 +34,18 @@ namespace tretyakov
   {
     size_t i = 0;
     size_t j = 0;
-    while (i < size1 && j < size2)
+    for (; i < size1 && j < size2; ++i, ++j)
     {
       sum_string[i + j] = string1[i];
-      ++i;
-      sum_string[i + j] = string2[j];
-      ++j;
+      sum_string[i + j + 1] = string2[j];
     }
-    while (i < size1)
+    for (; i < size1; ++i)
     {
       sum_string[i + j] = string1[i];
-      ++i;
     }
-    while (j < size2)
+    for (; j < size2; ++j)
     {
       sum_string[i + j] = string2[j];
-      ++j;
     }
     sum_string[i + j] = '\0';
     return sum_string;
@@ -69,14 +68,7 @@ namespace tretyakov
         break;
       }
     }
-    if (found)
-    {
-      res[0] = '1';
-    }
-    else
-    {
-      res[0] = '0';
-    }
+    res[0] = found ? '1' : '0';
     res[1] = '\0';
     return res;
   }
@@ -84,7 +76,6 @@ namespace tretyakov
 
 int main()
 {
-  const size_t initial_capacity = 16;
   const char *const string2 = "def ";
   const size_t size2 = std::strlen(string2);
   const char *const string3 = "abs";
