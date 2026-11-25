@@ -1,5 +1,6 @@
 #include <cstddef>
 #include <iostream>
+#include <memory>
 #include <new>
 #include "strings.hpp"
 
@@ -9,9 +10,14 @@ int main()
   const char* const dgt_snd_second = "g1h2k";
 
   size_t length = 0;
-  char* const line = readLine(&std::cin, &length);
+  char* const line = readLine(std::addressof(std::cin), std::addressof(length));
   if (line == nullptr) {
     std::cerr << "Error: not enough memory\n";
+    return 1;
+  }
+  if (length == 0) {
+    delete[] line;
+    std::cerr << "Error: empty input\n";
     return 1;
   }
 
