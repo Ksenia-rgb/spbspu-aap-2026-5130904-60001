@@ -5,6 +5,7 @@
 namespace zaharov
 {
   const int ascii_size = 256;
+  const size_t initial_capacity = 100;
 
   char *removeLatinLetters(const char *src, char *dest)
   {
@@ -42,7 +43,7 @@ namespace zaharov
 
 int main()
 {
-  size_t capacity = 100;
+  size_t capacity = zaharov::initial_capacity;
   size_t size = 0;
   char *buffer = new char[capacity];
 
@@ -79,7 +80,7 @@ int main()
     return 1;
   }
 
-  char *res = new char[size + 1];
+  char *const res = new char[size + 1];
 
   zaharov::removeLatinLetters(buffer, res);
   std::cout << res << '\n';
