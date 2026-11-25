@@ -5,18 +5,18 @@
 
 int main()
 {
-  const char* has_sam_second = "abs";
-  const char* dgt_snd_second = "g1h2k";
+  const char* const has_sam_second = "abs";
+  const char* const dgt_snd_second = "g1h2k";
 
   size_t length = 0;
-  char* line = readLine(&std::cin, &length);
+  char* const line = readLine(&std::cin, &length);
   if (line == nullptr) {
     std::cerr << "Error: not enough memory\n";
     return 1;
   }
 
-  size_t result_size = length + countDgt(dgt_snd_second) + 1;
-  char* result = new (std::nothrow) char[result_size];
+  const size_t result_size = length + countDgt(dgt_snd_second) + 1;
+  char* const result = new (std::nothrow) char[result_size];
   if (result == nullptr) {
     delete[] line;
     std::cerr << "Error: not enough memory\n";

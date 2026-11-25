@@ -5,7 +5,8 @@
 
 char* readLine(std::istream* in, size_t* out_len)
 {
-  size_t capacity = 16;
+  constexpr size_t initial_capacity = 16;
+  size_t capacity = initial_capacity;
   char* buffer = new (std::nothrow) char[capacity];
   if (buffer == nullptr) {
     return nullptr;
@@ -14,8 +15,8 @@ char* readLine(std::istream* in, size_t* out_len)
   char ch = 0;
   while (in->get(ch) && ch != '\n') {
     if (length + 1 == capacity) {
-      size_t new_capacity = capacity * 2;
-      char* bigger = new (std::nothrow) char[new_capacity];
+      const size_t new_capacity = capacity * 2;
+      char* const bigger = new (std::nothrow) char[new_capacity];
       if (bigger == nullptr) {
         delete[] buffer;
         return nullptr;
