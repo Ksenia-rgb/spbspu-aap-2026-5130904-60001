@@ -7,28 +7,33 @@
 namespace sudakov {
   constexpr size_t initial_capacity = 10;
 
-  std::istream& readLine(std::istream& input, char*& line)
+  char* readLine(std::istream& input)
   {
     size_t capacity = initial_capacity;
     size_t size = 0;
-    line = new char[capacity];
+    char* line = new char[capacity];
 
     char symbol = '\0';
-    while (input.get(symbol) and symbol != '\n') {
-      if (size + 1 == capacity) {
-        capacity *= 2;
-        char* const new_line = new char[capacity];
-        for (size_t i = 0; i < size; ++i) {
-          new_line[i] = line[i];
+    try {
+      while (input.get(symbol) and symbol != '\n') {
+        if (size + 1 == capacity) {
+          capacity *= 2;
+          char* const new_line = new char[capacity];
+          for (size_t i = 0; i < size; ++i) {
+            new_line[i] = line[i];
+          }
+          delete[] line;
+          line = new_line;
         }
-        delete[] line;
-        line = new_line;
+        line[size] = symbol;
+        ++size;
       }
-      line[size] = symbol;
-      ++size;
+    } catch (...) {
+      delete[] line;
+      throw;
     }
     line[size] = '\0';
-    return input;
+    return line;
   }
 
   char* toLower(char* result, const char* source)
@@ -67,7 +72,7 @@ int main()
   char* lower_result = nullptr;
   char* no_vowels = nullptr;
   try {
-    sudakov::readLine(std::cin, line);
+    line = sudakov::readLine(std::cin);
     if (!std::cin and line[0] == '\0') {
       delete[] line;
       std::cerr << "Input is empty\n";
