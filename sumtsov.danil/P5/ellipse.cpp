@@ -5,6 +5,7 @@
 namespace
 {
   constexpr double pi = 3.14159265358979323846;
+  constexpr double two = 2.0;
 }
 
 sumtsov::Ellipse::Ellipse(const point_t &pos, double radius_x, double radius_y):
@@ -25,7 +26,7 @@ double sumtsov::Ellipse::getArea() const
 
 sumtsov::rectangle_t sumtsov::Ellipse::getFrameRect() const
 {
-  return {2.0 * radius_x_, 2.0 * radius_y_, pos_};
+  return {two * radius_x_, two * radius_y_, pos_};
 }
 
 void sumtsov::Ellipse::move(const point_t &target)

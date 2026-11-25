@@ -4,6 +4,9 @@
 
 namespace
 {
+  constexpr double two = 2.0;
+  constexpr double three = 3.0;
+
   double minOf(double a, double b, double c)
   {
     const double ab = (a < b) ? a : b;
@@ -41,7 +44,7 @@ sumtsov::Triangle::Triangle(const point_t &a, const point_t &b, const point_t &c
 double sumtsov::Triangle::getArea() const
 {
   const double value = cross(a_, b_, c_);
-  return ((value < 0.0) ? -value : value) / 2.0;
+  return ((value < 0.0) ? -value : value) / two;
 }
 
 sumtsov::rectangle_t sumtsov::Triangle::getFrameRect() const
@@ -50,7 +53,7 @@ sumtsov::rectangle_t sumtsov::Triangle::getFrameRect() const
   const double right = maxOf(a_.x, b_.x, c_.x);
   const double bottom = minOf(a_.y, b_.y, c_.y);
   const double top = maxOf(a_.y, b_.y, c_.y);
-  return {right - left, top - bottom, {(left + right) / 2.0, (bottom + top) / 2.0}};
+  return {right - left, top - bottom, {(left + right) / two, (bottom + top) / two}};
 }
 
 void sumtsov::Triangle::move(const point_t &target)
@@ -83,5 +86,5 @@ void sumtsov::Triangle::scale(double factor)
 
 sumtsov::point_t sumtsov::Triangle::getCenter() const
 {
-  return {(a_.x + b_.x + c_.x) / 3.0, (a_.y + b_.y + c_.y) / 3.0};
+  return {(a_.x + b_.x + c_.x) / three, (a_.y + b_.y + c_.y) / three};
 }

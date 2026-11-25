@@ -9,6 +9,10 @@
 
 namespace
 {
+  constexpr double two = 2.0;
+  constexpr double three = 3.0;
+  constexpr double four = 4.0;
+
   void scaleAbout(sumtsov::Shape *shape, const sumtsov::point_t &target, double factor)
   {
     const sumtsov::point_t before = shape->getFrameRect().pos;
@@ -36,10 +40,10 @@ namespace
   {
     double total = 0.0;
     const sumtsov::rectangle_t first = shapes[0]->getFrameRect();
-    double left = first.pos.x - first.width / 2.0;
-    double right = first.pos.x + first.width / 2.0;
-    double bottom = first.pos.y - first.height / 2.0;
-    double top = first.pos.y + first.height / 2.0;
+    double left = first.pos.x - first.width / two;
+    double right = first.pos.x + first.width / two;
+    double bottom = first.pos.y - first.height / two;
+    double top = first.pos.y + first.height / two;
 
     for (size_t i = 0; i < count; ++i)
     {
@@ -50,10 +54,10 @@ namespace
       printFrame(out, frame);
       total += area;
 
-      const double f_left = frame.pos.x - frame.width / 2.0;
-      const double f_right = frame.pos.x + frame.width / 2.0;
-      const double f_bottom = frame.pos.y - frame.height / 2.0;
-      const double f_top = frame.pos.y + frame.height / 2.0;
+      const double f_left = frame.pos.x - frame.width / two;
+      const double f_right = frame.pos.x + frame.width / two;
+      const double f_bottom = frame.pos.y - frame.height / two;
+      const double f_top = frame.pos.y + frame.height / two;
       left = (f_left < left) ? f_left : left;
       right = (f_right > right) ? f_right : right;
       bottom = (f_bottom < bottom) ? f_bottom : bottom;
@@ -62,7 +66,7 @@ namespace
 
     out << "total area " << total << '\n';
     out << "total frame ";
-    printFrame(out, {right - left, top - bottom, {(left + right) / 2.0, (bottom + top) / 2.0}});
+    printFrame(out, {right - left, top - bottom, {(left + right) / two, (bottom + top) / two}});
   }
 
   void destroyAll(sumtsov::Shape **shapes, size_t count)
@@ -81,9 +85,9 @@ int main()
 
   try
   {
-    shapes[0] = new sumtsov::Rectangle({1.0, 1.0}, 4.0, 2.0);
-    shapes[1] = new sumtsov::Triangle({0.0, 0.0}, {4.0, 0.0}, {0.0, 3.0});
-    shapes[2] = new sumtsov::Ellipse({-2.0, 3.0}, 3.0, 2.0);
+    shapes[0] = new sumtsov::Rectangle({1.0, 1.0}, four, two);
+    shapes[1] = new sumtsov::Triangle({0.0, 0.0}, {four, 0.0}, {0.0, three});
+    shapes[2] = new sumtsov::Ellipse({-two, three}, three, two);
   }
   catch (const std::exception &error)
   {
@@ -91,6 +95,9 @@ int main()
     destroyAll(shapes, count);
     return 2;
   }
+
+  std::cout << "before scaling:\n";
+  printInfo(std::cout, shapes, count);
 
   sumtsov::point_t target = {0.0, 0.0};
   double factor = 0.0;
@@ -100,9 +107,6 @@ int main()
     destroyAll(shapes, count);
     return 1;
   }
-
-  std::cout << "before scaling:\n";
-  printInfo(std::cout, shapes, count);
 
   try
   {
