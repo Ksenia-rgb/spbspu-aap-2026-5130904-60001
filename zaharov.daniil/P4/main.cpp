@@ -66,7 +66,6 @@ int main()
       }
       delete[] buffer;
       buffer = new_buffer;
-
     }
     buffer[size] = c;
     ++size;
