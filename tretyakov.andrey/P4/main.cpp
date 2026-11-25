@@ -5,10 +5,10 @@ constexpr size_t initial_capacity = 16;
 
 namespace tretyakov
 {
-  char *resize(char *string1, size_t &capacity)
+  char *resize(const char *string1, size_t &capacity)
   {
     const size_t new_capacity = capacity * 2;
-    char *const new_string = new char[new_capacity];
+    char *new_string = new char[new_capacity];
     std::memcpy(new_string, string1, capacity);
     capacity = new_capacity;
     return new_string;
@@ -21,7 +21,7 @@ namespace tretyakov
     {
       if (size1 + 1 >= capacity)
       {
-        const char *new_string = resize(string1, capacity);
+        char *new_string = resize(string1, capacity);
         delete[] string1;
         string1 = new_string;
       }
