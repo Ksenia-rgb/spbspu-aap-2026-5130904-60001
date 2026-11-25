@@ -21,7 +21,7 @@ namespace tretyakov
     {
       if (size1 + 1 >= capacity)
       {
-        char *new_string = resize(string1, capacity);
+        const char *new_string = resize(string1, capacity);
         delete[] string1;
         string1 = new_string;
       }
