@@ -25,7 +25,7 @@ namespace sumtsov
       if (length + 1 >= capacity)
       {
         capacity *= 2;
-        char *grown = static_cast< char * >(std::realloc(buffer, capacity));
+        char *const grown = static_cast< char * >(std::realloc(buffer, capacity));
         if (grown == nullptr)
         {
           std::free(buffer);
@@ -36,6 +36,13 @@ namespace sumtsov
       buffer[length] = symbol;
       ++length;
     }
+
+    if ((length == 0) && in.eof())
+    {
+      std::free(buffer);
+      return nullptr;
+    }
+
     buffer[length] = '\0';
     return buffer;
   }
@@ -90,21 +97,21 @@ namespace sumtsov
 int main()
 {
   size_t length = 0;
-  char *first = sumtsov::readLine(std::cin, length);
+  char *const first = sumtsov::readLine(std::cin, length);
   if (first == nullptr)
   {
-    std::cerr << "Error: failed to allocate memory\n";
+    std::cerr << "Error: failed to read input string\n";
     return 1;
   }
 
-  const char *exc_second = "abc";
-  const char *dgt_second = "g1h2k";
+  const char *const exc_second = "abc";
+  const char *const dgt_second = "g1h2k";
 
   const size_t exc_size = length + 1;
   const size_t dgt_size = length + std::strlen(dgt_second) + 1;
 
-  char *exc_result = static_cast< char * >(std::malloc(exc_size));
-  char *dgt_result = static_cast< char * >(std::malloc(dgt_size));
+  char *const exc_result = static_cast< char * >(std::malloc(exc_size));
+  char *const dgt_result = static_cast< char * >(std::malloc(dgt_size));
   if ((exc_result == nullptr) || (dgt_result == nullptr))
   {
     std::free(exc_result);
