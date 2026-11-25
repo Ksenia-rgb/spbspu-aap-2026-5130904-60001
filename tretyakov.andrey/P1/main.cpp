@@ -1,0 +1,53 @@
+#include <iostream>
+
+int main()
+{
+  int kat1 = 1;
+  int kat2 = 0;
+  int gidrapousa = 0;
+  int pthtrp = 0;
+  int sumdup = 0;
+  int dvapred = 0;
+  int countvved = 1;
+  std::cin >> kat1;
+  if (!std::cin)
+  {
+    std::cout << "Input error\n";
+    return 1;
+  }
+  kat2 = kat1;
+  while (kat1 != 0)
+  {
+    std::cin >> kat1;
+    countvved = countvved + 1;
+    if (!std::cin)
+    {
+      std::cerr << "Input error\n";
+      return 1;
+    }
+    if (dvapred == kat1)
+    {
+      sumdup = sumdup + 1;
+    }
+    if (kat1 * kat1 == gidrapousa && kat1 != 0)
+    {
+      pthtrp = pthtrp + 1;
+    }
+    gidrapousa = kat1 * kat1 + kat2 * kat2;
+    dvapred = kat1 + kat2;
+    kat2 = kat1;
+  }
+  if (countvved > 3)
+  {
+    std::cout << "PTH-TRP = " << pthtrp << "\n";
+    std::cout << "SUM-DUP = " << sumdup << "\n";
+    return 0;
+  }
+  else
+  {
+    std::cerr << "Sequence too short for SUM-DUP\n";
+    std::cout << "PTH-TRP = " << pthtrp << "\n";
+    return 2;
+  }
+  return 0;
+}
