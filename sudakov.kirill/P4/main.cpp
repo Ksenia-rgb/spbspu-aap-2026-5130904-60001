@@ -5,9 +5,11 @@
 #include <new>
 
 namespace sudakov {
+  constexpr size_t initial_capacity = 10;
+
   std::istream& readLine(std::istream& input, char*& line)
   {
-    size_t capacity = 10;
+    size_t capacity = initial_capacity;
     size_t size = 0;
     line = new char[capacity];
 
