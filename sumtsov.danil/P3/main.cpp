@@ -16,7 +16,7 @@ namespace sumtsov
 
     char *end = nullptr;
     errno = 0;
-    long long parsed = std::strtoll(text, &end, 10);
+    const long long parsed = std::strtoll(text, &end, 10);
 
     if ((end == text) || (*end != '\0') || (errno == ERANGE) || (parsed < 0))
     {
@@ -90,7 +90,7 @@ namespace sumtsov
       row_min[i] = data[i * cols];
       for (size_t j = 1; j < cols; ++j)
       {
-        int value = data[i * cols + j];
+        const int value = data[i * cols + j];
         if (value < row_min[i])
         {
           row_min[i] = value;
@@ -103,7 +103,7 @@ namespace sumtsov
       col_max[j] = data[j];
       for (size_t i = 1; i < rows; ++i)
       {
-        int value = data[i * cols + j];
+        const int value = data[i * cols + j];
         if (value > col_max[j])
         {
           col_max[j] = value;
@@ -116,7 +116,7 @@ namespace sumtsov
     {
       for (size_t j = 0; j < cols; ++j)
       {
-        int value = data[i * cols + j];
+        const int value = data[i * cols + j];
         if ((value == row_min[i]) && (value == col_max[j]))
         {
           ++count;
@@ -158,7 +158,7 @@ namespace sumtsov
     size_t left = 0;
     size_t right = n - 1;
     size_t step = 1;
-    size_t side = n;
+    const size_t side = n;
 
     while ((top <= bottom) && (left <= right))
     {
@@ -290,7 +290,7 @@ int main(int argc, char *argv[])
   }
 
   size_t saddle_count = 0;
-  size_t square_size = sumtsov::minOf(rows, cols);
+  const size_t square_size = sumtsov::minOf(rows, cols);
   int *square = nullptr;
 
   try
