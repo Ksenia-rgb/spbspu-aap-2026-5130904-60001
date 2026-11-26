@@ -38,7 +38,7 @@ int main()
     std::cout << "Before scaling:\n";
     kotyurgina::printShapes(shapes, count);
 
-    kotyurgina::point_t pos = { 0.0, 0.0 };
+    kotyurgina::point_t pos = {0.0, 0.0};
     double factor = 0.0;
 
     if (!(std::cin >> pos.x >> pos.y >> factor))
@@ -91,14 +91,14 @@ kotyurgina::rectangle_t kotyurgina::getTotalFrameRect(Shape* const* shapes, size
     top = std::max(top, rect.pos.y + rect.height / 2);
   }
 
-  return { right - left, top - bottom,
-    { (left + right) / 2, (bottom + top) / 2 } };
+  return {right - left, top - bottom,
+    {(left + right) / 2, (bottom + top) / 2}};
 }
 
 void kotyurgina::printShapes(Shape* const* shapes, size_t count)
 {
   double total_area = 0.0;
-  const char* const names[] = { "Rectangle", "Ring", "Bubble" };
+  const char* const names[] = {"Rectangle", "Ring", "Bubble"};
 
   for (size_t i = 0; i < count; i++)
   {
@@ -109,17 +109,17 @@ void kotyurgina::printShapes(Shape* const* shapes, size_t count)
 
     std::cout << names[i] << '\n';
     std::cout << "Area: " << area << '\n';
-    std::cout << "Frame rectangle: "
-        << rect.width << ' ' << rect.height << ' '
-        << rect.pos.x << ' ' << rect.pos.y << '\n';
+    std::cout << "Frame rectangle: ";
+    std::cout << rect.width << ' ' << rect.height << ' ';
+    std::cout << rect.pos.x << ' ' << rect.pos.y << '\n';
   }
 
   const rectangle_t total_rect = getTotalFrameRect(shapes, count);
 
   std::cout << "Total area: " << total_area << '\n';
-  std::cout << "Total frame rectangle: "
-      << total_rect.width << ' ' << total_rect.height << ' '
-      << total_rect.pos.x << ' ' << total_rect.pos.y << '\n';
+  std::cout << "Total frame rectangle: ";
+  std::cout << total_rect.width << ' ' << total_rect.height << ' ';
+  std::cout << total_rect.pos.x << ' ' << total_rect.pos.y << '\n';
 }
 
 void kotyurgina::scaleShapes(Shape* const* shapes, size_t count, const point_t& pos, double factor)

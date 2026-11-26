@@ -1,5 +1,5 @@
-#ifndef KOTYURGINA_RING_HPP
-#define KOTYURGINA_RING_HPP
+#ifndef RING_HPP
+#define RING_HPP
 
 #include "shape.hpp"
 

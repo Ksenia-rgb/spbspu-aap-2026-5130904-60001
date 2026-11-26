@@ -1,5 +1,5 @@
-#ifndef KOTYURGINA_BASE_TYPES_HPP
-#define KOTYURGINA_BASE_TYPES_HPP
+#ifndef BASE_TYPES_HPP
+#define BASE_TYPES_HPP
 
 namespace kotyurgina
 {

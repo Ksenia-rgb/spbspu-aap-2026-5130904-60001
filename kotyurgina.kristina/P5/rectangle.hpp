@@ -1,5 +1,5 @@
-#ifndef KOTYURGINA_RECTANGLE_HPP
-#define KOTYURGINA_RECTANGLE_HPP
+#ifndef RECTANGLE_HPP
+#define RECTANGLE_HPP
 
 #include "shape.hpp"
 

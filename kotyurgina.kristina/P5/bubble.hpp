@@ -1,5 +1,5 @@
-#ifndef KOTYURGINA_BUBBLE_HPP
-#define KOTYURGINA_BUBBLE_HPP
+#ifndef BUBBLE_HPP
+#define BUBBLE_HPP
 
 #include "shape.hpp"
 
