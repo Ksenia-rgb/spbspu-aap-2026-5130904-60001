@@ -1,6 +1,7 @@
 #ifndef CIRCLE_HPP
 #define CIRCLE_HPP
 
+#include "base-types.hpp"
 #include "shape.hpp"
 
 namespace grebenshchikov
@@ -11,7 +12,7 @@ namespace grebenshchikov
     Circle(point_t pos, double radius);
     double getArea() const override;
     rectangle_t getFrameRect() const override;
-    void move(point_t newPos) override;
+    void move(point_t new_pos) override;
     void move(double dx, double dy) override;
     void scale(double factor) override;
   private:

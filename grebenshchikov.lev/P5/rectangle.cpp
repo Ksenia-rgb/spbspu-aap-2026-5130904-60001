@@ -1,5 +1,6 @@
 #include "rectangle.hpp"
 #include <stdexcept>
+#include "base-types.hpp"
 
 grebenshchikov::Rectangle::Rectangle(point_t pos, double width, double height):
   rect_{width, height, pos}
@@ -20,9 +21,9 @@ grebenshchikov::rectangle_t grebenshchikov::Rectangle::getFrameRect() const
   return rect_;
 }
 
-void grebenshchikov::Rectangle::move(point_t newPos)
+void grebenshchikov::Rectangle::move(point_t new_pos)
 {
-  rect_.pos = newPos;
+  rect_.pos = new_pos;
 }
 
 void grebenshchikov::Rectangle::move(double dx, double dy)

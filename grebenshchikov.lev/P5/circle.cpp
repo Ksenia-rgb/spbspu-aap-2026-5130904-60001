@@ -1,5 +1,6 @@
 #include "circle.hpp"
 #include <stdexcept>
+#include "base-types.hpp"
 
 namespace grebenshchikov
 {
@@ -23,18 +24,18 @@ double grebenshchikov::Circle::getArea() const
 
 grebenshchikov::rectangle_t grebenshchikov::Circle::getFrameRect() const
 {
-  const double maxY = center_.y + radius_;
-  const double minY = center_.y - radius_;
-  const double maxX = center_.x + radius_;
-  const double minX = center_.x - radius_;
-  const double width = maxX - minX;
-  const double height = maxY - minY;
+  const double max_y = center_.y + radius_;
+  const double min_y = center_.y - radius_;
+  const double max_x = center_.x + radius_;
+  const double min_x = center_.x - radius_;
+  const double width = max_x - min_x;
+  const double height = max_y - min_y;
   return {width, height, center_};
 }
 
-void grebenshchikov::Circle::move(point_t newPos)
+void grebenshchikov::Circle::move(point_t new_pos)
 {
-  center_ = newPos;
+  center_ = new_pos;
 }
 
 void grebenshchikov::Circle::move(double dx, double dy)
