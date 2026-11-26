@@ -69,7 +69,7 @@ int main()
 
       const size_t new_capacity = capacity * 2;
 
-      const char *temp = new (std::nothrow) char[new_capacity];
+      char *temp = new (std::nothrow) char[new_capacity];
 
       if (temp == nullptr)
       {
@@ -82,7 +82,7 @@ int main()
 
       delete[] input;
 
-      input = temp;
+      input = const *char temp;
       capacity = new_capacity;
     }
 
@@ -106,7 +106,7 @@ int main()
 
   input[length] = '\0';
 
-  const char *output = new (std::nothrow) char[length + 1];
+  char *output = new (std::nothrow) char[length + 1];
 
   if (output == nullptr)
   {
@@ -117,8 +117,8 @@ int main()
 
   const char second[] = "abc";
 
-  std::cout << removeCommon(input, second, output) << '\n';
-  std::cout << removeLatin(input, output) << '\n';
+  std::cout << removeCommon(input, second, const char* output) << '\n';
+  std::cout << removeLatin(input, const char* output) << '\n';
 
   if (!std::cout)
   {
