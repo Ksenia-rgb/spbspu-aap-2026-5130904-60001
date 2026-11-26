@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <new>
 
-char* remove_common(const char *input, const char *second, char *output)
+char * remove_сommon(const char *input, const char *second, char *output)
 {
   size_t j = 0;
 
@@ -22,13 +22,13 @@ char* remove_common(const char *input, const char *second, char *output)
   return output;
 }
 
-char* remove_latin(const char *input, char *output)
+char * remove_latin(const char *input, char *output)
 {
   size_t j = 0;
 
   for (size_t i = 0; input[i] != '\0'; i++)
   {
-    if (std::isalpha(static_cast<unsigned char>(input[i])) == 0)
+    if (std::isalpha(static_cast< unsigned char >(input[i])) == 0)
     {
       output[j] = input[i];
       j++;
@@ -59,7 +59,7 @@ int main()
   {
     if (length + 1 >= capacity)
     {
-      if (capacity > static_cast<std::size_t>(-1) / 2)
+      if (capacity > static_cast< std::size_t >(-1) / 2)
       {
         delete[] input;
         std::cerr << "error: not enough memory\n";
