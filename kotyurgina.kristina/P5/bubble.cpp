@@ -2,13 +2,13 @@
 #include <stdexcept>
 #include <cmath>
 
-kotyurgina::Bubble::Bubble(const point_t& circleCenter, const point_t& pos, double radius):
+kotyurgina::Bubble::Bubble(const point_t& circle_center, const point_t& pos, double radius):
   radius_(radius),
-  circleCenter_(circleCenter),
+  circle_center_(circle_center),
   pos_(pos)
 {
-  const double dx = pos_.x - circleCenter_.x;
-  const double dy = pos_.y - circleCenter_.y;
+  const double dx = pos_.x - circle_center_.x;
+  const double dy = pos_.y - circle_center_.y;
   const double distance = std::hypot(dx, dy);
 
   if (radius_ <= 0 || distance == 0 || distance >= radius_)
@@ -25,20 +25,20 @@ double kotyurgina::Bubble::getArea() const
 
 kotyurgina::rectangle_t kotyurgina::Bubble::getFrameRect() const
 {
-  return { 2 * radius_, 2 * radius_, circleCenter_ };
+  return {2 * radius_, 2 * radius_, circle_center_};
 }
 
-void kotyurgina::Bubble::move(const point_t& newPos)
+void kotyurgina::Bubble::move(const point_t& new_pos)
 {
-  move(newPos.x - pos_.x, newPos.y - pos_.y);
+  move(new_pos.x - pos_.x, new_pos.y - pos_.y);
 }
 
 void kotyurgina::Bubble::move(double dx, double dy)
 {
   pos_.x += dx;
   pos_.y += dy;
-  circleCenter_.x += dx;
-  circleCenter_.y += dy;
+  circle_center_.x += dx;
+  circle_center_.y += dy;
 }
 
 void kotyurgina::Bubble::scale(double factor)
@@ -48,7 +48,7 @@ void kotyurgina::Bubble::scale(double factor)
     throw std::invalid_argument("Invalid scale factor");
   }
 
-  circleCenter_.x = pos_.x + (circleCenter_.x - pos_.x) * factor;
-  circleCenter_.y = pos_.y + (circleCenter_.y - pos_.y) * factor;
+  circle_center_.x = pos_.x + (circle_center_.x - pos_.x) * factor;
+  circle_center_.y = pos_.y + (circle_center_.y - pos_.y) * factor;
   radius_ *= factor;
 }

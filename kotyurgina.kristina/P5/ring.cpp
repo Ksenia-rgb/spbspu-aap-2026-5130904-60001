@@ -2,12 +2,12 @@
 #include <stdexcept>
 #include <cmath>
 
-kotyurgina::Ring::Ring(const point_t& pos, double outerRadius, double innerRadius):
-  outerRadius_(outerRadius),
-  innerRadius_(innerRadius),
+kotyurgina::Ring::Ring(const point_t& pos, double outer_radius, double inner_radius):
+  outer_radius_(outer_radius),
+  inner_radius_(inner_radius),
   pos_(pos)
 {
-  if (innerRadius <= 0 || innerRadius >= outerRadius)
+  if (inner_radius <= 0 || inner_radius >= outer_radius)
   {
     throw std::invalid_argument("Invalid ring dimensions");
   }
@@ -16,17 +16,17 @@ kotyurgina::Ring::Ring(const point_t& pos, double outerRadius, double innerRadiu
 double kotyurgina::Ring::getArea() const
 {
   const double pi = std::acos(-1.0);
-  return pi * (outerRadius_ * outerRadius_ - innerRadius_ * innerRadius_);
+  return pi * (outer_radius_ * outer_radius_ - inner_radius_ * inner_radius_);
 }
 
 kotyurgina::rectangle_t kotyurgina::Ring::getFrameRect() const
 {
-  return { 2 * outerRadius_, 2 * outerRadius_, pos_ };
+  return {2 * outer_radius_, 2 * outer_radius_, pos_};
 }
 
-void kotyurgina::Ring::move(const point_t& newPos)
+void kotyurgina::Ring::move(const point_t& new_pos)
 {
-  pos_ = newPos;
+  pos_ = new_pos;
 }
 
 void kotyurgina::Ring::move(double dx, double dy)
@@ -41,6 +41,6 @@ void kotyurgina::Ring::scale(double factor)
   {
     throw std::invalid_argument("Invalid scale factor");
   }
-  outerRadius_ *= factor;
-  innerRadius_ *= factor;
+  outer_radius_ *= factor;
+  inner_radius_ *= factor;
 }
