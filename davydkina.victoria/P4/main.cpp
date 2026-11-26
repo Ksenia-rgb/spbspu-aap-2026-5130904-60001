@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <new>
 
-char * removeCommon(const char *input, const char *second, char *output)
+char *removeCommon(const char *input, const char *second, char *output)
 {
   size_t j = 0;
 
@@ -22,7 +22,7 @@ char * removeCommon(const char *input, const char *second, char *output)
   return output;
 }
 
-char * removeLatin(const char *input, char *output)
+char *removeLatin(const char *input, char *output)
 {
   size_t j = 0;
 
@@ -69,7 +69,7 @@ int main()
 
       const size_t new_capacity = capacity * 2;
 
-      char *temp = new (std::nothrow) char[new_capacity];
+      char * const temp = new (std::nothrow) char[new_capacity];
 
       if (temp == nullptr)
       {
@@ -106,7 +106,7 @@ int main()
 
   input[length] = '\0';
 
-  char *output = new (std::nothrow) char[length + 1];
+  char * const output = new (std::nothrow) char[length + 1];
 
   if (output == nullptr)
   {
