@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <new>
 
-char * remove_сommon(const char *input, const char *second, char *output)
+char * remove_common(const char *input, const char *second, char *output)
 {
   size_t j = 0;
 
