@@ -1,0 +1,111 @@
+#include "strings.hpp"
+
+#include <cstdlib>
+#include <iostream>
+
+namespace
+{
+  constexpr size_t init_cap = 16;
+  constexpr size_t grow_step = 2;
+  constexpr size_t ascii_cnt = 256;
+}
+
+char * erin::readStr(std::istream & in, size_t * out_len)
+{
+  size_t cap = init_cap;
+  size_t len = 0;
+
+  char * buf = static_cast< char * >(std::malloc(cap * sizeof(char)));
+  if (buf == nullptr)
+  {
+    return nullptr;
+  }
+
+  in >> std::noskipws;
+  char ch = '\0';
+  while ((in >> ch) && (ch != '\n'))
+  {
+    if (len + 1 >= cap)
+    {
+      const size_t new_cap = cap * grow_step;
+      char * const new_buf = static_cast< char * >(std::malloc(new_cap * sizeof(char)));
+      if (new_buf == nullptr)
+      {
+        std::free(buf);
+        in >> std::skipws;
+        return nullptr;
+      }
+      for (size_t i = 0; i < len; ++i)
+      {
+        new_buf[i] = buf[i];
+      }
+      std::free(buf);
+      buf = new_buf;
+      cap = new_cap;
+    }
+    buf[len] = ch;
+    ++len;
+  }
+  in >> std::skipws;
+
+  buf[len] = '\0';
+  if (out_len != nullptr)
+  {
+    *out_len = len;
+  }
+  return buf;
+}
+
+char * erin::uniteStr(char * dst, const char * s1, const char * s2)
+{
+  char * out = dst;
+  const char * p1 = s1;
+  const char * p2 = s2;
+
+  while ((*p1 != '\0') && (*p2 != '\0'))
+  {
+    *out = *p1;
+    ++out;
+    ++p1;
+    *out = *p2;
+    ++out;
+    ++p2;
+  }
+  while (*p1 != '\0')
+  {
+    *out = *p1;
+    ++out;
+    ++p1;
+  }
+  while (*p2 != '\0')
+  {
+    *out = *p2;
+    ++out;
+    ++p2;
+  }
+  *out = '\0';
+  return dst;
+}
+
+char * erin::findRep(char * dst, const char * src)
+{
+  size_t counts[ascii_cnt] = {};
+  for (const char * p = src; *p != '\0'; ++p)
+  {
+    ++counts[static_cast< unsigned char >(*p)];
+  }
+
+  char * out = dst;
+  for (const char * p = src; *p != '\0'; ++p)
+  {
+    const unsigned char ch = static_cast< unsigned char >(*p);
+    if (counts[ch] > 1)
+    {
+      *out = *p;
+      ++out;
+      counts[ch] = 0;
+    }
+  }
+  *out = '\0';
+  return dst;
+}
