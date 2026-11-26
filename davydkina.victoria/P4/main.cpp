@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <new>
 
-char * remove_common(const char *input, const char *second, char *output)
+char * removeCommon(const char *input, const char *second, char *output)
 {
   size_t j = 0;
 
@@ -22,7 +22,7 @@ char * remove_common(const char *input, const char *second, char *output)
   return output;
 }
 
-char * remove_latin(const char *input, char *output)
+char * removeLatin(const char *input, char *output)
 {
   size_t j = 0;
 
@@ -42,7 +42,8 @@ char * remove_latin(const char *input, char *output)
 
 int main()
 {
-  size_t capacity = 16;
+  const size_t initial_capacity = 16;
+  size_t capacity = initial_capacity;
   size_t length = 0;
 
   char *input = new (std::nothrow) char[capacity];
@@ -53,7 +54,7 @@ int main()
     return 1;
   }
 
-  char ch;
+  char ch = 0;
 
   while (std::cin.get(ch) && ch != '\n')
   {
@@ -66,9 +67,9 @@ int main()
         return 1;
       }
 
-      size_t new_capacity = capacity * 2;
+      const size_t new_capacity = capacity * 2;
 
-      char *temp = new (std::nothrow) char[new_capacity];
+      const char *temp = new (std::nothrow) char[new_capacity];
 
       if (temp == nullptr)
       {
@@ -105,7 +106,7 @@ int main()
 
   input[length] = '\0';
 
-  char *output = new (std::nothrow) char[length + 1];
+  const char *output = new (std::nothrow) char[length + 1];
 
   if (output == nullptr)
   {
@@ -116,8 +117,8 @@ int main()
 
   const char second[] = "abc";
 
-  std::cout << remove_common(input, second, output) << '\n';
-  std::cout << remove_latin(input, output) << '\n';
+  std::cout << removeCommon(input, second, output) << '\n';
+  std::cout << removeLatin(input, output) << '\n';
 
   if (!std::cout)
   {
