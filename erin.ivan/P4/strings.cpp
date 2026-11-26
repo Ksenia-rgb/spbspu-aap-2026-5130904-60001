@@ -3,32 +3,15 @@
 #include <cstdlib>
 #include <iostream>
 
-static int hasSym(const char * beg, const char * end, char ch)
+namespace
 {
-  for (const char * p = beg; p != end; ++p)
-  {
-    if (*p == ch)
-    {
-      return 1;
-    }
-  }
-  return 0;
-}
-
-size_t erin::getLen(const char * str)
-{
-  size_t len = 0;
-  while (str[len] != '\0')
-  {
-    ++len;
-  }
-  return len;
+  constexpr size_t init_cap = 16;
+  constexpr size_t grow_step = 2;
+  constexpr size_t ascii_cnt = 256;
 }
 
 char * erin::readStr(std::istream & in, size_t * out_len)
 {
-  constexpr size_t init_cap = 16;
-  constexpr size_t grow_step = 2;
   size_t cap = init_cap;
   size_t len = 0;
 
@@ -106,16 +89,21 @@ char * erin::uniteStr(char * dst, const char * s1, const char * s2)
 
 char * erin::findRep(char * dst, const char * src)
 {
-  char * out = dst;
-  const size_t len = erin::getLen(src);
-  const char * const end = src + len;
-
-  for (const char * cur = src; cur != end; ++cur)
+  size_t counts[ascii_cnt] = {};
+  for (const char * p = src; *p != '\0'; ++p)
   {
-    if ((hasSym(src, cur, *cur) == 0) && (hasSym(cur + 1, end, *cur) != 0))
+    ++counts[static_cast< unsigned char >(*p)];
+  }
+
+  char * out = dst;
+  for (const char * p = src; *p != '\0'; ++p)
+  {
+    const unsigned char ch = static_cast< unsigned char >(*p);
+    if (counts[ch] > 1)
     {
-      *out = *cur;
+      *out = *p;
       ++out;
+      counts[ch] = 0;
     }
   }
   *out = '\0';

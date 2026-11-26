@@ -19,8 +19,8 @@ int main()
     return 1;
   }
 
-  const char * const sec_str = "def ";
-  const size_t sec_len = erin::getLen(sec_str);
+  constexpr char sec_str[] = "def ";
+  constexpr size_t sec_len = sizeof(sec_str) - 1;
 
   char * const uni_buf = static_cast< char * >(std::malloc((len + sec_len + 1) * sizeof(char)));
   if (uni_buf == nullptr)
