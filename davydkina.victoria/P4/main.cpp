@@ -96,6 +96,13 @@ int main()
         return 1;
     }
 
+    if (std::cin.eof() && length == 0)
+    {
+       delete[] input;
+       std::cerr << "error: input failure\n";
+       return 1;
+    }
+
     input[length] = '\0';
 
     char *output = new (std::nothrow) char[length + 1];
