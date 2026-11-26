@@ -4,7 +4,7 @@
 #include <iostream>
 #include <new>
 
-char *removeCommon(const char *input, const char *second, char *output) {
+char *removeCommon(const char *input, const char *second, char *output){
   size_t j = 0;
 
   for (size_t i = 0; input[i] != '\0'; i++) {
@@ -19,11 +19,11 @@ char *removeCommon(const char *input, const char *second, char *output) {
   return output;
 }
 
-char *removeLatin(const char *input, char *output) {
+char *removeLatin(const char *input, char *output){
   size_t j = 0;
 
   for (size_t i = 0; input[i] != '\0'; i++) {
-    if (std::isalpha(static_cast<unsigned char>(input[i])) == 0) {
+    if (std::isalpha(static_cast< unsigned char >(input[i])) == 0) {
       output[j] = input[i];
       j++;
     }
@@ -34,7 +34,7 @@ char *removeLatin(const char *input, char *output) {
   return output;
 }
 
-int main() {
+int main(){
   const size_t initial_capacity = 16;
   size_t capacity = initial_capacity;
   size_t length = 0;
@@ -50,7 +50,7 @@ int main() {
 
   while (std::cin.get(ch) && ch != '\n') {
     if (length + 1 >= capacity) {
-      if (capacity > static_cast<std::size_t>(-1) / 2) {
+      if (capacity > static_cast< std::size_t >(-1) / 2) {
         delete[] input;
         std::cerr << "error: not enough memory\n";
         return 1;
