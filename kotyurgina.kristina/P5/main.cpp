@@ -91,8 +91,7 @@ kotyurgina::rectangle_t kotyurgina::getTotalFrameRect(Shape* const* shapes, size
     top = std::max(top, rect.pos.y + rect.height / 2);
   }
 
-  return {right - left, top - bottom,
-    {(left + right) / 2, (bottom + top) / 2}};
+  return {right - left, top - bottom, {(left + right) / 2, (bottom + top) / 2}};
 }
 
 void kotyurgina::printShapes(Shape* const* shapes, size_t count)
