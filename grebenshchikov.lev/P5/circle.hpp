@@ -14,7 +14,7 @@ namespace grebenshchikov
     void move(point_t newPos) override;
     void move(double dx, double dy) override;
     void scale(double factor) override;
-  private:  
+  private:
     point_t center_;
     double radius_;
   };
