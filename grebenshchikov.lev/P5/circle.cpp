@@ -9,7 +9,7 @@ namespace grebenshchikov
     center_(pos),
     radius_(radius)
   {
-    if (radius <= 0.0)
+    if (!(radius > 0.0))
     {
       throw std::logic_error("radius must be positive\n");
     }
@@ -50,7 +50,7 @@ namespace grebenshchikov
 
   void Circle::scale(double factor)
   {
-    if (factor <= 0)
+    if (!(factor > 0.0))
     {
       throw std::logic_error("Scale factor must be positive\n");
     }

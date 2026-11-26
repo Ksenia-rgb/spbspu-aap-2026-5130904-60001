@@ -4,7 +4,12 @@ namespace grebenshchikov
 {
   Rectangle::Rectangle(point_t pos, double width, double height): 
     rect_{width, height, pos}
-  {}
+  {
+    if (!(width > 0.0 && height > 0.0))
+    {
+      throw std::invalid_argument("Rectangle dimensions must be positive\n");
+    }
+  }
 
   double Rectangle::getArea() const
   {
@@ -31,7 +36,7 @@ namespace grebenshchikov
   {
     if (factor <= 0)
     {
-      throw std::logic_error("Scale factor must be positive");
+      throw std::logic_error("Scale factor must be positive\n");
     }
     rect_.height *= factor;
     rect_.width *= factor;
