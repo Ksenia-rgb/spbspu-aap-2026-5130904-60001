@@ -105,7 +105,7 @@ namespace zahovaev {
     return is;
   }
 
-  std::ofstream& sendAnswer(std::ofstream& as, int const* mass, const size_t n, const size_t m)
+  std::ofstream& outputMatrix(std::ofstream& as, int const* mass, const size_t n, const size_t m)
   {
     as << n << " " << m;
     for (size_t i = 0; i < n * m; i++) {
@@ -128,8 +128,8 @@ int main(int argc, char* argv[])
   short num = 0;
   try {
     char* end = nullptr;
-    num = std::strtol(argv[1], &end, 10);
-    if (end == argv[1] || *end != '\0') {
+    num = std::stoll(argv[1], &end, 10);
+    if (*end != '\0') {
       throw std::invalid_argument("Invalid argument");
     }
     if (!(0 < num && num < 3)) {
@@ -192,7 +192,7 @@ int main(int argc, char* argv[])
   zahovaev::lftBotClk(both_mass, n, m);
 
   as << c << "\n";
-  if (!(zahovaev::sendAnswer(as, both_mass, n, m))) {
+  if (!(zahovaev::outputMatrix(as, both_mass, n, m))) {
     std::cerr << "My code have UB probably. It means that i already dead\n";
     delete[] mass2;
     return 2;
