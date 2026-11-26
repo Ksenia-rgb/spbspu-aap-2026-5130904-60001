@@ -82,7 +82,7 @@ int main()
 
       delete[] input;
 
-      input = const *char temp;
+      input = temp;
       capacity = new_capacity;
     }
 
@@ -117,8 +117,8 @@ int main()
 
   const char second[] = "abc";
 
-  std::cout << removeCommon(input, second, const char* output) << '\n';
-  std::cout << removeLatin(input, const char* output) << '\n';
+  std::cout << removeCommon(input, second, output) << '\n';
+  std::cout << removeLatin(input, output) << '\n';
 
   if (!std::cout)
   {
