@@ -8,22 +8,22 @@
 
 namespace zhdaneev
 {
-    const std::size_t MAX_FIXED_ELEMENTS = 10000;
+    const size_t MAX_FIXED_ELEMENTS = 10000;
 
-    bool isValidSize(std::size_t rows, std::size_t cols)
+    bool isValidSize(size_t rows, size_t cols)
     {
         if (rows == 0 || cols == 0)
         {
             return rows == 0 && cols == 0;
         }
-        const std::size_t maxSize = std::numeric_limits<std::size_t>::max();
+        const size_t maxSize = std::numeric_limits<size_t>::max();
         return rows <= maxSize / cols
             && rows * cols <= maxSize / sizeof(long long);
     }
 
-    std::istream& readMatrix(std::istream& input, long long* data, std::size_t count)
+    std::istream& readMatrix(std::istream& input, long long* data, size_t count)
     {
-        for (std::size_t i = 0; i < count && input; ++i)
+        for (size_t i = 0; i < count && input; ++i)
         {
             input >> data[i];
         }
@@ -32,50 +32,50 @@ namespace zhdaneev
 
     template <class T>
     std::ostream& writeMatrix(std::ostream& output, const T* data,
-        std::size_t rows, std::size_t cols)
+        size_t rows, size_t cols)
     {
         output << rows << ' ' << cols;
-        const std::size_t count = rows * cols;
-        for (std::size_t i = 0; i < count; ++i)
+        const size_t count = rows * cols;
+        for (size_t i = 0; i < count; ++i)
         {
             output << ' ' << data[i];
         }
         return output;
     }
 
-    void applyBottomLeftClockwise(long long* data, std::size_t rows, std::size_t cols)
+    void applyBottomLeftClockwise(long long* data, size_t rows, size_t cols)
     {
         if (rows == 0 || cols == 0)
         {
             return;
         }
 
-        std::size_t top = 0;
-        std::size_t bottom = rows - 1;
-        std::size_t left = 0;
-        std::size_t right = cols - 1;
+        size_t top = 0;
+        size_t bottom = rows - 1;
+        size_t left = 0;
+        size_t right = cols - 1;
         long long step = 1;
 
         while (top <= bottom && left <= right)
         {
-            for (std::size_t row = bottom + 1; row-- > top;)
+            for (size_t row = bottom + 1; row-- > top;)
             {
                 data[row * cols + left] -= step++;
             }
-            for (std::size_t col = left + 1; col <= right; ++col)
+            for (size_t col = left + 1; col <= right; ++col)
             {
                 data[top * cols + col] -= step++;
             }
             if (bottom > top && right > left)
             {
-                for (std::size_t row = top + 1; row <= bottom; ++row)
+                for (size_t row = top + 1; row <= bottom; ++row)
                 {
                     data[row * cols + right] -= step++;
                 }
             }
             if (bottom > top && right > left + 1)
             {
-                for (std::size_t col = right; col-- > left + 1;)
+                for (size_t col = right; col-- > left + 1;)
                 {
                     data[bottom * cols + col] -= step++;
                 }
@@ -113,22 +113,22 @@ namespace zhdaneev
     }
 
     void buildSmoothed(const long long* source, double* result,
-        std::size_t rows, std::size_t cols)
+        size_t rows, size_t cols)
     {
-        for (std::size_t row = 0; row < rows; ++row)
+        for (size_t row = 0; row < rows; ++row)
         {
-            for (std::size_t col = 0; col < cols; ++col)
+            for (size_t col = 0; col < cols; ++col)
             {
                 long long sum = 0;
                 long long neighbors = 0;
-                const std::size_t rowStart = row == 0 ? 0 : row - 1;
-                const std::size_t rowEnd = row + 1 < rows ? row + 1 : row;
-                const std::size_t colStart = col == 0 ? 0 : col - 1;
-                const std::size_t colEnd = col + 1 < cols ? col + 1 : col;
+                const size_t rowStart = row == 0 ? 0 : row - 1;
+                const size_t rowEnd = row + 1 < rows ? row + 1 : row;
+                const size_t colStart = col == 0 ? 0 : col - 1;
+                const size_t colEnd = col + 1 < cols ? col + 1 : col;
 
-                for (std::size_t r = rowStart; r <= rowEnd; ++r)
+                for (size_t r = rowStart; r <= rowEnd; ++r)
                 {
-                    for (std::size_t c = colStart; c <= colEnd; ++c)
+                    for (size_t c = colStart; c <= colEnd; ++c)
                     {
                         if (r == row && c == col)
                         {
@@ -139,7 +139,7 @@ namespace zhdaneev
                     }
                 }
 
-                const std::size_t index = row * cols + col;
+                const size_t index = row * cols + col;
                 result[index] = neighbors == 0
                     ? static_cast<double>(source[index])
                     : static_cast<double>(roundedTenths(sum, neighbors)) / 10.0;
@@ -181,13 +181,13 @@ int main(int argc, char* argv[])
             throw std::runtime_error("cannot open input file");
         }
 
-        std::size_t rows = 0;
-        std::size_t cols = 0;
+        size_t rows = 0;
+        size_t cols = 0;
         if (!(input >> rows >> cols) || !isValidSize(rows, cols))
         {
             throw std::runtime_error("invalid matrix size");
         }
-        const std::size_t count = rows * cols;
+        const size_t count = rows * cols;
         if (number == 1 && count > MAX_FIXED_ELEMENTS)
         {
             throw std::runtime_error("matrix too large");
@@ -210,7 +210,7 @@ int main(int argc, char* argv[])
             throw std::runtime_error("invalid matrix data");
         }
 
-        for (std::size_t i = 0; i < count; ++i)
+        for (size_t i = 0; i < count; ++i)
         {
             spiral[i] = original[i];
         }
