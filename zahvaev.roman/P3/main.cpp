@@ -87,8 +87,8 @@ namespace zahvaev
     return max_sum;
   }
 
-  std::ostream & writeResult(std::ostream & out, const int * matrix, std::size_t rows,
-                             std::size_t cols, long long max_sum)
+  std::ostream & writeResult(
+    std::ostream & out, const int * matrix, std::size_t rows, std::size_t cols, long long max_sum)
   {
     const std::size_t count = rows * cols;
     out << rows << ' ' << cols;
