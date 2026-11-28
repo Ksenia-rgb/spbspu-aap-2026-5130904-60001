@@ -17,30 +17,26 @@ namespace zahvaev
   const int paramsError = 1;
   const int internalError = 2;
 
-  std::istream & readMatrix(std::istream & in, int * matrix, std::size_t count)
+  bool readMatrix(std::istream &in, int *matrix, std::size_t count)
   {
     for (std::size_t i = 0; i < count; ++i)
     {
       if (!(in >> matrix[i]))
       {
-        return in;
+        return false;
       }
     }
     in >> std::ws;
-    return in;
+    return in.eof();
   }
 
-  bool addLayerToMatrix(int * matrix, std::size_t rows, std::size_t cols)
+  bool changeMatrix(int *matrix, std::size_t rows, std::size_t cols)
   {
     for (std::size_t i = 0; i < rows; ++i)
     {
       for (std::size_t j = 0; j < cols; ++j)
       {
         const std::size_t layer = std::min({i, j, rows - 1 - i, cols - 1 - j});
-        if (layer >= static_cast< std::size_t >(std::numeric_limits< int >::max()))
-        {
-          return false;
-        }
         const int offset = static_cast< int >(layer) + 1;
         if (matrix[i * cols + j] > std::numeric_limits< int >::max() - offset)
         {
@@ -52,7 +48,7 @@ namespace zahvaev
     return true;
   }
 
-  long long calcMaxDiagonalSum(const int * matrix, std::size_t rows, std::size_t cols)
+  long long calcMaxDiagonalSum(const int *matrix, std::size_t rows, std::size_t cols)
   {
     if (rows == 0 || cols == 0)
     {
@@ -86,34 +82,15 @@ namespace zahvaev
     }
     return max_sum;
   }
-
-  std::ostream & writeResult(
-    std::ostream & out,
-    const int * matrix,
-    std::size_t rows,
-    std::size_t cols,
-    long long max_sum
-  )
-  {
-    const std::size_t count = rows * cols;
-    out << rows << ' ' << cols;
-    for (std::size_t i = 0; i < count; ++i)
-    {
-      out << ' ' << matrix[i];
-    }
-    out << '\n' << max_sum << '\n';
-    return out;
-  }
 }
 
-int main(int argc, char * argv[])
+int main(int argc, char *argv[])
 {
   if (argc != zahvaev::argsCount)
   {
     std::cerr << "Error: wrong number of arguments\n";
     return zahvaev::paramsError;
   }
-
   const bool isFixed = (std::strcmp(argv[zahvaev::modeArg], "1") == 0);
   const bool isDynamic = (std::strcmp(argv[zahvaev::modeArg], "2") == 0);
   if (!isFixed && !isDynamic)
@@ -137,18 +114,14 @@ int main(int argc, char * argv[])
     std::cerr << "Error: invalid matrix size\n";
     return zahvaev::internalError;
   }
-
   const std::size_t rows = static_cast< std::size_t >(raw_rows);
   const std::size_t cols = static_cast< std::size_t >(raw_cols);
-
   if (cols != 0 && rows > zahvaev::maxSize / sizeof(int) / cols)
   {
     std::cerr << "Error: matrix is too large\n";
     return zahvaev::internalError;
   }
-
   const std::size_t count = rows * cols;
-
   if (isFixed && count > zahvaev::maxFixedSize)
   {
     std::cerr << "Error: matrix does not fit into fixed array\n";
@@ -156,9 +129,8 @@ int main(int argc, char * argv[])
   }
 
   int fixed_data[zahvaev::maxFixedSize] = {};
-  int * dynamic_data = nullptr;
-  int * data = fixed_data;
-
+  int *dynamic_data = nullptr;
+  int *data = fixed_data;
   if (isDynamic)
   {
     dynamic_data = reinterpret_cast< int * >(std::malloc(count * sizeof(int)));
@@ -170,7 +142,7 @@ int main(int argc, char * argv[])
     data = dynamic_data;
   }
 
-  if (!zahvaev::readMatrix(in, data, count) || !in.eof())
+  if (!zahvaev::readMatrix(in, data, count))
   {
     std::free(dynamic_data);
     std::cerr << "Error: invalid matrix content\n";
@@ -178,22 +150,24 @@ int main(int argc, char * argv[])
   }
 
   const long long max_sum = zahvaev::calcMaxDiagonalSum(data, rows, cols);
-
-  if (!zahvaev::addLayerToMatrix(data, rows, cols))
+  if (!zahvaev::changeMatrix(data, rows, cols))
   {
     std::free(dynamic_data);
     std::cerr << "Error: integer overflow\n";
     return zahvaev::internalError;
   }
 
-  if (!zahvaev::writeResult(out, data, rows, cols, max_sum))
+  out << rows << ' ' << cols;
+  for (std::size_t i = 0; i < count; ++i)
   {
-    std::free(dynamic_data);
+    out << ' ' << data[i];
+  }
+  out << '\n' << max_sum << '\n';
+  std::free(dynamic_data);
+  if (!out)
+  {
     std::cerr << "Error: cannot write output file\n";
     return zahvaev::internalError;
   }
-
-  std::free(dynamic_data);
-
   return 0;
 }
